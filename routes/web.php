@@ -20,3 +20,7 @@ Route::get('/signin', function () {
 Route::get('/signup', function () {
     return view('auth.signup'); 
 })->name('register');
+
+Route::get('/', function () {
+    return view('welcome');
+});
