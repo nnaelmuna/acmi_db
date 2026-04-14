@@ -29,7 +29,7 @@
           <p class="text-base">Post</p>
         </div>
 
-        <div class="flex items-center gap-6 px-3 py-2 hover:bg-[#4155C6] rounded-lg cursor-pointer">
+        <div class="flex items-center gap-6 px-3 py-2 hover:bg-[#4155C6] rounded-lg cursor-pointer"> 
           <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
           <p class="text-base">FaQ</p>
         </div>
@@ -45,28 +45,24 @@
         </div>
 
         <div>
-          <!-- button -->
-          <div onclick="toggleCRM()" id="crmBtn" class="flex items-center justify-between px-3 py-2 hover:bg-[#4155C6] rounded-lg cursor-pointer">
-            <div class="flex items-center gap-6">
-              <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
-              <p class="text-base">CRM</p>
-            </div>
-            <span id="arrow">⌄</span>
-          </div>
-        
-          <!-- dropdown -->
-          <div id="crmMenu" class="hidden text-sm bg-[#142062] rounded-lg overflow-hidden">
-
-            <div class="px-6 py-2 hover:bg-[#4155C6] cursor-pointer">
-              Inbound
+            <div onclick="toggleCRM()" id="crmBtn" class="flex items-center justify-between px-3 py-2 hover:bg-[#4155C6] rounded-lg cursor-pointer transition-colors duration-200">
+              <div class="flex items-center gap-6">
+                <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
+                <p class="text-base">CRM</p>
+              </div>
+              <span id="arrow" class="transition-transform duration-200">⌄</span>
             </div>
           
-            <div class="px-6 py-2 hover:bg-[#4155C6] cursor-pointer">
-              Members
+            <div id="crmMenu" class="hidden text-sm bg-[#142062] rounded-lg overflow-hidden">
+              <div class="px-6 py-2 hover:text-[#958DFF] cursor-pointer transition-colors duration-200">
+                Inbound
+              </div>
+            
+              <div class="px-6 py-2 hover:text-[#958DFF] cursor-pointer transition-colors duration-200">
+                Members
+              </div>
             </div>
-          
           </div>
-        </div>
       
               <!-- media partner -->
               <div class="flex items-center gap-6 px-3 py-2 hover:bg-[#4155C6] rounded-lg cursor-pointer">
