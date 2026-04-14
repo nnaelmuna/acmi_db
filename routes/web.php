@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.signup');
+    return view('auth.signin');
 });
 
 // sign in
 Route::get('/signin', function () {
-    return view('auth.signup'); 
+    return view('auth.signin'); 
 });
 
 // route untuk halaman sign in
