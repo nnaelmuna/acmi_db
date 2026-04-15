@@ -9,7 +9,7 @@
 
 <body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-6">
 
-  <div class="bg-white p-2 rounded-[32px] shadow-2xl flex max-w-6xl w-full min-h-fit overflow-hidden">
+  <div class="bg-white p-2 rounded-[32px] shadow-2xl flex max-w-6xl w-full min-h-fit overflow-hidden scale-70">
 
     <div class="w-[41%] relative rounded-[24px] overflow-hidden">
       <img src="{{ asset('assets/bg.svg') }}" alt="background" class="absolute inset-0 w-full h-full h-[calc(100%-1.5rem)] object-cover object-center">

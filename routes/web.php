@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 // Halaman utama (Landing Page)
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.signin');
 });
 
-// Route untuk halaman sign in
+// sign in
 Route::get('/signin', function () {
     return view('auth.signin'); 
 })->name('login');
