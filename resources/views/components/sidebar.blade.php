@@ -18,10 +18,11 @@
         <p class="text-base text-white">Post</p>
       </a>
 
-      <div class="flex items-center gap-6 px-3 py-2 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100 rounded-lg cursor-pointer transition-all"> 
+      <a href="{{ route('faq') }}" 
+         class="flex items-center gap-6 px-3 py-2 rounded-lg cursor-pointer transition-all {{ request()->routeIs('faq') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
         <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
-        <p class="text-base text-white">FaQ</p>
-      </div>
+        <p class="text-base text-white">Faq</p>
+      </a>
 
       <div class="flex items-center gap-6 px-3 py-2 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100 rounded-lg cursor-pointer transition-all">
         <div class="w-6 h-6 bg-gray-300 rounded-full"></div>

@@ -7,14 +7,14 @@ Route::get('/', function () {
     return view('post');
 });
 
-// sign in
+
 Route::get('/signin', function () {
-    return view('auth.signin'); 
+    return view('auth.login'); 
 })->name('login');
 
-// Route untuk halaman sign up
+
 Route::get('/signup', function () {
-    return view('auth.signup'); 
+    return view('auth.register'); 
 })->name('register');
 
 Route::get('/dashboard', function () {
@@ -24,3 +24,7 @@ Route::get('/dashboard', function () {
 Route::get('/post', function () {
     return view('post');
 })->name('post');
+
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
