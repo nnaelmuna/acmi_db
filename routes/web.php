@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -35,13 +36,15 @@ Route::middleware('auth')->group(function () {
     // Rute Keamanan
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     
-    // Rute Dashboard (Sudah memanggil Controller agar angkanya dinamis)
+    // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Rute Post & FAQ (Sementara pakai view langsung tidak apa-apa, tapi harus di dalam sini agar aman)
-    Route::get('/post', function () {
-        return view('post');
-    })->name('post');
+    // Post
+    Route::get('/post', [PostController::class, 'index'])->name('post');
+    // Rute Create New Post
+    Route::get('/post', [PostController::class, 'create'])->name('post.create');
+    // Rute proses form saat submit
+    Route::post('/post', [PostController::class, 'store'])->name('post.store');
 
     Route::get('/faq', function () {
         return view('faq');
