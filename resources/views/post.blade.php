@@ -65,71 +65,8 @@
         </div>
     </div>
 
-    <div id="postModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300">
-        <div class="bg-white w-[750px] rounded-2xl shadow-2xl relative overflow-hidden border border-gray-400">
-            
-            <div class="flex justify-between items-center px-10 py-7">
-                <h2 class="text-xl font-bold text-black">Create New Post</h2>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-black transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <form action="#" class="px-10 pb-10 flex gap-8">
-                <div class="flex-1 space-y-5">
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Title</label>
-                        <input type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0C1C87]/10 focus:border-[#0C1C87]">
-                    </div>
-            
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Description</label>
-                        <div class="border border-gray-200 rounded-xl overflow-hidden">
-                            <div class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex gap-4 text-gray-400 text-xs font-bold">
-                                <span class="cursor-pointer hover:text-black">B</span>
-                                <span class="italic cursor-pointer hover:text-black">I</span>
-                                <span class="underline cursor-pointer hover:text-black">U</span>
-                            </div>
-                            <textarea rows="5" class="w-full px-4 py-3 focus:outline-none resize-none"></textarea>
-                        </div>
-                    </div>
-            
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Upload Image</label>
-                        <div class="border-2 border-dashed border-gray-200 rounded-2xl h-32 flex flex-col items-center justify-center bg-gray-50 cursor-pointer hover:bg-gray-100 group transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-300 group-hover:text-gray-400">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6.75a1.5 1.5 0 0 0-1.5-1.5H3.75a1.5 1.5 0 0 0-1.5 1.5v12.905a1.5 1.5 0 0 0 1.5 1.5Z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            
-                <div class="w-60 flex flex-col justify-between">
-                    <div class="bg-gray-100 rounded-xl p-5 mt-7 pb-10">
-                        <label class="block text-sm font-semibold mb-4 text-black">Select Category</label>
-                        <div class="space-y-3">
-                            @foreach(['Edukasi Bisnis', 'Networking', 'Artikel', 'Event', 'Promo', 'Pengumuman', 'Press Release'] as $category)
-                            <label class="flex items-center gap-3 text-xs text-gray-600 cursor-pointer hover:text-black transition-all">
-                                <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-[#0C1C87] focus:ring-[#0C1C87] accent-[#0C1C87]">
-                                <span>{{ $category }}</span>
-                            </label>
-                            @endforeach
-                        </div>
-                    </div>
-            
-                    <div class="space-y-3 bg-gray-100 rounded-xl p-5 mt-10 pb-5">
-                        <button type="submit" class="w-full bg-[#000EA6] text-white py-3 rounded-xl font-base text-sm shadow-lg hover:bg-[#000B82] transition-all">Publish Now</button>
-                        <button type="button" class="w-full border border-gray-300 text-black py-3 rounded-xl font-base text-sm hover:bg-gray-50 transition-all">Save to draft</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // Logika Tab Filter (yang sudah ada)
+        // logika pindah kotak
         function switchTab(element) {
             const tabs = document.querySelectorAll('.tab-item');
             tabs.forEach(tab => {
@@ -138,24 +75,6 @@
             });
             element.classList.remove('text-gray-500');
             element.classList.add('bg-white', 'shadow-sm', 'text-black');
-        }
-
-        // Logika Buka Tutup Modal
-        const modal = document.getElementById('postModal');
-
-        function openModal() {
-            modal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            modal.classList.add('hidden');
-        }
-
-        // Klik di area burem buat nutup modal
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
         }
     </script>
 
