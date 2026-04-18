@@ -18,11 +18,18 @@ Route::get('/', function () {
 */
 Route::middleware('guest')->group(function () {
     
-    // Auth - Register
-    Route::controller(RegisterController::class)->group(function() {
-        Route::get('/signup', 'showRegistrationForm')->name('register');
-        Route::post('/signup', 'register');
-    });
+    // // Auth - Register
+    // Route::controller(RegisterController::class)->group(function() {
+    //     Route::get('/signup', 'showRegistrationForm')->name('register');
+    //     Route::post('/signup', 'register');
+    // });
+
+    // // routes/web.php
+    // Route::middleware('auth')->group(function () {
+    //     Route::get('/register', [RegisterController::class, 'showRegistrationForm']);
+    //     Route::post('/register', [RegisterController::class, 'register']);
+    // });
+
 
     // Auth - Login
     Route::controller(LoginController::class)->group(function() {

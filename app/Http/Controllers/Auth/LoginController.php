@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -22,20 +24,26 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
-        $remember = $request->boolean('remember'); // Menangkap checkbox remember me
-
-        // 2. Coba melakukan autentikasi
-        if (Auth::attempt($credentials, $remember)) {
-            
-            // 3. Keamanan: Regenerasi session id
+    
+        // Rate limit key per email + IP
+        $throttleKey = strtolower($request->email).'|'.$request->ip();
+    
+        // Cek apakah sudah terlalu banyak percobaan
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            throw ValidationException::withMessages([
+                'email' => "Terlalu banyak percobaan. Coba lagi dalam {$seconds} detik.",
+            ]);
+        }
+    
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            RateLimiter::clear($throttleKey); // reset counter
             $request->session()->regenerate();
-
-            // 4. Redirect ke halaman yang sebelumnya ingin diakses user, atau default ke dashboard
             return redirect()->intended('/dashboard');
         }
-
-        // 5. Jika gagal, kembalikan ke halaman login dengan pesan error
+    
+        RateLimiter::hit($throttleKey, 60); // hit + decay 60 detik
+    
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');

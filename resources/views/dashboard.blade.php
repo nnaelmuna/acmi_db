@@ -6,7 +6,7 @@
 @section('content')
     <div class="grid grid-cols-3 gap-8">
         
-        <div class="bg-white rounded-[10px] border-1px border-[#1120B0] shadow-sm overflow-hidden">
+        <div class="bg-white rounded-10px border-1px border-#1120B0 shadow-sm overflow-hidden">
             <div class="p-5 flex justify-between items-center">
                 <p class="text-gray-600 text-lg font-medium">Total Member</p>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-black">
@@ -19,7 +19,7 @@
             </div>
         </div>
     
-        <div class="bg-white rounded-[10px] border-1px border-[#1120B0] shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[10px] border-1px border-#1120B0 shadow-sm overflow-hidden">
             <div class="p-5 flex justify-between items-center">
                 <p class="text-gray-600 text-lg font-medium">New Member</p>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-black">

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use function Symfony\Component\Clock\now;
+
 class RegisterController extends Controller
 {
     // show page signup
@@ -30,6 +32,7 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'email_verifies_at' => now(),
         ]);
 
         // 3. Langsung loginkan user yang baru mendaftar

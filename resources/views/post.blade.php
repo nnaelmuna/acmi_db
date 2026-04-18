@@ -18,22 +18,22 @@
 
 @section('content')
     <div class="flex justify-between items-center mb-8">
-        <div class="flex items-center bg-[#E9E9E9]/50 p-1.5 rounded-2xl border border-gray-200">
+        <div class="flex items-center bg-#E9E9E9/50 p-1.5 rounded-2xl border border-gray-200">
             <button onclick="switchTab(this)" class="tab-item flex items-center gap-2 px-6 py-2 bg-white rounded-xl shadow-sm text-sm font-base text-black transition-all">
                 Published
-                <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full">0</span>
+                <span class="bg-black text-white text-10px px-1.5 py-0.5 rounded-full">0</span>
             </button>
             <button onclick="switchTab(this)" class="tab-item flex items-center gap-2 px-6 py-2 rounded-xl text-sm font-base text-gray-500 hover:text-black transition-all">
                 Draft
-                <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full">0</span>
+                <span class="bg-black text-white text-10px px-1.5 py-0.5 rounded-full">0</span>
             </button>
             <button onclick="switchTab(this)" class="tab-item flex items-center gap-2 px-6 py-2 rounded-xl text-sm font-base text-gray-500 hover:text-black transition-all">
                 Archived
-                <span class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full">0</span>
+                <span class="bg-black text-white text-10px px-1.5 py-0.5 rounded-full">0</span>
             </button>
         </div>
 
-        <a href="{{ route('post.create') }}" class="flex items-center gap-3 bg-[#0C1C87] text-white px-6 py-3 rounded-2xl font-base shadow-lg hover:bg-[#0B1357] transition-all transform hover:-translate-y-0.5">
+        <a href="{{ route('post.create') }}" class="flex items-center gap-3 bg-#0C1C87 text-white px-6 py-3 rounded-2xl font-base shadow-lg hover:bg-[#0B1357] transition-all transform hover:-translate-y-0.5">
             New Post
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -41,11 +41,11 @@
         </a>
     </div>
 
-    <div class="grid grid-cols-12 gap-4 px-6 py-2 bg-[#F4F6F9] text-xs font-semibold text-[#8C94A3] rounded-t-lg border-b border-gray-200 mt-4">
+    <div class="grid grid-cols-12 gap-4 px-6 py-2 bg-#F4F6F9 text-xs font-semibold text-#8C94A3 rounded-t-lg border-b border-gray-200 mt-4">
         <div class="col-span-8 flex items-center gap-4">
             <input type="checkbox" class="rounded border-gray-300">
             <span>Title</span>
-            <div class="bg-white rounded-4xl border border-gray-100 shadow-sm p-6 min-h-[400px] flex items-center justify-center">
+            <div class="bg-white rounded-4xl border border-gray-100 shadow-sm p-6 min-h-400px flex items-center justify-center">
                  <p class="text-gray-400 font-light italic">Belum ada konten untuk ditampilkan.</p>
             </div>
         </div>
@@ -53,19 +53,19 @@
         <div class="col-span-2">Date</div>
     </div>
 
-    <div class="bg-white rounded-b-lg border border-[#C4C4C4] shadow-sm flex flex-col min-h-400px">
+    <div class="bg-white rounded-b-lg border border-#C4C4C4 shadow-sm flex flex-col min-h-400px">
         
         @forelse($posts ?? [] as $post)
-            <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#C4C4C4] hover:bg-gray-50 items-center">
+            <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-#C4C4C4 hover:bg-gray-50 items-center">
                 <div class="col-span-8 flex items-center gap-4">
-                    <input type="checkbox" class="rounded border-gray-300 w-4 h-4 text-[#0C1C87] focus:ring-[#0C1C87]">
+                    <input type="checkbox" class="rounded border-gray-300 w-4 h-4 text-#0C1C87 focus:ring-#0C1C87">
                     <p class="font-medium text-black text-sm">{{ $post->title }}</p>
                 </div>
                 
                 <div class="col-span-2 flex justify-center items-center gap-1 text-gray-500 text-sm">
                     <i class="fa-solid fa-eye text-xs"></i> 0 
     <div id="postModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300">
-        <div class="bg-white w-[750px] rounded-2xl shadow-2xl relative overflow-hidden border border-gray-400">
+        <div class="bg-white w-750px rounded-2xl shadow-2xl relative overflow-hidden border border-gray-400">
             
             <div class="flex justify-between items-center px-10 py-7">
                 <h2 class="text-xl font-bold text-black">Create New Post</h2>
