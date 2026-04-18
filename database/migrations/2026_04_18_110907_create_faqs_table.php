@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('faqs', function (Blueprint $table) {
             $table->id();
+            $table->string('question'); // Untuk input satu baris
+            $table->text('answer');     // Menggunakan text karena jawaban bisa panjang
             $table->timestamps();
         });
     }
