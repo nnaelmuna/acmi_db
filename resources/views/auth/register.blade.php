@@ -6,7 +6,7 @@
     <div>
         <h1 class="text-5xl font-semibold text-black mb-3">Sign Up</h1>
         <p class="text-black text-lg font-light">
-            Welcome to sign in to your background <br> management system
+            Welcome to sign up to your background <br> management system
         </p>
     </div>
 
@@ -24,16 +24,30 @@
         </div>
       
         <div>
-            <label class="block text-sm font-bold text-black mb-1.5">Password</label>
-            <input type="password" placeholder="Enter your password" 
-                   class="w-full px-5 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none transition-all">
-        </div>
+          <label class="text-sm font-bold text-gray-700 block mb-2">Password</label>
+          <div class="relative">
+              <input type="password" id="passwordInput" placeholder="Enter your password"
+                  class="w-full px-5 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#0C1C87] outline-none transition-all bg-gray-50/50">
+              
+              <button type="button" onclick="togglePassword()" 
+                  class="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-[#0C1C87] transition-colors">
+                  <i id="eyeIcon" class="fa-solid fa-eye"></i>
+              </button>
+          </div>
+      </div>
       
-        <div>
-            <label class="block text-sm font-bold text-black mb-1.5">Confirm Password</label>
-            <input type="password" placeholder="Repeat your password" 
-                   class="w-full px-5 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none transition-all">
+      <div>
+        <label class="text-sm font-bold text-gray-700 block mb-2">Confirm Password</label>
+        <div class="relative">
+            <input type="password" id="passwordInput" placeholder="Enter your password"
+                class="w-full px-5 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#0C1C87] outline-none transition-all bg-gray-50/50">
+            
+            <button type="button" onclick="togglePassword()" 
+                class="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-[#0C1C87] transition-colors">
+                <i id="eyeIcon" class="fa-solid fa-eye"></i>
+            </button>
         </div>
+    </div>
       
         <div class="pt-5">
             <button type="submit" class="w-full bg-[#0C1C87] text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-[#091565] transition-all transform hover:-translate-y-1">
@@ -47,3 +61,24 @@
     </p>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+  function togglePassword() {
+      const input = document.getElementById('passwordInput');
+      const icon = document.getElementById('eyeIcon');
+      
+      if (input.type === 'password') {
+          input.type = 'text';
+         
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+      } else {
+          input.type = 'password';
+     
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+      }
+  }
+</script>
+@endpush
