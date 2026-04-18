@@ -36,7 +36,7 @@
         </button>
     </div>
 
-    <div class="bg-white rounded-[32px] border border-gray-100 shadow-sm p-6 min-h-[400px] flex items-center justify-center">
+    <div class="bg-white rounded-4xl border border-gray-100 shadow-sm p-6 min-h-[400px] flex items-center justify-center">
          <p class="text-gray-400 font-light italic">Belum ada konten untuk ditampilkan.</p>
     </div>
 @endsection
