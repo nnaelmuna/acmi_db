@@ -7,7 +7,7 @@
 {{-- HERO SECTION --}}
 <section class="relative h-screen flex items-center justify-center overflow-hidden">
     <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab" class="absolute inset-0 w-full h-full object-cover scale-105" />
-    <div class="absolute inset-0 bg-gradient-to-b from-white/50 via-white/80 to-white/95"></div>
+    <div class="absolute inset-0 bg-linear-to-b from-white/50 via-white/80 to-white/95"></div>
 
     <div class="relative z-10 text-center px-6 max-w-4xl">
         <div class="inline-block px-4 py-1 rounded-full bg-orange-100 text-orange-500 text-xs font-poppins mb-6">
@@ -254,7 +254,7 @@
             @endphp
 
             @foreach($programs as $program)
-            <div class="group relative bg-[#f8f9fb] border {{ $program['is_featured'] ? 'border-orange-200' : 'border-transparent' }} p-10 rounded-[2rem] hover:bg-white hover:shadow-2xl hover:shadow-orange-100 transition-all duration-500">
+            <div class="group relative bg-[#f8f9fb] border {{ $program['is_featured'] ? 'border-orange-200' : 'border-transparent' }} p-10 rounded-4xl hover:bg-white hover:shadow-2xl hover:shadow-orange-100 transition-all duration-500">
                 <div class="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center text-white mb-8 shadow-lg shadow-orange-200 group-hover:scale-110 transition-transform duration-500">
                     <i class="fa-solid {{ $program['icon'] }} text-xl"></i>
                 </div>
@@ -288,7 +288,7 @@
         {{-- White Overlay --}}
         <div class="absolute inset-0 bg-white/80 backdrop-blur-[2px]"></div>
         {{-- Gradient Overlay --}}
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white"></div>
+        <div class="absolute inset-0 bg-linear-to-b from-transparent via-white/50 to-white"></div>
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-6">
@@ -409,7 +409,7 @@
 
                 @foreach($features as $feature)
                 <li class="flex items-center gap-3 text-slate-700 font-poppins text-sm md:text-base">
-                    <div class="flex-shrink-0 w-6 h-6 border-2 border-orange-400 rounded-full flex items-center justify-center">
+                    <div class="shrink-0 w-6 h-6 border-2 border-orange-400 rounded-full flex items-center justify-center">
                         <i class="fa-solid fa-check text-[10px] text-orange-500"></i>
                     </div>
                     {{ $feature }}
