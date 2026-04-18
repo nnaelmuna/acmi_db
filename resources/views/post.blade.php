@@ -59,13 +59,13 @@
                 </button>
             </div>
 
-            <div class="bg-white rounded-[32px] border border-gray-100 shadow-sm p-6 min-h-[400px] flex items-center justify-center">
+            <div class="bg-white rounded-4xl border border-gray-100 shadow-sm p-6 min-h-[400px] flex items-center justify-center">
                  <p class="text-gray-400 font-light italic">Belum ada konten untuk ditampilkan.</p>
             </div>
         </div>
     </div>
 
-    <div id="postModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300">
+    <div id="postModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300">
         <div class="bg-white w-[750px] rounded-2xl shadow-2xl relative overflow-hidden border border-gray-400">
             
             <div class="flex justify-between items-center px-10 py-7">
