@@ -15,7 +15,6 @@ class PostController extends Controller
         $posts = Post::latest()->get(); 
         
         return view('post', compact('posts'));
-        return view('post-create');
     }
 
     // Menyimpan post baru dari Modal

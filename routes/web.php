@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Models\Faq;
 
 // Rute Publik
 Route::get('/', function () {
@@ -64,8 +66,11 @@ Route::middleware('auth')->group(function () {
     });
 
     // Halaman FAQ
-    Route::get('/faq', function () {
-        return view('faq');
-    })->name('faq');
+    Route::controller(FaqController::class)->group(function() {
+        Route::get('/faq', 'index')->name('faq');
+        Route::post('/faq', 'store')->name('faq.store');
+        Route::put('/faq/{id}', 'update')->name('faq.update');
+        Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
+    });
 
 });
