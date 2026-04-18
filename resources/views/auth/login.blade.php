@@ -9,10 +9,10 @@
 
 <body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-6"> 
 
-  <div class="bg-white p-2 rounded-[32px] shadow-2xl flex max-w-6xl w-full min-h-[640px] overflow-hidden scale-70">
+  <div class="bg-white p-2 rounded-32px shadow-2xl flex max-w-6xl w-full min-h-640px overflow-hidden scale-70">
 
-    <div class="w-[41%] relative rounded-[24px] overflow-hidden">
-      <img src="{{ asset('assets/bg.svg') }}" alt="background" class="absolute inset-0 w-full h-full h-[calc(100%-1.5rem)] object-cover object-center">
+    <div class="w-41% relative rounded-24px overflow-hidden">
+      <img src="{{ asset('assets/bg.svg') }}" alt="background" class="absolute inset-0 w-full h-full h-calc(100%-1.5rem) object-cover object-center">
       
       <div class="relative z-10 text-custom-dark h-full flex flex-col justify-end p-12 bg-gradient-to-t from-white/30 to-transparent">
         <p class="text-lg font-medium mb-3 opacity-80">Lorem ipsum</p>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="w-[58%] p-12 flex flex-col justify-center items-center">
+    <div class="w-58% p-12 flex flex-col justify-center items-center">
       
       <div class="w-full max-w-md space-y-8">
         <div class="flex justify-start">

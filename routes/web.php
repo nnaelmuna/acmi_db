@@ -5,12 +5,10 @@ use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\DashboardController; // Pastikan ini ditambahkan
 
-// Rute Publik (Halaman depan jika ada)
+// Rute Publik
 Route::get('/', function () {
-    // Sementara kita arahkan langsung ke halaman login saja
-    return redirect()->route('login'); 
+    return redirect()->route('dashboard'); 
 });
 
 /*
@@ -19,11 +17,19 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-    Route::get('/signup', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/signup', [RegisterController::class, 'register']);
+    
+    // Auth - Register
+    Route::controller(RegisterController::class)->group(function() {
+        Route::get('/signup', 'showRegistrationForm')->name('register');
+        Route::post('/signup', 'register');
+    });
 
-    Route::get('/signin', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/signin', [LoginController::class, 'login']);
+    // Auth - Login
+    Route::controller(LoginController::class)->group(function() {
+        Route::get('/signin', 'showLoginForm')->name('login');
+        Route::post('/signin', 'login');
+    });
+
 });
 
 /*
@@ -33,19 +39,24 @@ Route::middleware('guest')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     
-    // Rute Keamanan
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    // Rute Keamanan (Logout)
+    Route::controller(LoginController::class)->group(function() {
+        Route::post('/logout', 'logout')->name('logout');
+    });
     
     // Dashboard
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::controller(AdminDashboardController::class)->group(function() {
+        Route::get('/dashboard', 'index')->name('dashboard');
+    });
 
-    // Post
-    Route::get('/post', [PostController::class, 'index'])->name('post');
-    // Rute Create New Post
-    Route::get('/post', [PostController::class, 'create'])->name('post.create');
-    // Rute proses form saat submit
-    Route::post('/post', [PostController::class, 'store'])->name('post.store');
+    // CRUD Post
+    Route::controller(PostController::class)->group(function() {
+        Route::get('/post', 'index')->name('post');
+        Route::get('/post/create', 'create')->name('post.create');
+        Route::post('/post', 'store')->name('post.store');
+    });
 
+    // Halaman FAQ
     Route::get('/faq', function () {
         return view('faq');
     })->name('faq');

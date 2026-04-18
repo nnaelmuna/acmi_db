@@ -50,7 +50,7 @@
         <div class="col-span-2">Date</div>
     </div>
 
-    <div class="bg-white rounded-b-lg border border-[#C4C4C4] shadow-sm flex flex-col min-h-[400px]">
+    <div class="bg-white rounded-b-lg border border-[#C4C4C4] shadow-sm flex flex-col min-h-400px">
         
         @forelse($posts ?? [] as $post)
             <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#C4C4C4] hover:bg-gray-50 items-center">

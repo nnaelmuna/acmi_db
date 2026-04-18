@@ -37,4 +37,9 @@ class PostController extends Controller
 
         return back()->with('success', 'Post berhasil dibuat!');
     }
+
+    public function create()
+    {
+        return view('post-create');
+    }
 }
