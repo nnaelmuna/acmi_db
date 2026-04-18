@@ -129,7 +129,7 @@
     </div>
 
     <script>
-        // Logika Tab Filter (yang sudah ada)
+        // logika pindah kotak
         function switchTab(element) {
             const tabs = document.querySelectorAll('.tab-item');
             tabs.forEach(tab => {
@@ -138,24 +138,6 @@
             });
             element.classList.remove('text-gray-500');
             element.classList.add('bg-white', 'shadow-sm', 'text-black');
-        }
-
-        // Logika Buka Tutup Modal
-        const modal = document.getElementById('postModal');
-
-        function openModal() {
-            modal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            modal.classList.add('hidden');
-        }
-
-        // Klik di area burem buat nutup modal
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
         }
     </script>
 
