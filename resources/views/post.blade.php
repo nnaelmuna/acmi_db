@@ -1,18 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Post Management - ACMI')
+@section('title', 'ACMI - Post Management')
 @section('page_title', 'Post')
 
 @section('header_right')
     <div class="relative group">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400 group-focus-within:text-[#0C1C87] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-gray-400">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
         </div>
-        <input type="text" 
-               placeholder="Search post..." 
-               class="block w-72 pl-12 pr-4 py-2.5 bg-white border border-gray-200 rounded-full text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0C1C87] focus:border-transparent shadow-sm transition-all">
+        <input type="text" placeholder="Search post..." class="block w-72 pl-12 pr-4 py-2.5 bg-white border border-gray-200 rounded-full text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-custom-blue shadow-sm transition-all">
     </div>
 @endsection
 
@@ -38,7 +36,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
-        </a>
+        </button>
     </div>
 
     <div class="grid grid-cols-12 gap-4 px-6 py-2 bg-#F4F6F9 text-xs font-semibold text-#8C94A3 rounded-t-lg border-b border-gray-200 mt-4">
@@ -121,7 +119,6 @@
 
 @push('scripts')
 <script>
-    // Logika Tab Filter
     function switchTab(element) {
         const tabs = document.querySelectorAll('.tab-item');
         tabs.forEach(tab => {
@@ -133,18 +130,3 @@
     }
 </script>
 @endpush
-    <script>
-        // logika pindah kotak
-        function switchTab(element) {
-            const tabs = document.querySelectorAll('.tab-item');
-            tabs.forEach(tab => {
-                tab.classList.remove('bg-white', 'shadow-sm', 'text-black');
-                tab.classList.add('text-gray-500');
-            });
-            element.classList.remove('text-gray-500');
-            element.classList.add('bg-white', 'shadow-sm', 'text-black');
-        }
-    </script>
-
-</body>
-</html>

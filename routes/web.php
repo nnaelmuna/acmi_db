@@ -8,16 +8,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Models\Faq;
 
-// Rute Publik
+// 1. Rute Publik (Langsung lempar ke dashboard)
 Route::get('/', function () {
-    return redirect()->route('dashboard'); 
+    return redirect()->route('dashboard');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Rute Guest (Hanya bisa diakses jika BELUM login)
-|--------------------------------------------------------------------------
-*/
+// 2. Rute Guest (Belum login)
 Route::middleware('guest')->group(function () {
     
     // // Auth - Register
@@ -26,19 +22,11 @@ Route::middleware('guest')->group(function () {
     //     Route::post('/signup', 'register');
     // });
 
-    // // routes/web.php
-    // Route::middleware('auth')->group(function () {
-    //     Route::get('/register', [RegisterController::class, 'showRegistrationForm']);
-    //     Route::post('/register', [RegisterController::class, 'register']);
-    // });
 
-
-    // Auth - Login
-    Route::controller(LoginController::class)->group(function() {
+    Route::controller(LoginController::class)->group(function () {
         Route::get('/signin', 'showLoginForm')->name('login');
         Route::post('/signin', 'login');
     });
-
 });
 
 /*
@@ -73,4 +61,5 @@ Route::middleware('auth')->group(function () {
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
     });
 
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
