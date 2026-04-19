@@ -1,9 +1,81 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Source+Serif+Pro:wght@400;600;700&display=swap');
 
-@theme {
-  --color-custom-blue: #0C1C86;
-  --color-custom-dark: #2D2D2D;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply font-poppins bg-gray-50 text-gray-800;
+    }
 }
 
-/* Di v4, dia otomatis scan file template. 
-   Tapi kalau mau nambahin custom path bisa di sini */
+@layer components {
+    .cms-card {
+        @apply bg-white rounded-xl border border-acmi-bordercolor shadow-sm p-6;
+    }
+
+    .cms-title {
+        @apply text-sm text-gray-500;
+    }
+
+    .cms-value {
+        @apply mt-2 text-3xl sm:text-4xl font-bold text-acmi-darkblue;
+    }
+
+    .icon-primary {
+        @apply bg-acmi-blueprimer/10 text-acmi-blueprimer p-3 rounded-lg;
+    }
+
+    .icon-accent {
+        @apply bg-acmi-softblue text-acmi-blueaccent p-3 rounded-lg;
+    }
+
+    .icon-warning {
+        @apply bg-orange-100 text-acmi-yellowaccent p-3 rounded-lg;
+    }
+
+    .icon-success {
+        @apply bg-green-100 text-green-600 p-3 rounded-lg;
+    }
+
+    .cms-panel {
+        @apply bg-white rounded-xl border border-acmi-bordercolor shadow-sm p-6;
+    }
+
+    .cms-panel-title {
+        @apply mb-4 text-lg font-semibold text-acmi-darkblue;
+    }
+
+    .btn-primary {
+        @apply bg-acmi-blueprimer text-white px-4 py-2 rounded-lg hover:bg-acmi-blueaccent transition;
+    }
+
+    .btn-secondary {
+        @apply border border-acmi-bordercolor text-acmi-darkblue px-4 py-2 rounded-lg hover:bg-acmi-softblue transition;
+    }
+
+    .cms-input {
+        @apply w-full rounded-lg border border-acmi-bordercolor px-4 py-2 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20;
+    }
+
+    .badge-approved {
+        @apply bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium;
+    }
+
+    .badge-review {
+        @apply bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-medium;
+    }
+
+    .badge-rejected {
+        @apply bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium;
+    }
+
+    .member-item {
+        @apply flex items-center gap-3 border-b pb-3 mb-3 last:border-none;
+    }
+
+    .avatar {
+        @apply w-10 h-10 rounded-full bg-gray-200 overflow-hidden;
+    }
+}
