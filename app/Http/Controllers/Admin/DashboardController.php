@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $approvedCount = MemberRequest::where('status', 'approved')->count();
         $rejectedCount = MemberRequest::where('status', 'rejected')->count();
 
-        return view('admin.dashboard', compact(
+        return view('dashboard', compact(
             'totalMember',
             'newMember',
             'totalViews',

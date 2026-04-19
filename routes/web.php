@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +10,7 @@ use App\Models\Faq;
 
 // 1. Rute Publik (Langsung lempar ke dashboard)
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('login');
 });
 
 // 2. Rute Guest (Belum login)
@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     });
     
     // Dashboard
-    Route::controller(AdminDashboardController::class)->group(function() {
+    Route::controller(DashboardController::class)->group(function() {
         Route::get('/dashboard', 'index')->name('dashboard');
     });
 
