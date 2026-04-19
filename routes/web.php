@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('login');
 });
 
 // kalau user belum login
@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Dashboard
-    Route::controller(AdminDashboardController::class)->group(function () {
+    Route::controller(DashboardController::class)->group(function() {
         Route::get('/dashboard', 'index')->name('dashboard');
     });
 
