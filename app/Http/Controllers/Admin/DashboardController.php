@@ -8,34 +8,51 @@ use App\Models\MemberRequest;
 use App\Models\WebsiteView;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
+use function Illuminate\Support\weeks;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+
+        // total member
         $totalMember = Member::count();
 
-        $newMember = Member::whereDate('created_at', today())->count();
+        // new member (7 hari kebelakang)
+        $newMember = Member::where('created_at', '>=', now()->subWeek())->count();
 
-        $totalViews = WebsiteView::count();
+        // Total Views (lebih cocok SUM daripada COUNT kalau ada kolom views)
+        $totalViews = WebsiteView::sum('views') ?? WebsiteView::count();
 
-        $recentActivities = ActivityLog::latest()->take(5)->get();
+        // activity terbaru
+        $recentActivities = ActivityLog::latest()
+            ->take(5)
+            ->get();
 
-        $latestMembers = Member::latest()->take(5)->get();
+        // member baru
+        $latestMembers = Member::latest()
+            ->take(5)
+            ->get();
+
+        // member req
 
         $requestedCount = MemberRequest::where('status', 'review')->count();
-        $approvedCount = MemberRequest::where('status', 'approved')->count();
-        $rejectedCount = MemberRequest::where('status', 'rejected')->count();
+        $approvedCount  = MemberRequest::where('status', 'approved')->count();
+        $rejectedCount  = MemberRequest::where('status', 'rejected')->count();
 
-        return view('admin.dashboard', compact(
-            'totalMember',
-            'newMember',
-            'totalViews',
-            'recentActivities',
-            'latestMembers',
-            'requestedCount',
-            'approvedCount',
-            'rejectedCount'
-        ));
+        // return view
+
+        return view('admin.dashboard', [
+            'totalMember'     => $totalMember,
+            'newMember'       => $newMember,
+            'totalViews'      => $totalViews,
+            'recentActivities'=> $recentActivities,
+            'latestMembers'   => $latestMembers,
+            'requestedCount'  => $requestedCount,
+            'approvedCount'   => $approvedCount,
+            'rejectedCount'   => $rejectedCount,
+        ]);
     }
 }
