@@ -5,119 +5,139 @@
 
 @section('content')
 <div class="w-full">
+    <div class="flex flex-col gap-6">
 
-    {{-- CARD SECTION --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- Cards --}}
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 
-        {{-- Total Member --}}
-        <div class="bg-white rounded-xl border border-[#1120B0]/20 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-gray-500 text-sm font-medium">Total Member</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-black mt-2">
-                    {{ number_format($totalMember ?? 0) }}
-                </h2>
+            {{-- Total Member --}}
+            <div class="rounded-2xl border border-acmi-blueprimer bg-white overflow-hidden">
+                <div class="flex items-center justify-between px-5 py-3">
+                    <p class="text-sm font-medium text-gray-700">Total Member</p>
+                    <img src="{{ asset('assets/icons/people_icon.svg') }}"
+                         alt="Total Member"
+                         class="h-5 w-5 object-contain"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                </div>
+                <div class="h-px bg-acmi-blueprimer"></div>
+                <div class="px-5 py-4">
+                    <h2 class="text-4xl font-bold text-black">
+                        {{ number_format($totalMember ?? 0) }}
+                    </h2>
+                </div>
             </div>
 
-            <div class="bg-[#1120B0]/10 p-3 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#1120B0]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003Z"/>
-                </svg>
+            {{-- New Member --}}
+            <div class="rounded-2xl border border-acmi-blueprimer bg-white overflow-hidden">
+                <div class="flex items-center justify-between px-5 py-3">
+                    <p class="text-sm font-medium text-gray-700">New Member</p>
+                    <img src="{{ asset('assets/icons/people_icon.svg') }}"
+                         alt="New Member"
+                         class="h-5 w-5 object-contain"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                </div>
+                <div class="h-px bg-acmi-blueprimer"></div>
+                <div class="px-5 py-4">
+                    <h2 class="text-4xl font-bold text-black">
+                        {{ number_format($newMember ?? 0) }}
+                    </h2>
+                </div>
             </div>
+
+            {{-- Total Views --}}
+            <div class="rounded-2xl border border-acmi-blueprimer bg-white overflow-hidden md:col-span-2 xl:col-span-1">
+                <div class="flex items-center justify-between px-5 py-3">
+                    <p class="text-sm font-medium text-gray-700">Total Views</p>
+                    <img src="{{ asset('assets/icons/bar-chart-icon.svg') }}"
+                         alt="Total Views"
+                         class="h-5 w-5 object-contain"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                </div>
+                <div class="h-px bg-acmi-blueprimer"></div>
+                <div class="px-5 py-4">
+                    <h2 class="text-4xl font-bold text-black">
+                        {{ number_format($totalViews ?? 0) }}
+                    </h2>
+                </div>
+            </div>
+
         </div>
 
-        {{-- New Member --}}
-        <div class="bg-white rounded-xl border border-[#1120B0]/20 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-gray-500 text-sm font-medium">New Member</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-black mt-2">
-                    {{ number_format($newMember ?? 0) }}
-                </h2>
-            </div>
+        {{-- Bottom panels --}}
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
 
-            <div class="bg-green-100 p-3 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 4.5a7.5 7.5 0 0 0-7.5 7.5h15A7.5 7.5 0 0 0 12 4.5Z"/>
-                </svg>
-            </div>
-        </div>
+            {{-- Recent Activity --}}
+            <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5">
+                <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <h4 class="text-xl font-semibold text-acmi-darkblue">Recent Activity</h4>
 
-        {{-- Total Views --}}
-        <div class="bg-white rounded-xl border border-[#1120B0]/20 shadow-sm p-6 flex items-center justify-between">
-            <div>
-                <p class="text-gray-500 text-sm font-medium">Total Views</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-black mt-2">
-                    {{ number_format($totalViews ?? 0) }}
-                </h2>
-            </div>
-
-            <div class="bg-purple-100 p-3 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 13.5s3.75-7.5 9-7.5 9 7.5 9 7.5-3.75 7.5-9 7.5-9-7.5-9-7.5Z"/>
-                </svg>
-            </div>
-        </div>
-
-    </div>
-
-    {{-- SECOND SECTION --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-
-        {{-- Recent Activity --}}
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h4 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h4>
-
-            <div class="space-y-4">
-                @forelse($recentActivities as $activity)
-                    <div class="flex justify-between items-start border-b pb-3">
-                        <div>
-                            <p class="text-sm text-gray-700">
-                                {{ $activity->description ?? '-' }}
-                            </p>
-                            <span class="text-xs text-gray-400">
-                                {{ $activity->created_at->diffForHumans() }}
-                            </span>
-                        </div>
+                    <div class="inline-flex w-fit items-center gap-2 rounded-full bg-acmi-blueprimer px-3 py-1.5 text-xs font-medium text-white">
+                        <span>Post</span>
+                        <img src="{{ asset('assets/icons/down.svg') }}"
+                                     alt="Activity"
+                                     class="h-4 w-4 object-contain"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     </div>
-                @empty
-                    <p class="text-sm text-gray-400">No activity yet</p>
-                @endforelse
-            </div>
-        </div>
+                </div>
 
-        {{-- New Members --}}
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h4 class="text-lg font-semibold text-gray-800 mb-4">New Members</h4>
+                <div class="space-y-4">
+                    @forelse($recentActivities as $activity)
+                        <div class="flex items-start gap-3">
+                            <div class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100">
+                                <img src="{{ asset('assets/icons/down.svg') }}"
+                                     alt="Activity"
+                                     class="h-4 w-4 object-contain"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            </div>
 
-            <div class="space-y-4">
-                @forelse($latestMembers as $member)
-                    <div class="flex items-center gap-4 border-b pb-3">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-medium text-gray-800">
+                                    {{ $activity->description ?? '-' }}
+                                </p>
+                                <p class="mt-1 text-xs text-gray-400">
+                                    {{ $activity->created_at->diffForHumans() }}
+                                </p>
+                            </div>
 
-                        {{-- Avatar --}}
-                        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                            <img 
-                                src="{{ $member->photo ? asset('storage/'.$member->photo) : asset('images/default-user.png') }}"
-                                class="w-full h-full object-cover"
-                            >
+                            <span class="mt-2 h-2.5 w-2.5 rounded-full bg-lime-400"></span>
                         </div>
-
-                        {{-- Info --}}
-                        <div>
-                            <p class="text-sm font-medium text-gray-800">
-                                {{ $member->name }}
-                            </p>
-                            <span class="text-xs text-gray-400">
-                                {{ $member->approved_at ? $member->approved_at->diffForHumans() : $member->created_at->diffForHumans() }}
-                            </span>
-                        </div>
-
-                    </div>
-                @empty
-                    <p class="text-sm text-gray-400">No new members</p>
-                @endforelse
+                    @empty
+                        <p class="text-sm text-gray-400">No activity yet</p>
+                    @endforelse
+                </div>
             </div>
-        </div>
 
+            {{-- New Members --}}
+            <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5">
+                <h4 class="mb-4 text-xl font-semibold text-acmi-darkblue">New Member</h4>
+
+                <div class="space-y-4">
+                    @forelse($latestMembers as $member)
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 overflow-hidden rounded-full bg-gray-200">
+                                <img
+                                    src="{{ $member->photo ? asset('storage/' . $member->photo) : asset('assets/images/default-user.png') }}"
+                                    alt="{{ $member->name }}"
+                                    class="h-full w-full object-cover"
+                                >
+                            </div>
+
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold text-gray-900">
+                                    {{ $member->name }}
+                                </p>
+                                <p class="text-xs text-gray-400">
+                                    {{ $member->approved_at ? $member->approved_at->diffForHumans() : $member->created_at->diffForHumans() }}
+                                </p>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-sm text-gray-400">No new members</p>
+                    @endforelse
+                </div>
+            </div>
+
+        </div>
     </div>
-
 </div>
 @endsection

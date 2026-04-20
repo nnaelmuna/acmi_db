@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $newMember = Member::where('created_at', '>=', now()->subWeek())->count();
 
         // Total Views (lebih cocok SUM daripada COUNT kalau ada kolom views)
-        $totalViews = WebsiteView::sum('views') ?? WebsiteView::count();
+        $totalViews = WebsiteView::count();
 
         // activity terbaru
         $recentActivities = ActivityLog::latest()
@@ -44,7 +44,7 @@ class DashboardController extends Controller
 
         // return view
 
-        return view('admin.dashboard', [
+        return view('dashboard', [
             'totalMember'     => $totalMember,
             'newMember'       => $newMember,
             'totalViews'      => $totalViews,
