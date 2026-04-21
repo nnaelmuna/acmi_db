@@ -37,7 +37,7 @@ class DashboardController extends Controller
             ->get();
 
         // member req
-
+        
         $requestedCount = MemberRequest::where('status', 'review')->count();
         $approvedCount  = MemberRequest::where('status', 'approved')->count();
         $rejectedCount  = MemberRequest::where('status', 'rejected')->count();

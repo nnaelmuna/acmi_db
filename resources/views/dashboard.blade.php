@@ -14,10 +14,7 @@
             <div class="rounded-2xl border border-acmi-blueprimer bg-white overflow-hidden">
                 <div class="flex items-center justify-between px-5 py-3">
                     <p class="text-sm font-medium text-gray-700">Total Member</p>
-                    <img src="{{ asset('assets/icons/people_icon.svg') }}"
-                         alt="Total Member"
-                         class="h-5 w-5 object-contain"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <i class="fas fa-users h-5 w-5"></i>
                 </div>
                 <div class="h-px bg-acmi-blueprimer"></div>
                 <div class="px-5 py-4">
@@ -31,10 +28,7 @@
             <div class="rounded-2xl border border-acmi-blueprimer bg-white overflow-hidden">
                 <div class="flex items-center justify-between px-5 py-3">
                     <p class="text-sm font-medium text-gray-700">New Member</p>
-                    <img src="{{ asset('assets/icons/people_icon.svg') }}"
-                         alt="New Member"
-                         class="h-5 w-5 object-contain"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <i class="fas fa-user-plus h-5 w-5"></i>
                 </div>
                 <div class="h-px bg-acmi-blueprimer"></div>
                 <div class="px-5 py-4">
@@ -48,10 +42,7 @@
             <div class="rounded-2xl border border-acmi-blueprimer bg-white overflow-hidden md:col-span-2 xl:col-span-1">
                 <div class="flex items-center justify-between px-5 py-3">
                     <p class="text-sm font-medium text-gray-700">Total Views</p>
-                    <img src="{{ asset('assets/icons/bar-chart-icon.svg') }}"
-                         alt="Total Views"
-                         class="h-5 w-5 object-contain"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <i class="fas fa-bar-chart"></i>
                 </div>
                 <div class="h-px bg-acmi-blueprimer"></div>
                 <div class="px-5 py-4">
