@@ -11,28 +11,44 @@
 @section('footer_action', 'Sign Up')
 
 @section('content')
-<form method="POST" action="{{ route('login') }}">
+<form method="POST" action="{{ route('login') }}" novalidate>
     @csrf
-    
+
     <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <input type="email" name="email" value="{{ old('email') }}" required autofocus placeholder="Enter your email" 
-               class="input-custom @error('email') input-error @enderror">
+        <label class="form-label" for="email">Email Address</label>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            value="{{ old('email') }}"
+            required
+            autofocus
+            placeholder="Enter your email"
+            class="input-custom @error('email') input-error @enderror"
+        >
+
         @error('email')
             <span class="error-text">{{ $message }}</span>
         @enderror
     </div>
 
     <div class="form-group">
-        <label class="form-label">Password</label>
+        <label class="form-label" for="password">Password</label>
         <div class="password-wrapper">
-            <input type="password" name="password" id="passwordInput" required placeholder="Enter your password" 
-                   class="input-custom @error('password') input-error @enderror">
-            
-            <button type="button" onclick="togglePassword()" class="eye-btn">
+            <input
+                type="password"
+                name="password"
+                id="passwordInput"
+                required
+                placeholder="Enter your password"
+                class="input-custom @error('password') input-error @enderror"
+            >
+
+            <button type="button" onclick="togglePassword()" class="eye-btn" aria-label="Toggle password visibility">
                 <i id="eyeIcon" class="fa-solid fa-eye"></i>
             </button>
         </div>
+
         @error('password')
             <span class="error-text">{{ $message }}</span>
         @enderror
@@ -47,7 +63,7 @@
     function togglePassword() {
         const input = document.getElementById('passwordInput');
         const icon = document.getElementById('eyeIcon');
-        
+
         if (input.type === 'password') {
             input.type = 'text';
             icon.classList.remove('fa-eye');

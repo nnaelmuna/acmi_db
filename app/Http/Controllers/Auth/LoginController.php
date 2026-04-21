@@ -3,59 +3,81 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    // show page sign in
-    public function showLoginForm() 
+    public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // proses login
     public function login(Request $request)
     {
         // 1. Validasi input
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-    
-        // Rate limit key per email + IP
-        $throttleKey = strtolower($request->email).'|'.$request->ip();
-    
-        // Cek apakah sudah terlalu banyak percobaan
+        $request->validate(
+            [
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ],
+            [
+                'email.required' => 'Email is required.',
+                'email.email' => 'Invalid email format.',
+                'password.required' => 'Password is required.',
+            ]
+        );
+
+        // 2. Key rate limit berdasarkan email + IP
+        $throttleKey = strtolower($request->email) . '|' . $request->ip();
+
+        // 3. Batasi percobaan login
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
+
             throw ValidationException::withMessages([
-                'email' => "Terlalu banyak percobaan. Coba lagi dalam {$seconds} detik.",
+                'email' => "Too many login attempts. Try again in {$seconds} seconds.",
             ]);
         }
-    
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            RateLimiter::clear($throttleKey); // reset counter
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+        // 4. Cek apakah email terdaftar
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            RateLimiter::hit($throttleKey, 60);
+
+            return back()->withErrors([
+                'email' => 'Email not found.',
+            ])->onlyInput('email');
         }
-    
-        RateLimiter::hit($throttleKey, 60); // hit + decay 60 detik
-    
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+
+        // 5. Cek password
+        if (!Hash::check($request->password, $user->password)) {
+            RateLimiter::hit($throttleKey, 60);
+
+            return back()->withErrors([
+                'password' => 'Incorrect password.',
+            ])->onlyInput('email');
+        }
+
+        // 6. Login user
+        Auth::login($user, $request->boolean('remember'));
+        RateLimiter::clear($throttleKey);
+        $request->session()->regenerate();
+
+        return redirect()->intended('/dashboard');
     }
 
-    // Memproses proses logout
     public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
-        $request->session()->regenerateToken(); // Mencegah CSRF setelah logout
+        $request->session()->regenerateToken();
 
         return redirect('/');
     }
