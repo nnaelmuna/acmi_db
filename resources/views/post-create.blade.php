@@ -26,9 +26,9 @@
         <div>
             <label class="mb-2 block text-sm font-semibold text-gray-800">Add Description</label>
             <textarea
-                rows="4"
+                rows="2"
                 placeholder="Write a short summary..."
-                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20 resize-none"
+                class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"
             ></textarea>
         </div>
 
@@ -37,31 +37,12 @@
             <label class="mb-2 block text-sm font-semibold text-gray-800">Field</label>
 
             <div class="overflow-hidden rounded-2xl border border-gray-300 bg-white">
-                {{-- Toolbar --}}
-                <div class="flex flex-wrap items-center gap-4 border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
-                    <div class="flex items-center gap-3 border-r border-gray-300 pr-4">
-                        <button type="button" class="transition hover:text-black">↩</button>
-                        <button type="button" class="transition hover:text-black">↪</button>
-                    </div>
-
-                    <select class="bg-transparent font-medium text-gray-700 focus:outline-none">
-                        <option>Paragraph</option>
-                    </select>
-
-                    <div class="flex items-center gap-4 font-bold text-gray-700">
-                        <button type="button" class="transition hover:text-black">B</button>
-                        <button type="button" class="italic transition hover:text-black">I</button>
-                        <button type="button" class="underline transition hover:text-black">U</button>
-                    </div>
-
-                    <button type="button" class="font-bold transition hover:text-black">•••</button>
-                </div>
-
-                {{-- Content --}}
                 <textarea
+                    id="acmi-editor"
+                    name="content"
                     rows="15"
                     placeholder="Write your content here..."
-                    class="w-full resize-none px-5 py-4 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none"
+                    class="w-full resize-none p-4 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none"
                 ></textarea>
             </div>
         </div>
@@ -147,3 +128,30 @@
     </div>
 </form>
 @endsection
+
+@push('scripts')
+<script>
+    tinymce.init({
+        selector: '#acmi-editor', // Targetkan ID textarea-nya
+        height: 500, // Tinggi editornya
+        menubar: false, // Menghilangkan menu bar atas biar lebih bersih
+        plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | blocks | ' +
+                 'bold italic underline | alignleft aligncenter ' +
+                 'alignright alignjustify | bullist numlist outdent indent | ' +
+                 'link image media table | removeformat | help',
+        content_style: 'body { font-family: "Poppins", sans-serif; font-size:14px }',
+        
+        // Mematikan branding TinyMCE di pojok kanan bawah (opsional, kadang butuh langganan)
+        branding: false,
+        
+        // Sedikit styling biar sesuai dengan tema ACMI
+        skin: 'oxide',
+        content_css: 'default'
+    });
+</script>
+@endpush
