@@ -16,22 +16,47 @@
 @section('content')
 <div class="w-full space-y-4">
 
+    {{-- Success Notification --}}
     @if(session('success'))
-        <div class="rounded-lg bg-green-100 px-4 py-3 text-sm font-medium text-green-700">
-            {{ session('success') }}
+        <div
+            id="successAlert"
+            class="mb-4 flex translate-y-[-8px] items-center justify-between rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-700 opacity-0 transition-all duration-500"
+        >
+            <span>{{ session('success') }}</span>
+
+            <button type="button" onclick="hideSuccessAlert()" class="ml-4 text-green-700 hover:text-green-900">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
     @endif
 
+    {{-- FAQ List --}}
     @forelse($faqs as $faq)
         <div class="overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
+
+            {{-- Question Row --}}
             <div class="flex items-center justify-between gap-4 px-5 py-4">
-                <p class="text-sm font-medium text-gray-900 md:text-[15px]">
+
+                {{-- Question --}}
+                <p class="flex-1 text-sm font-medium leading-6 text-gray-900 md:text-[15px]">
                     {{ $faq->question }}
                 </p>
 
+                {{-- Right Actions --}}
                 <div class="flex shrink-0 items-center gap-3">
 
-                    {{-- EDIT --}}
+                    {{-- Status Badge --}}
+                    @if(($faq->status ?? 'published') === 'draft')
+                        <span class="inline-flex h-6 min-w-[78px] items-center justify-center rounded-md bg-gray-100 px-3 text-[11px] font-medium text-gray-600">
+                            Draft
+                        </span>
+                    @else
+                        <span class="inline-flex h-6 min-w-[78px] items-center justify-center rounded-md bg-green-100 px-3 text-[11px] font-medium text-green-700">
+                            Published
+                        </span>
+                    @endif
+
+                    {{-- Edit --}}
                     <button
                         type="button"
                         data-id="{{ $faq->id }}"
@@ -44,7 +69,7 @@
                         <i class="fa-solid fa-pen text-sm"></i>
                     </button>
 
-                    {{-- DELETE --}}
+                    {{-- Delete --}}
                     <button
                         type="button"
                         onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FaQ?')"
@@ -53,7 +78,7 @@
                         <i class="fa-solid fa-trash text-sm"></i>
                     </button>
 
-                    {{-- ARROW --}}
+                    {{-- Arrow --}}
                     <button
                         type="button"
                         onclick="toggleFaq(this)"
@@ -64,7 +89,7 @@
                 </div>
             </div>
 
-            {{-- ANSWER --}}
+            {{-- Answer --}}
             <div class="faq-answer hidden border-t border-white/70 bg-[#F4F8FF] px-5 py-4">
                 <p class="text-sm leading-relaxed text-gray-700">
                     {{ $faq->answer }}
@@ -78,9 +103,10 @@
     @endforelse
 </div>
 
-{{-- ADD MODAL --}}
+{{-- Add FAQ Modal --}}
 <div id="addFaqModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
     <div id="addFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
+
         <div class="flex items-center justify-between px-6 pt-6">
             <h2 class="text-lg font-semibold text-white">Add FaQ</h2>
 
@@ -138,9 +164,10 @@
     </div>
 </div>
 
-{{-- EDIT MODAL --}}
+{{-- Edit FAQ Modal --}}
 <div id="editFaqModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
     <div id="editFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
+
         <div class="flex items-center justify-between px-6 pt-6">
             <h2 class="text-lg font-semibold text-white">Edit FaQ</h2>
 
@@ -261,17 +288,40 @@
         animateModalClose('editFaqModal', 'editFaqBox');
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.getElementById('successAlert');
+
+        if (alert) {
+            requestAnimationFrame(() => {
+                alert.classList.remove('opacity-0', 'translate-y-[-8px]');
+                alert.classList.add('opacity-100', 'translate-y-0');
+            });
+
+            setTimeout(() => {
+                hideSuccessAlert();
+            }, 3000);
+        }
+    });
+
+    function hideSuccessAlert() {
+        const alert = document.getElementById('successAlert');
+
+        if (!alert) return;
+
+        alert.classList.remove('opacity-100', 'translate-y-0');
+        alert.classList.add('opacity-0', 'translate-y-[-8px]');
+
+        setTimeout(() => {
+            alert.remove();
+        }, 500);
+    }
+
     window.addEventListener('click', function(e) {
         const addModal = document.getElementById('addFaqModal');
         const editModal = document.getElementById('editFaqModal');
 
-        if (e.target === addModal) {
-            closeAddModal();
-        }
-
-        if (e.target === editModal) {
-            closeEditModal();
-        }
+        if (e.target === addModal) closeAddModal();
+        if (e.target === editModal) closeEditModal();
     });
 </script>
 @endpush
