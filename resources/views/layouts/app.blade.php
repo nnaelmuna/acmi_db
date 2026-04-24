@@ -50,7 +50,7 @@
         </aside>
 
         <main class="flex-1 flex flex-col pr-12 pl-4 pt-12">
-            <nav class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <nav class="mb-8 flex item-center gap-4 md:flex-row md:items-center md:justify-between">
                 
                 {{-- LEFT: TITLE + DATE --}}
                 <div>
@@ -63,10 +63,10 @@
                 </div>
             
                 {{-- RIGHT: PROFILE + DROPDOWN --}}
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 flex-nowrap">
                     @yield('header_right')
                     
-                    <div class="relative">
+                    <div class="relative shrink-0">
                         {{-- BUTTON --}}
                         <button onclick="toggleDropdown(event)" class="flex items-center gap-3">
                             

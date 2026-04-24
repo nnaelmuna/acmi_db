@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\ProductController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -42,4 +43,12 @@ Route::middleware('auth')->group(function () {
         Route::put('/faq/{id}', 'update')->name('faq.update');
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
     });
+
+    // Product
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/product', 'index')->name('product');
+        
+    });
+
+     
 });

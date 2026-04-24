@@ -26,7 +26,8 @@
               <span class="text-[15px] font-medium text-white">Faq</span>
           </a>
 
-          <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100">
+          <a href="{{ route('product') }}"
+           class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('product') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
               <i class="fas fa-box"></i>
               <span class="text-[15px] font-medium text-white">Product</span>
           </a>
