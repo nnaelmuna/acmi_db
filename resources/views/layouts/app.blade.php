@@ -107,8 +107,6 @@
     
     @stack('scripts')
 
-    <>
-
     {{-- DELETE MODAL (REUSABLE) --}}
     <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 backdrop-blur-sm">
         <div id="deleteBox" class="w-full max-w-md scale-95 rounded-2xl bg-white p-8 text-center opacity-0 shadow-xl transition-all duration-300">
@@ -117,11 +115,11 @@
             </h2>
 
             <div class="flex justify-center gap-6">
-                <button onclick="closeDeleteModal()" class="px-6 py-2 bg-red-200 rounded-lg">
+                <button onclick="closeDeleteModal()" class="font-semibold px-6 py-3 bg-red-200 rounded-lg">
                     Cancel
                 </button>
 
-                <button id="confirmDeleteBtn" class="px-6 py-2 bg-green-200 rounded-lg">
+                <button id="confirmDeleteBtn" class="font-semibold px-6 py-3 bg-green-200 rounded-lg">
                     Delete
                 </button>
             </div>
