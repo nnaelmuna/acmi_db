@@ -112,11 +112,7 @@
                 class="inline-flex items-center gap-3 rounded-2xl bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-acmi-darkblue"
             >
                 <span>New Post</span>
-                <img
-                    src="{{ asset('assets/icons/add-icon.svg') }}"
-                    alt="Dropdown"
-                    class="h-4 w-4 object-contain"
-                >
+                <i class="fa-solid fa-plus"></i>
             </a>
         </div>
     </div>
