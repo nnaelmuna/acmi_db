@@ -6,6 +6,7 @@
     <title>@yield('title', 'ACMI - Asosiasi CEO Indonesia')</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tiny.cloud/1/sgwhbaaenj1eci8masf7auzq2e1d8px24bcfbdrkuj5r06d0/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Source+Serif+Pro:ital,wght@400;600&display=swap" rel="stylesheet">
 
