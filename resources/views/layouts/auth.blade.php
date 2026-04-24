@@ -40,12 +40,22 @@
 </head>
 <body class="bg-[#DFEBFF] font-sans min-h-screen flex items-center justify-center p-4">
 
-    <div class="bg-white rounded-[40px] shadow-sm flex max-w-6xl w-[95%] min-h-[750px] overflow-hidden scale-90">
+    <div class="bg-white rounded-[20px] shadow-sm flex max-w-6xl w-[95%] min-h-[750px] overflow-hidden scale-90">
     
         <div class="w-[45%] relative hidden md:block p-4">
-            <div class="relative h-full w-full rounded-[40px] overflow-hidden">
-                <img src="{{ asset('assets/acmibg.svg') }}" alt="background" class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300">
-                <div class="relative z-10 text-white h-full flex flex-col justify-end p-10 bg-black/10"></div>
+            <div class="relative h-full w-full rounded-[20px] overflow-hidden">
+                <img src="{{ asset('assets/element-signin.svg') }}" alt="background" class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300">
+                
+                <div class="relative z-10 h-full flex flex-col justify-end p-8 bg-black/10">
+                    <div class="max-w-sm font-poppins">
+                        <p class="text-md font-light text-white mb-4">
+                            Welcome Back, Admin
+                        </p>
+                        <h2 class="text-2xl md:text-4xl font-medium text-white leading-snug">
+                            Kelola Ekosistem Digital ACMI dengan Presisi.
+                        </h2>
+                    </div>
+                </div>
             </div>
         </div>
 

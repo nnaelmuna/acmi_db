@@ -3,7 +3,7 @@
 @section('title', 'Sign In')
 @section('heading', 'Sign In')
 @section('subheading')
-    Welcome to sign in to your background <br> management system
+    Welcome to sign in to your background <br> management system.
 @endsection
 
 @section('footer_text', 'Don’t have an account?')

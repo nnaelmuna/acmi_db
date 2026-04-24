@@ -21,16 +21,22 @@
         function toggleDropdown(e) {
             e.stopPropagation();
             const menu = document.getElementById('dropdownMenu');
+            const icon = document.getElementById('dropdownIcon');
+            
+            if (menu && icon) {
+                menu.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            }
         }
 
-        // klik luar → nutup
+        // dropdown
         window.addEventListener('click', function() {
             const menu = document.getElementById('dropdownMenu');
             const icon = document.getElementById('dropdownIcon');
         
-            if (!menu.classList.contains('hidden')) {
+            if (menu && !menu.classList.contains('hidden')) {
                 menu.classList.add('hidden');
-                icon.classList.remove('rotate-180');
+                if(icon) icon.classList.remove('rotate-180');
             }
         });
     </script>
