@@ -8,47 +8,53 @@ use Illuminate\Http\Request;
 
 class FaqController extends Controller
 {
-    // Menampilkan halaman FAQ (CMS Screen)
     public function index()
     {
-        $faqs = Faq::latest()->get(); // Mengambil data terbaru dari atas
-        return view('faq', compact('faqs')); 
-        // Pastikan nama view kamu sesuai, misalnya 'faq.blade.php'
+        $faqs = Faq::latest()->get();
+        return view('faq', compact('faqs'));
     }
 
-    // Memproses data dari Pop Out Add FaQ
     public function store(Request $request)
     {
-        $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string',
+        $validated = $request->validate([
+            'question' => ['required', 'string', 'max:255'],
+            'answer' => ['required', 'string'],
+            'status' => ['nullable', 'in:draft,published'],
         ]);
 
-        Faq::create($request->all());
+        Faq::create([
+            'question' => $validated['question'],
+            'answer' => $validated['answer'],
+            'status' => $validated['status'] ?? 'published',
+        ]);
 
-        return redirect()->route('faq')->with('success', 'FAQ berhasil ditambahkan!');
+        return redirect()->route('faq')->with('success', 'FAQ created successfully.');
     }
 
-    // Memproses data dari Pop Out Edit FaQ
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'question' => 'required|string|max:255',
-            'answer' => 'required|string',
+        $validated = $request->validate([
+            'question' => ['required', 'string', 'max:255'],
+            'answer' => ['required', 'string'],
+            'status' => ['nullable', 'in:draft,published'],
         ]);
 
         $faq = Faq::findOrFail($id);
-        $faq->update($request->all());
 
-        return redirect()->route('faq')->with('success', 'FAQ berhasil diperbarui!');
+        $faq->update([
+            'question' => $validated['question'],
+            'answer' => $validated['answer'],
+            'status' => $validated['status'] ?? $faq->status,
+        ]);
+
+        return redirect()->route('faq')->with('success', 'FAQ updated successfully.');
     }
 
-    // Menghapus data FAQ (Biasanya dibutuhkan di CMS)
     public function destroy($id)
     {
         $faq = Faq::findOrFail($id);
         $faq->delete();
 
-        return redirect()->route('faq')->with('success', 'FAQ berhasil dihapus!');
+        return redirect()->route('faq')->with('success', 'FAQ deleted successfully.');
     }
 }

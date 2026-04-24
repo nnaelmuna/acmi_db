@@ -40,6 +40,7 @@
             }
         });
     </script>
+
 </head>
 
 <body class="font-poppins antialiased">
@@ -105,6 +106,69 @@
     </div>
     
     @stack('scripts')
+
+    <>
+
+    {{-- DELETE MODAL (REUSABLE) --}}
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 backdrop-blur-sm">
+        <div id="deleteBox" class="w-full max-w-md scale-95 rounded-2xl bg-white p-8 text-center opacity-0 shadow-xl transition-all duration-300">
+            <h2 id="deleteModalTitle" class="mb-8 text-2xl font-semibold text-black">
+                Are you sure want to delete this item?
+            </h2>
+
+            <div class="flex justify-center gap-6">
+                <button onclick="closeDeleteModal()" class="px-6 py-2 bg-red-200 rounded-lg">
+                    Cancel
+                </button>
+
+                <button id="confirmDeleteBtn" class="px-6 py-2 bg-green-200 rounded-lg">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <form id="deleteForm" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+        function openDeleteModal(url, title = 'Are you sure want to delete this item?') {
+            const modal = document.getElementById('deleteModal');
+            const box = document.getElementById('deleteBox');
+            const form = document.getElementById('deleteForm');
+            const titleText = document.getElementById('deleteModalTitle');
+            const btn = document.getElementById('confirmDeleteBtn');
+
+            form.action = url;
+            titleText.innerText = title;
+
+            btn.onclick = () => form.submit();
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            requestAnimationFrame(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            });
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            const box = document.getElementById('deleteBox');
+
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+    </script>
+
 </body>
 </html>
 
