@@ -38,10 +38,10 @@ Route::middleware('auth')->group(function () {
 
     // FAQ
     Route::controller(FaqController::class)->group(function () {
-        Route::get('/faq', 'index')->name('faq');
-        Route::post('/faq', 'store')->name('faq.store');
-        Route::put('/faq/{id}', 'update')->name('faq.update');
-        Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
+        Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+        Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
+        Route::put('/faq/{id}', [FaqController::class, 'update'])->name('faq.update');
+        Route::delete('/faq/{id}', [FaqController::class, 'destroy'])->name('faq.destroy');
     });
 
     // Product

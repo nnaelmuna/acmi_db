@@ -9,9 +9,9 @@ class Faq extends Model
 {
     use HasFactory;
 
-    // Mengizinkan Controller untuk mengisi kolom ini secara massal
     protected $fillable = [
         'question',
         'answer',
+        'status',
     ];
 }

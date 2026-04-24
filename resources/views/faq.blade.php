@@ -10,83 +10,314 @@
 @endsection
 
 @section('content')
-    <div class="space-y-3 max-w-5xl">
-        @for ($i = 0; $i < 8; $i++)
-        <div class="rounded-lg overflow-hidden border border-blue-100 shadow-sm">
-            <div onclick="toggleFaq(this)" class="flex items-center justify-between px-6 py-3 bg-[#DAE7FF] cursor-pointer">
-                <p class="text-black text-sm font-medium">Kenapa Memilih Acmi untuk di redesign oleh Tim Breyole Ujikom?</p>
-                <div class="flex items-center gap-3">
-                    <div class="bg-[#3D4BC9] p-1.5 rounded-md shadow-sm flex items-center justify-center cursor-pointer hover:bg-blue-800 transition">
-                        <img src="{{ asset('assets/iconedit.svg') }}" alt="Edit" class="w-4 h-4 object-contain">
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4 text-gray-700 arrow-icon transition-transform duration-300">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
+<div class="w-full space-y-4">
+
+    {{-- Success Notification --}}
+    @if(session('success'))
+        <div
+            id="successAlert"
+            class="mb-4 flex translate-y-[-8px] items-center justify-between rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-700 opacity-0 transition-all duration-500"
+        >
+            <span>{{ session('success') }}</span>
+
+            <button type="button" onclick="hideSuccessAlert()" class="ml-4 text-green-700 hover:text-green-900">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    @endif
+
+    {{-- FAQ List --}}
+    @forelse($faqs as $faq)
+        <div class="overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
+
+            {{-- Question Row --}}
+            <div class="flex items-center justify-between gap-4 px-5 py-4">
+
+                {{-- Question --}}
+                <p class="flex-1 text-sm font-medium leading-6 text-gray-900 md:text-[15px]">
+                    {{ $faq->question }}
+                </p>
+
+                {{-- Right Actions --}}
+                <div class="flex shrink-0 items-center gap-3">
+
+                    {{-- Status Badge --}}
+                    @if(($faq->status ?? 'published') === 'draft')
+                        <span class="inline-flex h-6 min-w-[78px] items-center justify-center rounded-md bg-gray-100 px-3 text-[11px] font-medium text-gray-600">
+                            Draft
+                        </span>
+                    @else
+                        <span class="inline-flex h-6 min-w-[78px] items-center justify-center rounded-md bg-green-100 px-3 text-[11px] font-medium text-green-700">
+                            Published
+                        </span>
+                    @endif
+
+                    {{-- Edit --}}
+                    <button
+                        type="button"
+                        data-id="{{ $faq->id }}"
+                        data-question="{{ e($faq->question) }}"
+                        data-answer="{{ e($faq->answer) }}"
+                        data-status="{{ $faq->status ?? 'published' }}"
+                        onclick="openEditModalFromButton(this)"
+                        class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-blueaccent text-white transition hover:bg-acmi-blueprimer"
+                    >
+                        <i class="fa-solid fa-pen text-sm"></i>
+                    </button>
+
+                    {{-- Delete --}}
+                    <button
+                        type="button"
+                        onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FaQ?')"
+                        class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-yellowaccent text-white transition hover:opacity-90"
+                    >
+                        <i class="fa-solid fa-trash text-sm"></i>
+                    </button>
+
+                    {{-- Arrow --}}
+                    <button
+                        type="button"
+                        onclick="toggleFaq(this)"
+                        class="flex h-8 w-8 items-center justify-center text-gray-800 transition"
+                    >
+                        <i class="faq-arrow fa-solid fa-chevron-down text-sm transition-transform duration-300"></i>
+                    </button>
                 </div>
             </div>
-            <div class="faq-answer hidden px-6 py-4 bg-#F4F8FF border-t border-blue-100">
-                <p class="text-gray-700 text-xs leading-relaxed italic">Karena kita keren</p>
+
+            {{-- Answer --}}
+            <div class="faq-answer hidden border-t border-white/70 bg-[#F4F8FF] px-5 py-4">
+                <p class="text-sm leading-relaxed text-gray-700">
+                    {{ $faq->answer }}
+                </p>
             </div>
         </div>
-        @endfor
-    </div>
+    @empty
+        <div class="flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-acmi-bordercolor bg-white">
+            <p class="text-sm italic text-gray-400">No FAQ available yet.</p>
+        </div>
+    @endforelse
+</div>
 
-    <div id="addFaqModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all duration-300">
-        <div class="bg-white w-600px rounded-xl shadow-2xl relative overflow-hidden">
-            <div class="flex justify-between items-center px-8 py-5 border-b border-gray-100">
-                <h2 class="text-lg font-bold text-black">Add FaQ</h2>
-                <button onclick="closeAddModal()" class="text-gray-400 hover:text-black transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+{{-- Add FAQ Modal --}}
+<div id="addFaqModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
+    <div id="addFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
+
+        <div class="flex items-center justify-between px-6 pt-6">
+            <h2 class="text-lg font-semibold text-white">Add FaQ</h2>
+
+            <button type="button" onclick="closeAddModal()" class="text-white/80 transition hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <form action="{{ route('faq.store') }}" method="POST" class="space-y-5 px-6 pb-6 pt-5">
+            @csrf
+
+            <div>
+                <label for="question" class="mb-2 block text-xs font-semibold text-white">Question</label>
+                <input
+                    type="text"
+                    id="question"
+                    name="question"
+                    required
+                    value="{{ old('question') }}"
+                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20"
+                >
+            </div>
+
+            <div>
+                <label for="answer" class="mb-2 block text-xs font-semibold text-white">Answer</label>
+                <textarea
+                    id="answer"
+                    name="answer"
+                    rows="6"
+                    required
+                    class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20"
+                >{{ old('answer') }}</textarea>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-1">
+                <button
+                    type="submit"
+                    name="status"
+                    value="draft"
+                    class="rounded-md border border-white/50 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10"
+                >
+                    Save to draft
+                </button>
+
+                <button
+                    type="submit"
+                    name="status"
+                    value="published"
+                    class="rounded-md bg-white px-4 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100"
+                >
+                    Publish Now
                 </button>
             </div>
-
-            <form action="{{ route('faq.store') }}" method="POST" class="px-8 py-6 flex flex-col gap-5">
-                @csrf
-                
-                <div>
-                    <label for="question" class="block text-xs font-bold text-black mb-2">Question</label>
-                    <input type="text" id="question" name="question" required
-                        class="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-[#0C1C87] text-sm">
-                </div>
-
-                <div>
-                    <label for="answer" class="block text-xs font-bold text-black mb-2">Answer</label>
-                    <textarea id="answer" name="answer" rows="4" required
-                        class="w-full border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-[#0C1C87] text-sm resize-none"></textarea>
-                </div>
-
-                <div class="flex justify-end gap-3 mt-4">
-                    <button type="button" onclick="closeAddModal()" class="px-6 py-2.5 border border-gray-300 rounded-md text-xs font-bold text-gray-700 hover:bg-gray-50 transition-all">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-6 py-2.5 bg-[#0C1C87] text-white rounded-md text-xs font-bold hover:bg-[#0B1357] transition-all shadow-sm">
-                        Publish Now
-                    </button>
-                </div>
-            </form>
-        </div>
+        </form>
     </div>
+</div>
+
+{{-- Edit FAQ Modal --}}
+<div id="editFaqModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
+    <div id="editFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
+
+        <div class="flex items-center justify-between px-6 pt-6">
+            <h2 class="text-lg font-semibold text-white">Edit FaQ</h2>
+
+            <button type="button" onclick="closeEditModal()" class="text-white/80 transition hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <form id="editFaqForm" method="POST" class="space-y-5 px-6 pb-6 pt-5">
+            @csrf
+            @method('PUT')
+
+            <input type="hidden" name="status" id="edit_status" value="published">
+
+            <div>
+                <label for="edit_question" class="mb-2 block text-xs font-semibold text-white">Question</label>
+                <input
+                    type="text"
+                    id="edit_question"
+                    name="question"
+                    required
+                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20"
+                >
+            </div>
+
+            <div>
+                <label for="edit_answer" class="mb-2 block text-xs font-semibold text-white">Answer</label>
+                <textarea
+                    id="edit_answer"
+                    name="answer"
+                    rows="6"
+                    required
+                    class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20"
+                ></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <button
+                    type="button"
+                    onclick="closeEditModal()"
+                    class="rounded-md border border-white/50 px-5 py-2 text-xs font-medium text-white transition hover:bg-white/10"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="rounded-md bg-white px-5 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100"
+                >
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
-    // Script untuk Accordion
     function toggleFaq(element) {
-        const answer = element.nextElementSibling;
-        const arrow = element.querySelector('.arrow-icon');
+        const wrapper = element.closest('.overflow-hidden');
+        const answer = wrapper.querySelector('.faq-answer');
+        const arrow = element.querySelector('.faq-arrow');
+
         answer.classList.toggle('hidden');
-        arrow.style.transform = answer.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        arrow.classList.toggle('rotate-180');
     }
 
-    // 3. Script untuk Modal Add FaQ
+    function animateModalOpen(modalId, boxId) {
+        const modal = document.getElementById(modalId);
+        const box = document.getElementById(boxId);
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        requestAnimationFrame(() => {
+            box.classList.remove('scale-95', 'opacity-0');
+            box.classList.add('scale-100', 'opacity-100');
+        });
+    }
+
+    function animateModalClose(modalId, boxId) {
+        const modal = document.getElementById(modalId);
+        const box = document.getElementById(boxId);
+
+        box.classList.remove('scale-100', 'opacity-100');
+        box.classList.add('scale-95', 'opacity-0');
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 200);
+    }
+
     function openAddModal() {
-        document.getElementById('addFaqModal').classList.remove('hidden');
+        animateModalOpen('addFaqModal', 'addFaqBox');
     }
 
     function closeAddModal() {
-        document.getElementById('addFaqModal').classList.add('hidden');
+        animateModalClose('addFaqModal', 'addFaqBox');
     }
+
+    function openEditModalFromButton(button) {
+        const form = document.getElementById('editFaqForm');
+        const question = document.getElementById('edit_question');
+        const answer = document.getElementById('edit_answer');
+        const status = document.getElementById('edit_status');
+
+        form.action = `/faq/${button.dataset.id}`;
+        question.value = button.dataset.question;
+        answer.value = button.dataset.answer;
+        status.value = button.dataset.status || 'published';
+
+        animateModalOpen('editFaqModal', 'editFaqBox');
+    }
+
+    function closeEditModal() {
+        animateModalClose('editFaqModal', 'editFaqBox');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.getElementById('successAlert');
+
+        if (alert) {
+            requestAnimationFrame(() => {
+                alert.classList.remove('opacity-0', 'translate-y-[-8px]');
+                alert.classList.add('opacity-100', 'translate-y-0');
+            });
+
+            setTimeout(() => {
+                hideSuccessAlert();
+            }, 3000);
+        }
+    });
+
+    function hideSuccessAlert() {
+        const alert = document.getElementById('successAlert');
+
+        if (!alert) return;
+
+        alert.classList.remove('opacity-100', 'translate-y-0');
+        alert.classList.add('opacity-0', 'translate-y-[-8px]');
+
+        setTimeout(() => {
+            alert.remove();
+        }, 500);
+    }
+
+    window.addEventListener('click', function(e) {
+        const addModal = document.getElementById('addFaqModal');
+        const editModal = document.getElementById('editFaqModal');
+
+        if (e.target === addModal) closeAddModal();
+        if (e.target === editModal) closeEditModal();
+    });
 </script>
 @endpush
