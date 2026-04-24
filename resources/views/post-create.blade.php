@@ -4,17 +4,7 @@
 @section('page_title', 'Create New Post')
 
 @section('content')
-@php
-    $dummyCategories = [
-        'Edukasi Bisnis',
-        'Artikel',
-        'Promo',
-        'Networking',
-        'Event',
-        'Pengumuman',
-        'Press Release',
-    ];
-@endphp
+
 
 <form action="#" method="POST" class="grid grid-cols-1 gap-8 pb-20 xl:grid-cols-12">
     @csrf
@@ -94,13 +84,15 @@
             </div>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                @foreach($dummyCategories as $category)
+                @foreach($categories as $category)
                     <label class="group flex cursor-pointer items-center gap-3 text-xs text-gray-700">
                         <input
                             type="checkbox"
+                            name="categories[]"
+                            value="{{ $category->id }}"
                             class="h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer accent-acmi-blueprimer"
                         >
-                        <span class="transition group-hover:text-black">{{ $category }}</span>
+                        <span class="transition group-hover:text-black">{{ $category->name }}</span>
                     </label>
                 @endforeach
             </div>
