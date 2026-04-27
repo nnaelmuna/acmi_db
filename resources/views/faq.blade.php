@@ -4,7 +4,7 @@
 @section('page_title', 'FaQ')
 
 @section('header_right')
-    <button onclick="openAddModal()" class="bg-#0C1C87 text-black px-6 py-2 rounded-lg text-base font-base shadow-md hover:bg-#0B1357 transition-all mt-5">
+    <button onclick="openAddModal()" class="bg-acmi-darkblue text-white px-6 py-2 rounded-lg text-base font-base shadow-md hover:bg-#0B1357 transition-all">
         Add FaQ
     </button>
 @endsection
@@ -142,8 +142,7 @@
                     type="submit"
                     name="status"
                     value="draft"
-                    class="rounded-md border border-white/50 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10"
-                >
+                    class="rounded-md border border-white/50 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10">
                     Save to draft
                 </button>
 
@@ -151,8 +150,7 @@
                     type="submit"
                     name="status"
                     value="published"
-                    class="rounded-md bg-white px-4 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100"
-                >
+                    class="rounded-md bg-white px-4 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100">
                     Publish Now
                 </button>
             </div>
