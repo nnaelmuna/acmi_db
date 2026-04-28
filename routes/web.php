@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -34,7 +35,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/post', 'index')->name('post');
         Route::get('/post/create', 'create')->name('post.create');
         Route::post('/post', 'store')->name('post.store');
+        Route::get('/post/{post}/edit', 'edit')->name('post.edit');
+        Route::put('/post/{post}', 'update')->name('post.update');
     });
+
+    // Category Post
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // FAQ
     Route::controller(FaqController::class)->group(function () {

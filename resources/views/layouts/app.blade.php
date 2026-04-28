@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'ACMI - Asosiasi CEO Indonesia')</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.tiny.cloud/1/sgwhbaaenj1eci8masf7auzq2e1d8px24bcfbdrkuj5r06d0/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://unpkg.com/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Source+Serif+Pro:ital,wght@400;600&display=swap" rel="stylesheet">
 
@@ -133,7 +134,7 @@
     </form>
 
     <script>
-        function openDeleteModal(url, title = 'Are you sure want to delete this item?') {
+        function openDeleteModal(url, title = 'Are you sure want to delete this item?', onConfirm = null) {
             const modal = document.getElementById('deleteModal');
             const box = document.getElementById('deleteBox');
             const form = document.getElementById('deleteForm');
@@ -143,7 +144,13 @@
             form.action = url;
             titleText.innerText = title;
 
-            btn.onclick = () => form.submit();
+            btn.onclick = () => {
+                if (onConfirm) {
+                    onConfirm();
+                } else {
+                    form.submit();
+                }
+            };
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
