@@ -15,7 +15,7 @@ class MediaItemController extends Controller
     $media = MediaItem::with('category')->latest()->get();
     $categories = MediaCategory::all();
 
-    return view('admin.media.index', compact('media', 'categories'));
+    return view('media', compact('media', 'categories'));
 }
 
     // STORE (Add Media)
