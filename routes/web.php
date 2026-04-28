@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\MediaCategoryController;
+use App\Http\Controllers\Admin\MediaItemController;
 use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
@@ -57,5 +59,19 @@ Route::middleware('auth')->group(function () {
         
     });
 
-     
+    // Media Category
+    Route::get('/categories', [MediaCategoryController::class, 'index']);
+    Route::post('/categories', [MediaCategoryController::class, 'store']);
+    Route::put('/categories/{id}', [MediaCategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [MediaCategoryController::class, 'destroy']);
+
+    // Media Item
+    Route::prefix('media')->group(function () {
+    Route::get('/', [MediaItemController::class, 'index'])->name('media');
+
+    Route::post('/', [MediaItemController::class, 'store']);
+    Route::put('/{id}', [MediaItemController::class, 'update']);
+    Route::delete('/{id}', [MediaItemController::class, 'destroy']);
+});
+ 
 });
