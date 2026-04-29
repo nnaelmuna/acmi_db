@@ -108,19 +108,22 @@
     
     @stack('scripts')
 
-    {{-- DELETE MODAL (REUSABLE) --}}
-    <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 backdrop-blur-sm">
+   {{-- DELETE MODAL (REUSABLE) --}}
+    {{-- Aku ganti z-index ke z-[9999] biar pasti paling depan --}}
+    <div id="deleteModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/40 backdrop-blur-sm">
         <div id="deleteBox" class="w-full max-w-md scale-95 rounded-2xl bg-white p-8 text-center opacity-0 shadow-xl transition-all duration-300">
-            <h2 id="deleteModalTitle" class="mb-8 text-2xl font-semibold text-black">
+            <h2 id="deleteModalTitle" class="mb-8 text-lg font-semibold text-black">
                 Are you sure want to delete this item?
             </h2>
 
-            <div class="flex justify-center gap-6">
-                <button onclick="closeDeleteModal()" class="font-semibold px-6 py-3 bg-red-200 rounded-lg">
+            <div class="flex justify-center gap-4">
+                {{-- Tombol Cancel --}}
+                <button onclick="closeDeleteModal()" class="flex-1 font-semibold px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition">
                     Cancel
                 </button>
 
-                <button id="confirmDeleteBtn" class="font-semibold px-6 py-3 bg-green-200 rounded-lg">
+                {{-- Tombol Confirm (Pakai Merah biar sesuai standar Delete) --}}
+                <button id="confirmDeleteBtn" class="flex-1 font-semibold px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition shadow-lg shadow-red-200">
                     Delete
                 </button>
             </div>
