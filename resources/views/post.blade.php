@@ -21,48 +21,6 @@
 @endsection
 
 @section('content')
-@php
-    $dummyPosts = [
-        [
-            'title' => 'ACMI Peduli Banjir Bandung',
-            'status' => 'Published',
-            'views' => 15,
-            'date' => '2026/4/7 at 12.23 am',
-        ],
-        [
-            'title' => 'Grebek Kantor Temen: Budi Wahyono',
-            'status' => 'Published',
-            'views' => 15,
-            'date' => '2026/4/7 at 12.23 am',
-        ],
-        [
-            'title' => 'Edukasi Bisnis',
-            'status' => 'Published',
-            'views' => 15,
-            'date' => '2026/4/7 at 12.23 am',
-        ],
-        [
-            'title' => 'ACMI Talk: "Menyusun Strategi Bisni 2025"',
-            'status' => 'Published',
-            'views' => 15,
-            'date' => '2026/4/7 at 12.23 am',
-        ],
-        [
-            'title' => 'Super Networking',
-            'status' => 'Published',
-            'views' => 15,
-            'date' => '2026/4/7 at 12.23 am',
-        ],
-        [
-            'title' => 'ACMI Peduli Banjir Bandung',
-            'status' => 'Published',
-            'views' => 15,
-            'date' => '2026/4/7 at 12.23 am',
-        ],
-    ];
-
-    $posts = $posts ?? collect($dummyPosts);
-@endphp
 
 <div class="space-y-5">
 
@@ -122,26 +80,17 @@
 
         {{-- Table Header --}}
         <div class="grid grid-cols-12 items-center gap-3 border-b border-acmi-blueprimer px-4 py-3 text-xs font-medium text-gray-600">
-            <div class="col-span-7 flex items-center gap-3 md:col-span-8">
-                <input
-                    type="checkbox"
-                    class="h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer"
-                >
-                <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">
-                    Title
-                </span>
+            <div class="col-span-8 flex items-center gap-3">
+                <input type="checkbox" class="h-4 w-4 rounded border-gray-300">
+                <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Title</span>
             </div>
-
+        
             <div class="col-span-2 text-center">
-                <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">
-                    Stats
-                </span>
+                <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Stats</span>
             </div>
-
-            <div class="col-span-3 text-left">
-                <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">
-                    Date
-                </span>
+        
+            <div class="col-span-2 text-left">
+                <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Date</span>
             </div>
         </div>
 
@@ -149,39 +98,33 @@
         <div class="divide-y divide-acmi-blueprimer/70">
             @forelse($posts as $post)
                 <div class="grid grid-cols-12 items-center gap-3 px-4 py-4 transition hover:bg-gray-50">
-                    <div class="col-span-7 flex items-start gap-3 md:col-span-8">
-                        <input
-                            type="checkbox"
-                            class="mt-1 h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer"
-                        >
-
-                        <p class="text-sm font-medium leading-6 text-gray-900">
-                            {{ is_array($post) ? $post['title'] : $post->title }}
+        
+                    {{-- Title --}}
+                    <div class="col-span-8 flex items-center gap-3">
+                        <input type="checkbox" class="h-4 w-4 rounded border-gray-300">
+                        <p class="text-sm font-medium text-gray-900">
+                            <a href="{{ route('post.edit', $post) }}" class="hover:text-acmi-blueprimer transition">
+                                {{ $post->title }}
+                            </a>
                         </p>
                     </div>
-
+        
+                    {{-- Stats --}}
                     <div class="col-span-2 flex items-center justify-center gap-1 text-sm text-gray-700">
-                        <img
-                            src="{{ asset('assets/icons/eye.svg') }}"
-                            alt="Views"
-                            class="h-4 w-4 object-contain"
-                        >
-                        <span>{{ is_array($post) ? $post['views'] : ($post->views ?? 0) }}</span>
+                        <i class="fa-solid fa-eye"></i>
+                        <span>{{ $post->views ?? 0 }}</span>
                     </div>
-
-                    <div class="col-span-3 text-xs leading-5 text-gray-600">
-                        <p class="font-medium text-gray-700">
-                            {{ is_array($post) ? $post['status'] : ucfirst($post->status ?? 'Published') }}
-                        </p>
-                        <p>
-                            {{ is_array($post) ? $post['date'] : optional($post->created_at)->format('Y/m/d \a\t h.i a') }}
-                        </p>
+        
+                    {{-- Date --}}
+                    <div class="col-span-2 text-xs text-gray-600">
+                        {{ optional($post->created_at)->format('Y/m/d \a\t h.i a') }}
                     </div>
+        
                 </div>
             @empty
                 <div class="flex min-h-[340px] items-center justify-center px-6 py-10">
                     <p class="text-sm italic text-gray-400">
-                        No post content has been created yet. Please click “New Post”.
+                        No post content has been created yet. Please click "New Post".
                     </p>
                 </div>
             @endforelse
