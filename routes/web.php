@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/categories', [MediaCategoryController::class, 'store'])->name('media.categories.store');
     Route::put('/categories/{id}', [MediaCategoryController::class, 'update'])->name('media.categories.update');
     Route::delete('/categories/{id}', [MediaCategoryController::class, 'destroy'])->name('media.categories.destroy');
+    Route::post('/categories/{id}/delete', [MediaCategoryController::class, 'destroy'])->name('media.categories.delete');
 
     // Media Item
     Route::prefix('media')->group(function () {
@@ -76,7 +77,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
         Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
         Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
+
 });
+
 
     // --- LOGOUT ---
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

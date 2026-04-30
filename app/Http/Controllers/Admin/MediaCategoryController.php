@@ -6,39 +6,44 @@ use App\Http\Controllers\Controller;
 use App\Models\MediaCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-class MediaCategoryController extends Controller
 
+class MediaCategoryController extends Controller
 {
-    // GET list category
     public function index()
     {
-        $categories = MediaCategory::latest()->get();
+        $categories = MediaCategory::orderBy('is_default', 'desc')
+            ->orderBy('id', 'asc')
+            ->get();
+
         return view('media.categories', compact('categories'));
     }
 
-    // STORE (Add Category)
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:media_categories,name',
         ]);
 
         MediaCategory::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
+            'is_default' => 0,
         ]);
 
         return back()->with('success', 'Category added successfully');
     }
 
-    // UPDATE (Edit Category)
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
         $category = MediaCategory::findOrFail($id);
+
+        if ($category->is_default) {
+            return back()->with('success', 'Default category cannot be edited');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255|unique:media_categories,name,' . $id,
+        ]);
 
         $category->update([
             'name' => $request->name,
@@ -48,12 +53,10 @@ class MediaCategoryController extends Controller
         return back()->with('success', 'Category updated successfully');
     }
 
-    // DELETE
-    public function destroy($id)
-    {
-        $category = MediaCategory::findOrFail($id);
-        $category->delete();
+    public function destroy($id) {
+    $category = MediaCategory::findOrFail($id);
+    $category->delete();
 
-        return back()->with('success', 'Category deleted successfully');
-    }
+    return back()->with('success', 'Category deleted successfully');
+}
 }
