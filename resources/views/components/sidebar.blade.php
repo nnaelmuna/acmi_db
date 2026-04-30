@@ -32,10 +32,10 @@
               <span class="text-[15px] font-medium text-white">Product</span>
           </a>
 
-          <a href="{{ route('media') }}" class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100">
+          {{-- <a href="{{ route('media') }}" class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100">
               <i class="fas fa-folder-open"></i>
               <span class="text-[15px] font-medium text-white">Media</span>
-          </a>
+          </a> --}}
 
           <div class="pt-2">
               <button onclick="this.nextElementSibling.classList.toggle('hidden'); this.nextElementSibling.classList.toggle('flex'); this.querySelector('svg').classList.toggle('rotate-180');" 
