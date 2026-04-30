@@ -63,6 +63,21 @@ Route::middleware('auth')->group(function () {
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
     });
 
+    // --- Media ---
+    // Media Category
+    Route::get('/categories', [MediaCategoryController::class, 'index'])->name('media.categories');
+    Route::post('/categories', [MediaCategoryController::class, 'store'])->name('media.categories.store');
+    Route::put('/categories/{id}', [MediaCategoryController::class, 'update'])->name('media.categories.update');
+    Route::delete('/categories/{id}', [MediaCategoryController::class, 'destroy'])->name('media.categories.destroy');
+
+    // Media Item
+    Route::prefix('media')->group(function () {
+        Route::get('/', [MediaItemController::class, 'index'])->name('media');
+        Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
+        Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
+        Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
+});
+
     // --- LOGOUT ---
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
