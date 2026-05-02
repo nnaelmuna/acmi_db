@@ -65,7 +65,7 @@
             </div>
     
             <!-- Tombol Tambah Kategori -->
-            <button type="button" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 shadow-sm transition hover:text-[#0014A8]">
+            <button type="button" class="flex h-10 w-10 ml-3 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 shadow-sm transition hover:text-[#0014A8]">
                 <i class="fa-solid fa-plus text-sm"></i>
             </button>
         </div>

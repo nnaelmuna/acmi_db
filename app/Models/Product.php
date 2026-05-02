@@ -13,7 +13,7 @@ class Product extends Model
 
     // INI PENTING: Biar array bisa masuk ke database
     protected $casts = [
-        'secondary_images' => 'array',
+        'images' => 'array',
         'features' => 'array',
     ];
 }

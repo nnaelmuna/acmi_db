@@ -63,31 +63,47 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+{
+    $product = Product::findOrFail($id);
 
-        $request->validate([
-            'title' => 'required',
-            'company_name' => 'required',
-            'category' => 'required',
-            'ceo_name' => 'required',
-            'description' => 'required',
-            'product_images' => 'nullable|array',
-        ]);
+    // 1. Ambil list gambar yang TIDAK dihapus (dari input hidden di JS)
+    // Kalau user nggak hapus apa-apa, isinya array gambar lama lengkap.
+    $finalImages = $request->input('existing_images', []);
 
-        $data = $request->except(['product_images']);
-
-        if ($request->hasFile('product_images')) {
-            if ($product->image) { 
-                Storage::disk('public')->delete($product->image); 
-            }
-            $files = $request->file('product_images');
-            $data['image'] = $files[0]->store('products', 'public');
+    // 2. Hapus file fisik HANYA untuk gambar yang diklik "X"
+    $oldImagesInDb = $product->images ?? [];
+    foreach ($oldImagesInDb as $oldPath) {
+        if (!in_array($oldPath, $finalImages)) {
+            Storage::disk('public')->delete($oldPath);
         }
-
-        $product->update($data);
-        return redirect()->route('product.index')->with('success', 'Produk berhasil diupdate!');
     }
+
+    // 3. Tambah gambar baru kalau ada upload tambahan
+    if ($request->hasFile('product_images')) {
+        foreach ($request->file('product_images') as $file) {
+            // Tetep jaga maksimal 3 gambar
+            if (count($finalImages) < 3) {
+                $finalImages[] = $file->store('products', 'public');
+            }
+        }
+    }
+
+    // 4. Update database dengan array final (gabungan lama & baru)
+    $product->update([
+        'category' => $request->category,
+        'title' => $request->title,
+        'company_name' => $request->company_name,
+        'ceo_name' => $request->ceo_name,
+        'description' => $request->description,
+        'images' => $finalImages, // Ini kuncinya biar gak ngulang semua
+        'features' => $request->features,
+        'website' => $request->website,
+        'email' => $request->email,
+        'phone' => $request->phone,
+    ]);
+
+    return redirect()->route('product.index')->with('success', 'Produk berhasil diupdate!');
+}
 
     public function destroy($id)
     {
