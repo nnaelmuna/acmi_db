@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\MediaCategoryController;
 use App\Http\Controllers\Admin\MediaItemController;
 use App\Http\Controllers\CategoryController;
 
+// Redirect ke login
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -30,9 +31,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/product', 'index')->name('product.index');
         Route::get('/product/create', 'create')->name('product.create');
         Route::post('/product', 'store')->name('product.store');
-        Route::get('/product/{id}/edit', 'edit')->name('product.edit'); // Tampilan edit
-        Route::put('/product/{id}', 'update')->name('product.update'); // Proses simpan edit
-        Route::delete('/product/{id}', 'destroy')->name('product.destroy'); // Proses hapus
+        Route::get('/product/{id}/edit', 'edit')->name('product.edit');
+        Route::put('/product/{id}', 'update')->name('product.update');
+        Route::delete('/product/{id}', 'destroy')->name('product.destroy');
     });
 
     // --- DASHBOARD ---
@@ -60,12 +61,12 @@ Route::middleware('auth')->group(function () {
     });
 
     // --- Media ---
+
     // Media Category
     Route::get('/categories', [MediaCategoryController::class, 'index'])->name('media.categories');
     Route::post('/categories', [MediaCategoryController::class, 'store'])->name('media.categories.store');
     Route::put('/categories/{id}', [MediaCategoryController::class, 'update'])->name('media.categories.update');
     Route::delete('/categories/{id}', [MediaCategoryController::class, 'destroy'])->name('media.categories.destroy');
-    Route::post('/categories/{id}/delete', [MediaCategoryController::class, 'destroy'])->name('media.categories.delete');
 
     // Media Item
     Route::prefix('media')->group(function () {
@@ -73,9 +74,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
         Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
         Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
-
     });
-
 
     // --- LOGOUT ---
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
