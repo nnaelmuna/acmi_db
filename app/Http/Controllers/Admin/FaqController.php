@@ -8,11 +8,18 @@ use Illuminate\Http\Request;
 
 class FaqController extends Controller
 {
-    public function index()
-    {
-        $faqs = Faq::latest()->get();
-        return view('faq', compact('faqs'));
-    }
+    public function index(Request $request)
+{
+    $allFaqs = Faq::all();
+
+    $status = $request->get('status', 'published');
+
+    $faqs = Faq::where('status', $status)
+        ->latest()
+        ->get();
+
+    return view('faq', compact('faqs', 'allFaqs'));
+}
 
     public function store(Request $request)
     {

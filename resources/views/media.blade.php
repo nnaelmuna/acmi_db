@@ -62,19 +62,19 @@
     </div>
 
     {{-- Button kanan --}}
-    <div class="flex shrink-0 items-center justify-end gap-3">
-        <button onclick="openCategoryModal()"
-            class="inline-flex h-[54px] min-w-[150px] items-center justify-center gap-3 rounded-2xl bg-orange-500 px-5 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
-            <span>Add Category</span>
-            <i class="fa-solid fa-plus"></i>
-        </button>
+<div class="flex shrink-0 items-center justify-end gap-3">
+    <button onclick="openCategoryModal()"
+        class="inline-flex items-center gap-3 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
+        <span>Add Category</span>
+        <i class="fa-solid fa-plus"></i>
+    </button>
 
-        <button onclick="openMediaModal()"
-            class="inline-flex h-[54px] min-w-[150px] items-center justify-center gap-3 rounded-2xl bg-[#0014A8] px-5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
-            <span>Add Media</span>
-            <i class="fa-solid fa-plus"></i>
-        </button>
-    </div>
+    <button onclick="openMediaModal()"
+        class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+        <span>Add Media</span>
+        <i class="fa-solid fa-plus"></i>
+    </button>
+</div>
 </div>
 
     {{-- Media Grid --}}
@@ -153,10 +153,10 @@
 
     {{-- Add Category Modal --}}
     <div id="categoryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-        <div class="w-full max-w-md rounded-2xl bg-acmi-darkblue p-6 shadow-2xl">
+        <div class="rounded-2xl bg-acmi-darkblue px-5 py-3 shadow-2xl">
             <div class="mb-5 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-white">Add Category</h2>
-                <button type="button" onclick="closeCategoryModal()" class="text-white/80 hover:text-white">
+                <button type="button" onclick="closeCategoryModal()" class="px-5 py-3 text-white/80 hover:text-white">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -185,7 +185,7 @@
 
     {{-- Add Media Modal --}}
     <div id="mediaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-        <div class="w-full max-w-lg rounded-2xl bg-acmi-darkblue p-6 shadow-2xl">
+        <div class="rounded-2xl bg-acmi-darkblue px-5 py-3 shadow-2xl">
             <div class="mb-5 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-white">Add Media</h2>
                 <button type="button" onclick="closeMediaModal()" class="text-white/80 hover:text-white">
