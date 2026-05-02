@@ -20,9 +20,18 @@ class CategoryController extends Controller
         return redirect()->back()->with('success', 'Category added!');
     }
     
-    public function destroy(Category $category)
+    public function destroy($id)
     {
+        // Cari kategorinya
+        $category = Category::findOrFail($id); // Pastikan Model Category sudah di-import di atas
+        
+        // Hapus dari database
         $category->delete();
-        return response()->json(['success' => true]);
+    
+        // Kembalikan jawaban sukses ke JavaScript
+        return response()->json([
+            'success' => true,
+            'message' => 'Category deleted successfully'
+        ]);
     }
 }

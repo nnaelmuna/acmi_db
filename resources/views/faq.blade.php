@@ -105,7 +105,7 @@
 
 {{-- Add FAQ Modal --}}
 <div id="addFaqModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
-    <div id="addFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
+    <div id="addFaqBox" class="w-full max-w-xl scale-95 rounded-lg bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
 
         <div class="flex items-center justify-between px-6 pt-6">
             <h2 class="text-lg font-semibold text-white">Add FAQ</h2>

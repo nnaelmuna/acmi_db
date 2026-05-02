@@ -46,7 +46,7 @@
                     </a>
 
                     {{-- Delete category --}}
-                    <form action="{{ route('media.categories.delete', $cat->id) }}" method="POST"
+                    <form action="{{ route('media.categories.destroy', $cat->id) }}" method="POST"
     onsubmit="return confirm('Delete this category?')"
     class="absolute -right-1 -top-1 hidden group-hover:block">
     @csrf
@@ -64,13 +64,13 @@
     {{-- Button kanan --}}
 <div class="flex shrink-0 items-center justify-end gap-3">
     <button onclick="openCategoryModal()"
-        class="inline-flex items-center gap-3 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
+        class="inline-flex items-center gap-3 rounded-lg bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
         <span>Add Category</span>
         <i class="fa-solid fa-plus"></i>
     </button>
 
     <button onclick="openMediaModal()"
-        class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+        class="inline-flex items-center gap-3 rounded-lg bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
         <span>Add Media</span>
         <i class="fa-solid fa-plus"></i>
     </button>

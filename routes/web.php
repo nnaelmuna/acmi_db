@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\MediaCategoryController;
 use App\Http\Controllers\Admin\MediaItemController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 
 // Redirect ke login
@@ -25,16 +26,6 @@ Route::middleware('guest')->group(function () {
 
 // Kalau user SUDAH login
 Route::middleware('auth')->group(function () {
-
-    // --- PRODUCT ROUTES ---
-    Route::controller(ProductController::class)->group(function () {
-        Route::get('/product', 'index')->name('product.index');
-        Route::get('/product/create', 'create')->name('product.create');
-        Route::post('/product', 'store')->name('product.store');
-        Route::get('/product/{id}/edit', 'edit')->name('product.edit');
-        Route::put('/product/{id}', 'update')->name('product.update');
-        Route::delete('/product/{id}', 'destroy')->name('product.destroy');
-    });
 
     // --- DASHBOARD ---
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -60,7 +51,18 @@ Route::middleware('auth')->group(function () {
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
     });
 
-    // --- Media ---
+    // --- PRODUCT ROUTES ---
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/product', 'index')->name('product.index');
+        Route::get('/product/create', 'create')->name('product.create');
+        Route::post('/product', 'store')->name('product.store');
+        Route::get('/product/{id}/edit', 'edit')->name('product.edit');
+        Route::put('/product/{id}', 'update')->name('product.update');
+        Route::delete('/product/{id}', 'destroy')->name('product.destroy');
+    });
+
+    Route::post('/product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');
+    Route::delete('/product-categories/{id}', [ProductCategoryController::class, 'destroy'])->name('product.categories.destroy');
 
     // Media Category
     Route::get('/categories', [MediaCategoryController::class, 'index'])->name('media.categories');

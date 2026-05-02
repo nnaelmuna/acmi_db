@@ -235,55 +235,55 @@
        // --- IMAGE LOGIC (Versi Nabung Gambar) ---
     let uploadedFiles = []; // Ini tabungan gambar kita
 
-function handleImageUpload(input) {
-    if (input.files && input.files.length > 0) {
-        // Ambil file yang baru dipilih
-        const newFiles = Array.from(input.files);
-        
-        // Masukin ke tabungan, tapi maksimal tetep cuma 3
-        newFiles.forEach(file => {
-            if (uploadedFiles.length < 3) {
-                uploadedFiles.push(file);
-            }
-        });
-
-        // Penting: Reset input biar kalau pilih file yang sama bisa kepicu lagi onchange-nya
-        input.value = ''; 
-        
-        renderPreviews();
-    }
-}
-
-function renderPreviews() {
-    const defaultLabels = ['Image 1', 'Image 2', 'Image 3'];
+    function handleImageUpload(input) {
+        if (input.files && input.files.length > 0) {
+            // Ambil file yang baru dipilih
+            const newFiles = Array.from(input.files);
+            
+            // Masukin ke tabungan, tapi maksimal tetep cuma 3
+            newFiles.forEach(file => {
+                if (uploadedFiles.length < 3) {
+                    uploadedFiles.push(file);
+                }
+            });
     
-    for (let i = 1; i <= 3; i++) {
-        const slot = document.getElementById(`preview-slot-${i}`);
-        const file = uploadedFiles[i - 1]; 
-        
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                // Kasih tombol hapus kecil biar kalau salah upload bisa dibuang
-                slot.innerHTML = `
-                    <img src="${e.target.result}" class="w-full h-full object-cover">
-                    <button type="button" onclick="removeImage(${i-1})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center shadow-lg">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i-1]}</span>`;
+            // Penting: Reset input biar kalau pilih file yang sama bisa kepicu lagi onchange-nya
+            input.value = ''; 
+            
+            renderPreviews();
         }
     }
-}
-
-// Fungsi tambahan buat hapus kalau salah pilih
-function removeImage(index) {
-    uploadedFiles.splice(index, 1);
-    renderPreviews();
-}
+    
+    function renderPreviews() {
+        const defaultLabels = ['Image 1', 'Image 2', 'Image 3'];
+        
+        for (let i = 1; i <= 3; i++) {
+            const slot = document.getElementById(`preview-slot-${i}`);
+            const file = uploadedFiles[i - 1]; 
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    // Kasih tombol hapus kecil biar kalau salah upload bisa dibuang
+                    slot.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                        <button type="button" onclick="removeImage(${i-1})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center shadow-lg">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i-1]}</span>`;
+            }
+        }
+    }
+    
+    // Fungsi tambahan buat hapus kalau salah pilih
+    function removeImage(index) {
+        uploadedFiles.splice(index, 1);
+        renderPreviews();
+    }
     
         // --- 3. SUBMIT LOGIC (Paksa file masuk ke Form) ---
         document.getElementById('productForm').onsubmit = function(e) {
