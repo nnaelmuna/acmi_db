@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->longText('content')->nullable();
             $table->string('image')->nullable();
-            $table->string('category');
             $table->enum('status', ['published', 'draft', 'archived'])->default('draft');
             $table->timestamps();
         });
