@@ -9,53 +9,53 @@ use Illuminate\Http\Request;
 class FaqController extends Controller
 {
     public function index(Request $request)
-{
-    $allFaqs = Faq::all();
+    {
+        $allFaqs = Faq::all();
 
-    $status = $request->get('status', 'published');
+        $status = $request->get('status', 'published');
 
-    $faqs = Faq::where('status', $status)
-        ->latest()
-        ->get();
+        $faqs = Faq::where('status', $status)
+            ->latest()
+            ->get();
 
-    return view('faq', compact('faqs', 'allFaqs'));
-}
+        return view('faq', compact('faqs', 'allFaqs'));
+    }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'question' => ['required', 'string', 'max:255'],
-            'answer' => ['required', 'string'],
-            'status' => ['nullable', 'in:draft,published'],
-        ]);
+{
+    $validated = $request->validate([
+        'question' => ['required', 'string', 'max:255'],
+        'answer' => ['required', 'string'],
+        'status' => ['nullable', 'in:draft,published,archived'],
+    ]);
 
-        Faq::create([
-            'question' => $validated['question'],
-            'answer' => $validated['answer'],
-            'status' => $validated['status'] ?? 'published',
-        ]);
+    Faq::create([
+        'question' => $validated['question'],
+        'answer' => $validated['answer'],
+        'status' => $validated['status'] ?? 'published',
+    ]);
 
-        return redirect()->route('faq')->with('success', 'FAQ created successfully.');
-    }
+    return redirect()->route('faq')->with('success', 'FAQ created successfully.');
+}
 
     public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'question' => ['required', 'string', 'max:255'],
-            'answer' => ['required', 'string'],
-            'status' => ['nullable', 'in:draft,published'],
-        ]);
+{
+    $validated = $request->validate([
+        'question' => ['required', 'string', 'max:255'],
+        'answer' => ['required', 'string'],
+        'status' => ['nullable', 'in:draft,published,archived'],
+    ]);
 
-        $faq = Faq::findOrFail($id);
+    $faq = Faq::findOrFail($id);
 
-        $faq->update([
-            'question' => $validated['question'],
-            'answer' => $validated['answer'],
-            'status' => $validated['status'] ?? $faq->status,
-        ]);
+    $faq->update([
+        'question' => $validated['question'],
+        'answer' => $validated['answer'],
+        'status' => $validated['status'] ?? $faq->status,
+    ]);
 
-        return redirect()->route('faq')->with('success', 'FAQ updated successfully.');
-    }
+    return redirect()->route('faq')->with('success', 'FAQ updated successfully.');
+}
 
     public function destroy($id)
     {

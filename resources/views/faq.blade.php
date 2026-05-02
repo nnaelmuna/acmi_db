@@ -35,7 +35,7 @@
             <button
                 type="button"
                 onclick="openAddModal()"
-                class="inline-flex px-5 py-3 items-center justify-center gap-3 rounded-2xl bg-acmi-darkblue text-sm font-medium text-white shadow-sm transition hover:bg-blue-900"
+                class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900"
             >
                 <span>Add FAQ</span>
                 <i class="fa-solid fa-plus"></i>
@@ -110,8 +110,9 @@
         <div class="flex items-center justify-between px-6 pt-6">
             <h2 class="text-lg font-semibold text-white">Add FAQ</h2>
 
-            <button type="button" onclick="closeAddModal()" class="text-white/80 transition hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button type="button" onclick="closeAddModal()"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
@@ -154,6 +155,15 @@
                 <button
                     type="submit"
                     name="status"
+                    value="archived"
+                    class="rounded-md border border-white/50 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10"
+                >
+                    Archive
+                </button>
+
+                <button
+                    type="submit"
+                    name="status"
                     value="published"
                     class="rounded-md bg-white px-4 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100"
                 >
@@ -171,16 +181,15 @@
         <div class="flex items-center justify-between px-6 pt-6">
             <h2 class="text-lg font-semibold text-white">Edit FAQ</h2>
 
-            <button type="button" onclick="closeEditModal()" class="text-white/80 transition hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button type="button" onclick="closeEditModal()"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
         <form id="editFaqForm" method="POST" class="space-y-5 px-6 pb-6 pt-5">
             @csrf
             @method('PUT')
-
-            <input type="hidden" name="status" id="edit_status" value="published">
 
             <div>
                 <label for="edit_question" class="mb-2 block text-xs font-semibold text-white">Question</label>
@@ -202,6 +211,19 @@
                     required
                     class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20"
                 ></textarea>
+            </div>
+
+            <div>
+                <label for="edit_status" class="mb-2 block text-xs font-semibold text-white">Status</label>
+                <select
+                    id="edit_status"
+                    name="status"
+                    class="w-full rounded-md border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20"
+                >
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                </select>
             </div>
 
             <div class="flex justify-end gap-3 pt-2">
