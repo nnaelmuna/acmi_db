@@ -10,12 +10,25 @@ use Illuminate\Http\Request;
 class MediaItemController extends Controller
 {
     // LIST MEDIA
-    public function index()
+    public function index(Request $request)
 {
-    $media = MediaItem::with('category')->latest()->get();
-    $categories = MediaCategory::all();
+    $categories = MediaCategory::orderBy('is_default', 'desc')
+        ->orderBy('id', 'asc')
+        ->get();
 
-    return view('media', compact('media', 'categories'));
+    $allMedia = MediaItem::with('category')->get();
+
+    $query = MediaItem::with('category');
+
+    if ($request->filled('category')) {
+        $query->whereHas('category', function ($q) use ($request) {
+            $q->where('slug', $request->category);
+        });
+    }
+
+    $media = $query->latest()->get();
+
+    return view('media', compact('media', 'categories', 'allMedia'));
 }
 
     // STORE (Add Media)
