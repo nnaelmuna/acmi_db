@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             SuperAdminSeeder::class,
+            CategorySeeder::class,
+            MediaCategorySeeder::class,
             CategorySeeder::class
         ]);
     }

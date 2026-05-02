@@ -1,13 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'ACMI - FaQ Management')
-@section('page_title', 'FaQ')
-
-@section('header_right')
-    <button onclick="openAddModal()" class="bg-acmi-darkblue text-white px-6 py-2 rounded-lg text-base font-base shadow-md hover:bg-#0B1357 transition-all">
-        Add FaQ
-    </button>
-@endsection
+@section('title', 'ACMI - FAQ Management')
+@section('page_title', 'FAQ')
 
 @section('content')
 <div class="w-full space-y-4">
@@ -26,6 +20,29 @@
         </div>
     @endif
 
+    {{-- Filter Tabs + Button --}}
+    <div class="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+
+        {{-- Tabs --}}
+        <x-filters-tab :tabs="[
+            ['label' => 'Published', 'count' => $allFaqs->where('status', 'published')->count()],
+            ['label' => 'Draft',     'count' => $allFaqs->where('status', 'draft')->count()],
+            ['label' => 'Archived',  'count' => $allFaqs->where('status', 'archived')->count()],
+        ]" />
+
+        {{-- Add Button --}}
+        <div class="flex justify-end">
+            <button
+                type="button"
+                onclick="openAddModal()"
+                class="inline-flex px-5 py-3 items-center justify-center gap-3 rounded-2xl bg-acmi-darkblue text-sm font-medium text-white shadow-sm transition hover:bg-blue-900"
+            >
+                <span>Add FAQ</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
     {{-- FAQ List --}}
     @forelse($faqs as $faq)
         <div class="overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
@@ -33,24 +50,11 @@
             {{-- Question Row --}}
             <div class="flex items-center justify-between gap-4 px-5 py-4">
 
-                {{-- Question --}}
                 <p class="flex-1 text-sm font-medium leading-6 text-gray-900 md:text-[15px]">
                     {{ $faq->question }}
                 </p>
 
-                {{-- Right Actions --}}
                 <div class="flex shrink-0 items-center gap-3">
-
-                    {{-- Status Badge --}}
-                    @if(($faq->status ?? 'published') === 'draft')
-                        <span class="inline-flex h-6 min-w-[78px] items-center justify-center rounded-md bg-gray-100 px-3 text-[11px] font-medium text-gray-600">
-                            Draft
-                        </span>
-                    @else
-                        <span class="inline-flex h-6 min-w-[78px] items-center justify-center rounded-md bg-green-100 px-3 text-[11px] font-medium text-green-700">
-                            Published
-                        </span>
-                    @endif
 
                     {{-- Edit --}}
                     <button
@@ -68,7 +72,7 @@
                     {{-- Delete --}}
                     <button
                         type="button"
-                        onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FaQ?')"
+                        onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FAQ?')"
                         class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-yellowaccent text-white transition hover:opacity-90"
                     >
                         <i class="fa-solid fa-trash text-sm"></i>
@@ -104,7 +108,7 @@
     <div id="addFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
 
         <div class="flex items-center justify-between px-6 pt-6">
-            <h2 class="text-lg font-semibold text-white">Add FaQ</h2>
+            <h2 class="text-lg font-semibold text-white">Add FAQ</h2>
 
             <button type="button" onclick="closeAddModal()" class="text-white/80 transition hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -142,7 +146,8 @@
                     type="submit"
                     name="status"
                     value="draft"
-                    class="rounded-md border border-white/50 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10">
+                    class="rounded-md border border-white/50 px-4 py-2 text-xs font-medium text-white transition hover:bg-white/10"
+                >
                     Save to draft
                 </button>
 
@@ -150,7 +155,8 @@
                     type="submit"
                     name="status"
                     value="published"
-                    class="rounded-md bg-white px-4 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100">
+                    class="rounded-md bg-white px-4 py-2 text-xs font-medium text-acmi-blueprimer transition hover:bg-gray-100"
+                >
                     Publish Now
                 </button>
             </div>
@@ -163,7 +169,7 @@
     <div id="editFaqBox" class="w-full max-w-xl scale-95 rounded-2xl bg-acmi-darkblue opacity-0 shadow-2xl transition-all duration-300">
 
         <div class="flex items-center justify-between px-6 pt-6">
-            <h2 class="text-lg font-semibold text-white">Edit FaQ</h2>
+            <h2 class="text-lg font-semibold text-white">Edit FAQ</h2>
 
             <button type="button" onclick="closeEditModal()" class="text-white/80 transition hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -221,6 +227,22 @@
 
 @push('scripts')
 <script>
+    function switchTab(button) {
+        const label = button.querySelector('span').innerText.toLowerCase();
+
+        if (label === 'published') {
+            window.location.href = '?status=published';
+        }
+
+        if (label === 'draft') {
+            window.location.href = '?status=draft';
+        }
+
+        if (label === 'archived') {
+            window.location.href = '?status=archived';
+        }
+    }
+
     function toggleFaq(element) {
         const wrapper = element.closest('.overflow-hidden');
         const answer = wrapper.querySelector('.faq-answer');
