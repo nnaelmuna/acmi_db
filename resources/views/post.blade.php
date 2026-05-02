@@ -28,40 +28,11 @@
     <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
         {{-- Tabs --}}
-        <div class="inline-flex w-fit flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5">
-            <button
-                type="button"
-                onclick="switchTab(this)"
-                class="tab-item inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition"
-            >
-                <span>Published</span>
-                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                    0
-                </span>
-            </button>
-
-            <button
-                type="button"
-                onclick="switchTab(this)"
-                class="tab-item inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-gray-500 transition hover:text-black"
-            >
-                <span>Draft</span>
-                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                    0
-                </span>
-            </button>
-
-            <button
-                type="button"
-                onclick="switchTab(this)"
-                class="tab-item inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-gray-500 transition hover:text-black"
-            >
-                <span>Archived</span>
-                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                    0
-                </span>
-            </button>
-        </div>
+        <x-filters-tab :tabs="[
+            ['label' => 'Published', 'count' => $posts->where('status', 'published')->count()],
+            ['label' => 'Draft',     'count' => $posts->where('status', 'draft')->count()],
+            ['label' => 'Archived',  'count' => $posts->where('status', 'archived')->count()],
+        ]" />
 
         {{-- New Post Button --}}
         <div class="flex justify-start xl:justify-end">
