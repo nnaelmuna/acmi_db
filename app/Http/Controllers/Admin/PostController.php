@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request; 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -17,11 +18,18 @@ class PostController extends Controller
     }
 
     // Menampilkan halaman Post beserta datanya
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::latest()->get();
+        $status = $request->get('status', 'published');
+        $posts = Post::where('status', $status)->latest()->get();
+        $counts = [
+            'published' => Post::where('status', 'published')->count(),
+            'draft'     => Post::where('status', 'draft')->count(),
+            'archived'  => Post::where('status', 'archived')->count(),
+        ];
+        
 
-        return view('post', compact('posts'));
+        return view('post', compact('posts', 'counts'));
     }
 
     // Menampilkan form buat post baru

@@ -21,8 +21,8 @@
         >
             <span>{{ $tab['label'] }}</span>
             <span class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                {{ $tab['count'] ?? 0 }}
+                {{ $tab['count'] }}
             </span>
-        </button>
+        </a>
     @endforeach
 </div>

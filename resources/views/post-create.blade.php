@@ -6,7 +6,7 @@
 @section('content')
 
 
-<form action="{{ route('post.store') }}" enctype="multipart/form-data" method="POST" class="grid grid-cols-1 gap-8 pb-20 xl:grid-cols-12">
+<form id="postForm" action="{{ route('post.store') }}" enctype="multipart/form-data" method="POST" class="grid grid-cols-1 gap-8 pb-20 xl:grid-cols-12">
     @csrf
 
     {{-- Left Section --}}
@@ -36,15 +36,6 @@
 
         {{-- Hidden status --}}
         <input type="hidden" name="status" id="postStatus" value="published">
-        
-        {{-- Tombol Save to Draft
-        <button
-            type="button"
-            onclick="saveDraft()"
-            class="..."
-        >
-            Save to Draft
-        </button> --}}
 
         {{-- Content Editor --}}
         <div>
@@ -328,11 +319,16 @@
     }
 
     function saveDraft() {
+        console.log(document.getElementById('postStatus'));
         document.getElementById('postStatus').value = 'draft';
-        document.querySelector('form').submit();
+        tinymce.triggerSave();
+        setTimeout(function() {
+            document.getElementById('postForm').submit();
+        }, 100);
+        
     }
 
-    document.querySelector('form').addEventListener('submit', function() {
+    document.getElementById('postForm').addEventListener('submit', function() {
         tinymce.triggerSave();
     });
 </script>

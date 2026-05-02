@@ -29,10 +29,10 @@
 
         {{-- Tabs --}}
         <x-filters-tab :tabs="[
-            ['label' => 'Published', 'count' => $posts->where('status', 'published')->count()],
-            ['label' => 'Draft',     'count' => $posts->where('status', 'draft')->count()],
-            ['label' => 'Archived',  'count' => $posts->where('status', 'archived')->count()],
-        ]" />
+        ['label' => 'Published', 'count' => $counts['published']],
+        ['label' => 'Draft',     'count' => $counts['draft']],
+        ['label' => 'Archived',  'count' => $counts['archived']],
+    ]" />
 
         {{-- New Post Button --}}
         <div class="flex justify-start xl:justify-end">
