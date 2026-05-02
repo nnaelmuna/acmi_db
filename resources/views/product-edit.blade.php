@@ -6,7 +6,6 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto pb-10">
-    {{-- Form mengarah ke route update dengan Method PUT --}}
     <form action="{{ route('product.update', $product->id) }}" 
           method="POST" enctype="multipart/form-data" id="productForm">
         @csrf
@@ -14,7 +13,7 @@
         
         <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             
-            {{-- Top Row: Basic Info --}}
+            {{-- Row 1: Basic Info --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div>
                    <label class="block text-sm font-bold text-gray-800 mb-2">Kategori Produk</label>
@@ -37,29 +36,28 @@
                 </div>
             </div>
 
-            {{-- Second Row: Images & CEO --}}
+            {{-- Row 2: Images & CEO --}}
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 relative">
                 <input type="file" id="mainImageInput" name="product_images[]" class="hidden" accept="image/*" multiple onchange="handleImageUpload(this)">
 
                 <div class="md:col-span-8">
+                    <label class="block text-sm font-bold text-gray-800 mb-4">Update Gambar Produk (Max 3)</label>
                     <div class="flex flex-wrap gap-4">
                         <div onclick="document.getElementById('mainImageInput').click()" 
                              class="w-32 h-40 bg-white rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-50 hover:border-[#0014A8] transition group shrink-0">
                             <i class="fas fa-upload text-2xl mb-2 group-hover:text-[#0014A8]"></i>
-                            <span class="text-[10px] font-bold uppercase group-hover:text-[#0014A8]">Update Image</span>
+                            <span class="text-[10px] font-bold uppercase group-hover:text-[#0014A8]">Upload Image</span>
                         </div>
-
-                        <div id="preview-slot-1" class="w-32 h-40 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-200 relative group">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
-                            @else
-                                <span class="text-[14px] font-base text-gray-900 text-center px-2">Primary Image</span>
-                            @endif
-                        </div>
-                        <div id="preview-slot-2" class="w-32 h-40 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-200 relative"></div>
-                        <div id="preview-slot-3" class="w-32 h-40 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-200 relative opacity-60"></div>
+                
+                        {{-- Slot preview akan diisi otomatis oleh JavaScript --}}
+                        @for ($i = 1; $i <= 3; $i++)
+                            <div id="preview-slot-{{ $i }}" class="w-32 h-40 bg-gray-100 rounded-2xl flex items-center justify-center overflow-hidden border border-gray-200 relative shadow-sm">
+                                <span class="text-[12px] font-medium text-gray-400">Image {{ $i }}</span>
+                            </div>
+                        @endfor
                     </div>
-                    <p class="text-[10px] text-gray-500 mt-2">*Kosongkan jika tidak ingin mengubah gambar</p>
+                    {{-- Container rahasia buat nampung input hidden existing_images --}}
+                    <div id="existing-images-container"></div>
                 </div>
 
                 <div class="md:col-span-4">
@@ -68,62 +66,59 @@
                 </div>
             </div>
 
-            {{-- Description Section --}}
+            {{-- Row 3: Description --}}
             <div class="mb-8">
                 <label class="block text-sm font-bold text-gray-800 mb-2">Deskripsi Produk</label>
                 <textarea name="description" rows="4" class="w-full rounded-sm border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-200' }} p-4 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] outline-none text-sm leading-relaxed">{{ old('description', $product->description) }}</textarea>
             </div>
 
-          {{-- Bottom Section: Features & Contact --}}
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                
-            {{-- Key Features --}}
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold text-gray-800">Key Features</h3>
-                <div id="feature-container" class="space-y-3">
-                    @if($product->features)
-                        @foreach($product->features as $feature)
-                            <div class="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-                                <i class="fas fa-check text-[#0014A8] text-xs"></i>
-                                <span class="text-sm text-gray-700">{{ $feature }}</span>
-                                <input type="hidden" name="features[]" value="{{ $feature }}">
-                                <button type="button" onclick="this.parentElement.remove()" class="ml-auto text-gray-300 hover:text-red-500">
-                                    <i class="fas fa-times text-xs"></i>
-                                </button>
-                            </div>
-                        @endforeach
-                    @endif
+            {{-- Row 4: Features & Contact --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold text-gray-800">Key Features</h3>
+                    <div id="feature-container" class="space-y-3">
+                        @if($product->features)
+                            @foreach($product->features as $feature)
+                                <div class="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                                    <i class="fas fa-check text-[#0014A8] text-xs"></i>
+                                    <span class="text-sm text-gray-700">{{ $feature }}</span>
+                                    <input type="hidden" name="features[]" value="{{ $feature }}">
+                                    <button type="button" onclick="this.parentElement.remove()" class="ml-auto text-gray-300 hover:text-red-500">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </div>
+                            @endforeach
+                        @endif
+                    </div>
+                    
+                    <div class="flex items-center gap-3 mt-4">
+                        <button type="button" onclick="addFeatureToList()" class="w-10 h-10 shrink-0 bg-white rounded-xl border border-gray-200 flex items-center justify-center text-gray-300 hover:text-[#0014A8] hover:border-[#0014A8] transition shadow-sm">
+                            <i class="fas fa-plus text-xs"></i>
+                        </button>
+                        <input type="text" id="feature-input" placeholder="Add Key Features.." 
+                            class="flex-1 rounded-xl border border-gray-200 py-2.5 px-4 outline-none text-sm"
+                            onkeypress="if(event.key === 'Enter') { event.preventDefault(); addFeatureToList(); }">
+                    </div>
                 </div>
-                
-                <div class="flex items-center gap-3 mt-4">
-                    <button type="button" onclick="addFeatureToList()" class="w-10 h-10 shrink-0 bg-white rounded-xl border border-gray-200 flex items-center justify-center text-gray-300 hover:text-[#0014A8] hover:border-[#0014A8] transition shadow-sm">
-                        <i class="fas fa-plus text-xs"></i>
-                    </button>
-                    <input type="text" id="feature-input" placeholder="Add Key Features.." 
-                        class="flex-1 rounded-xl border border-gray-200 py-2.5 px-4 outline-none text-sm"
-                        onkeypress="if(event.key === 'Enter') { event.preventDefault(); addFeatureToList(); }">
-                </div>
-            </div>
 
-            {{-- Company Contact Details --}}
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold text-gray-800">Company Contact Details</h3>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-globe text-gray-800"></i></div>
-                        <input type="text" name="website" value="{{ old('website', $product->website) }}" class="w-full rounded-md border border-gray-300 py-2 px-3 outline-none">
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-envelope text-gray-800"></i></div>
-                        <input type="email" name="email" value="{{ old('email', $product->email) }}" class="w-full rounded-md border border-gray-300 py-2 px-3 outline-none">
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-phone text-gray-800"></i></div>
-                        <input type="text" name="phone" value="{{ old('phone', $product->phone) }}" class="w-full rounded-md border border-gray-300 py-2 px-3 outline-none">
+                <div class="space-y-4">
+                    <h3 class="text-sm font-bold text-gray-800">Company Contact Details</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-globe text-gray-800"></i></div>
+                            <input type="text" name="website" value="{{ old('website', $product->website) }}" class="w-full rounded-md border border-gray-300 py-2 px-3 outline-none">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-envelope text-gray-800"></i></div>
+                            <input type="email" name="email" value="{{ old('email', $product->email) }}" class="w-full rounded-md border border-gray-300 py-2 px-3 outline-none">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-phone text-gray-800"></i></div>
+                            <input type="text" name="phone" value="{{ old('phone', $product->phone) }}" class="w-full rounded-md border border-gray-300 py-2 px-3 outline-none">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
             <div class="mt-12 flex justify-end gap-4">
                 <a href="{{ route('product.index') }}" class="px-7 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">Cancel</a>
@@ -136,6 +131,74 @@
 </div>
 
 <script>
+    // --- 1. IMAGE LOGIC ---
+    let uploadedFiles = []; 
+    let existingFiles = @json($product->images ?? []); 
+
+    window.onload = function() {
+        renderPreviews();
+    };
+
+    function handleImageUpload(input) {
+        if (input.files && input.files.length > 0) {
+            const newFiles = Array.from(input.files);
+            newFiles.forEach(file => {
+                if ((uploadedFiles.length + existingFiles.length) < 3) {
+                    uploadedFiles.push(file);
+                }
+            });
+            input.value = ''; 
+            renderPreviews();
+        }
+    }
+
+    function renderPreviews() {
+        const defaultLabels = ['Image 1', 'Image 2', 'Image 3'];
+        const containerHidden = document.getElementById('existing-images-container');
+        containerHidden.innerHTML = ''; 
+
+        for (let i = 1; i <= 3; i++) {
+            const slot = document.getElementById(`preview-slot-${i}`);
+            const isExisting = existingFiles[i - 1];
+            const isNew = uploadedFiles[i - 1 - existingFiles.length];
+
+            if (isExisting) {
+                slot.innerHTML = `
+                    <img src="{{ asset('storage') }}/${isExisting}" class="w-full h-full object-cover">
+                    <button type="button" onclick="removeExisting(${i-1})" class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white hover:bg-red-600">
+                        <i class="fas fa-times text-[10px]"></i>
+                    </button>
+                `;
+                containerHidden.innerHTML += `<input type="hidden" name="existing_images[]" value="${isExisting}">`;
+
+            } else if (isNew) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    slot.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-full object-cover">
+                        <button type="button" onclick="removeNew(${i - 1 - existingFiles.length})" class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                            <i class="fas fa-times text-[10px]"></i>
+                        </button>
+                    `;
+                };
+                reader.readAsDataURL(isNew);
+            } else {
+                slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i-1]}</span>`;
+            }
+        }
+    }
+
+    function removeExisting(index) {
+        existingFiles.splice(index, 1);
+        renderPreviews();
+    }
+
+    function removeNew(index) {
+        uploadedFiles.splice(index, 1);
+        renderPreviews();
+    }
+
+    // --- 2. FEATURE LOGIC ---
     function addFeatureToList() {
         const input = document.getElementById('feature-input');
         const container = document.getElementById('feature-container');
@@ -143,30 +206,23 @@
             const val = input.value.trim();
             const div = document.createElement('div');
             div.className = "flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm";
-            div.innerHTML = `<i class="fas fa-check text-[#0014A8] text-xs"></i><span class="text-sm">${val}</span><input type="hidden" name="features[]" value="${val}"><button type="button" onclick="this.parentElement.remove()" class="ml-auto text-gray-300 hover:text-red-500"><i class="fas fa-times text-xs"></i></button>`;
+            div.innerHTML = `
+                <i class="fas fa-check text-[#0014A8] text-xs"></i>
+                <span class="text-sm text-gray-700">${val}</span>
+                <input type="hidden" name="features[]" value="${val}">
+                <button type="button" onclick="this.parentElement.remove()" class="ml-auto text-gray-300 hover:text-red-500">
+                    <i class="fas fa-times text-xs"></i>
+                </button>`;
             container.appendChild(div);
             input.value = "";
         }
     }
 
-    let uploadedFiles = [];
-    function handleImageUpload(input) {
-        if (input.files) {
-            uploadedFiles = Array.from(input.files).slice(0, 3);
-            renderPreviews();
-        }
-    }
-
-    function renderPreviews() {
-        for (let i = 1; i <= 3; i++) {
-            const slot = document.getElementById(`preview-slot-${i}`);
-            const file = uploadedFiles[i - 1];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => slot.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
-                reader.readAsDataURL(file);
-            }
-        }
-    }
+    // --- 3. SUBMIT LOGIC ---
+    document.getElementById('productForm').onsubmit = function(e) {
+        const dt = new DataTransfer();
+        uploadedFiles.forEach(f => dt.items.add(f));
+        document.getElementById('mainImageInput').files = dt.files;
+    };
 </script>
 @endsection
