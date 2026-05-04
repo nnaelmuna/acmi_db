@@ -16,7 +16,7 @@
             {{-- Row 1: Basic Info --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div>
-                   <label class="block text-sm font-bold text-gray-800 mb-2">Kategori Produk</label>
+                   <label class="block text-sm font-bold text-gray-800 mb-2">Product Category</label>
                    @php $currentCat = old('category', $product->category); @endphp
                    <select name="category" class="w-full rounded-md border {{ $errors->has('category') ? 'border-red-500' : 'border-gray-200' }} py-2 px-3 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] transition appearance-none bg-white bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2rem_1.2rem] bg-no-repeat bg-[right_1rem_center] pr-10">
                         @foreach(['Energi', 'Software', 'FnB', 'Manufaktur', 'Properti', 'Fintech'] as $opt)
@@ -25,12 +25,12 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-gray-800 mb-2">Judul Produk</label>
+                    <label class="block text-sm font-bold text-gray-800 mb-2">Product Title</label>
                     <input type="text" name="title" value="{{ old('title', $product->title) }}" class="w-full rounded-md border {{ $errors->has('title') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] outline-none">
                     @error('title') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-gray-800 mb-2">Nama Perusahaan</label>
+                    <label class="block text-sm font-bold text-gray-800 mb-2">Company Name</label>
                     <input type="text" name="company_name" value="{{ old('company_name', $product->company_name) }}" class="w-full rounded-md border {{ $errors->has('company_name') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] outline-none">
                     @error('company_name') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -41,7 +41,7 @@
                 <input type="file" id="mainImageInput" name="product_images[]" class="hidden" accept="image/*" multiple onchange="handleImageUpload(this)">
 
                 <div class="md:col-span-8">
-                    <label class="block text-sm font-bold text-gray-800 mb-4">Update Gambar Produk (Max 3)</label>
+                    <label class="block text-sm font-bold text-gray-800 mb-4">Update Product Image (Max 3)</label>
                     <div class="flex flex-wrap gap-4">
                         <div onclick="document.getElementById('mainImageInput').click()" 
                              class="w-32 h-40 bg-white rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-50 hover:border-[#0014A8] transition group shrink-0">
@@ -68,7 +68,7 @@
 
             {{-- Row 3: Description --}}
             <div class="mb-8">
-                <label class="block text-sm font-bold text-gray-800 mb-2">Deskripsi Produk</label>
+                <label class="block text-sm font-bold text-gray-800 mb-2">Product Description</label>
                 <textarea name="description" rows="4" class="w-full rounded-sm border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-200' }} p-4 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] outline-none text-sm leading-relaxed">{{ old('description', $product->description) }}</textarea>
             </div>
 
@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    <h3 class="text-sm font-bold text-gray-800">Company Contact Details</h3>
+                    <h3 class="text-sm font-bold text-gray-800">Contact Company Details</h3>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 flex items-center justify-center"><i class="fas fa-globe text-gray-800"></i></div>

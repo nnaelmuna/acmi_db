@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\MediaCategoryController;
 use App\Http\Controllers\Admin\MediaItemController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CRM\InboundController;
 
 // Redirect ke login
 Route::get('/', function () {
@@ -76,6 +77,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
         Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
         Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
+    });
+
+    // Inbound
+    Route::prefix('crm')->group(function () {
+        Route::get('/inbound', [InboundController::class, 'index'])->name('inbound.index');
+        Route::get('/inbound/{id}', [InboundController::class, 'show'])->name('inbound.show');
+        Route::patch('/inbound/{id}/status', [InboundController::class, 'updateStatus'])->name('inbound.status');
+        Route::post('/inbound/bulk-approve', [InboundController::class, 'bulkApprove'])->name('inbound.bulkApprove');
     });
 
     // --- LOGOUT ---
