@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [MediaItemController::class, 'index'])->name('media');
         Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
         Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
-        Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
+        Route::delete('/media/{id}', [MediaItemController::class, 'destroy'])->name('media.categories.destroy');
     });
 
     // Inbound

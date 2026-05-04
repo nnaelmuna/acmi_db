@@ -23,13 +23,17 @@ class MediaCategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:media_categories,name',
         ]);
-
-        MediaCategory::create([
+    
+        $category = MediaCategory::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'is_default' => 0,
         ]);
-
+    
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'category' => $category]);
+        }
+    
         return back()->with('success', 'Category added successfully');
     }
 
@@ -56,8 +60,9 @@ class MediaCategoryController extends Controller
     public function destroy($id)
     {
         $category = MediaCategory::findOrFail($id);
+        $name = $category->name;
         $category->delete();
 
-        return back()->with('success', 'Category deleted successfully');
+        return response()->json(['success' => true]);
     }
 }

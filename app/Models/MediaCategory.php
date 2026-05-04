@@ -9,6 +9,7 @@ class MediaCategory extends Model
     protected $fillable = [
         'name',
         'slug',
+        'is_default'
     ];
 
     public function mediaItems()

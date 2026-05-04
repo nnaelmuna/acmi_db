@@ -11,29 +11,29 @@ class MediaItemController extends Controller
 {
     // LIST MEDIA
     public function index(Request $request)
-{
-    $categories = MediaCategory::orderBy('is_default', 'desc')
-        ->orderBy('id', 'asc')
-        ->get();
+    {
+        $categories = MediaCategory::orderBy('is_default', 'desc')
+            ->orderBy('id', 'asc')
+            ->get();
 
-    $allMedia = MediaItem::with('category')->get();
+        $allMedia = MediaItem::with('category')->get();
 
-    $query = MediaItem::with('category');
+        $query = MediaItem::with('category');
 
-    if ($request->filled('category')) {
-        $query->whereHas('category', function ($q) use ($request) {
-            $q->where('slug', $request->category);
-        });
+        if ($request->filled('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        $media = $query->latest()->get();
+
+        $counts = $categories->mapWithKeys(function ($cat) use ($allMedia) {
+            return [$cat->slug => $allMedia->where('media_category_id', $cat->id)->count()];
+        })->toArray();
+
+        return view('media', compact('media', 'categories', 'allMedia', 'counts'));
     }
-
-    $media = $query->latest()->get();
-
-    $counts = $categories->mapWithKeys(function ($cat) use ($allMedia) {
-        return [$cat->slug => $allMedia->where('media_category_id', $cat->id)->count()];
-    })->toArray();
-
-    return view('media', compact('media', 'categories', 'allMedia'));
-}
 
     // STORE (Add Media)
     public function store(Request $request)
