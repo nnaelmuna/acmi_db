@@ -4,7 +4,7 @@
 @section('page_title', 'Media')
 
 @section('content')
-    @if(session('success'))
+    @if (session('success'))
         <div id="successAlert"
             class="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500 ease-in-out">
             {{ session('success') }}
@@ -17,65 +17,67 @@
     @endphp
 
     {{-- Category Tabs + Button --}}
-<div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+    <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
 
-    {{-- Category Tabs --}}
-    <div class="flex-1 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5">
-        <div class="flex flex-wrap items-center gap-2">
+        {{-- Category Tabs --}}
+        <div class="flex-1 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5">
+            <div class="flex flex-wrap items-center gap-2">
 
-            {{-- Semua --}}
-            <a href="{{ url('/media') }}"
-                class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
+                {{-- Semua --}}
+                <a href="{{ url('/media') }}"
+                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
                 {{ !request('category') ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                <span>Semua</span>
-                <span class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                    {{ $allMedia->count() }}
-                </span>
-            </a>
+                    <span>Semua</span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
+                        {{ $allMedia->count() }}
+                    </span>
+                </a>
 
-            @foreach($categories as $cat)
-                <div class="group relative inline-flex items-center">
+                @foreach ($categories as $cat)
+                    <div class="group relative inline-flex items-center">
 
-                    <a href="{{ url('/media?category=' . $cat->slug) }}"
-                        class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
+                        <a href="{{ url('/media?category=' . $cat->slug) }}"
+                            class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
                         {{ request('category') == $cat->slug ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                        <span>{{ $cat->name }}</span>
-                        <span class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                            {{ $allMedia->where('media_category_id', $cat->id)->count() }}
-                        </span>
-                    </a>
+                            <span>{{ $cat->name }}</span>
+                            <span
+                                class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
+                                {{ $allMedia->where('media_category_id', $cat->id)->count() }}
+                            </span>
+                        </a>
 
-                    {{-- Delete category --}}
-                    <form action="{{ route('media.categories.delete', $cat->id) }}" method="POST"
-    onsubmit="return confirm('Delete this category?')"
-    class="absolute -right-1 -top-1 hidden group-hover:block">
-    @csrf
+                        {{-- Delete category --}}
+                        <form action="{{ route('media.categories.delete', $cat->id) }}" method="POST"
+                            onsubmit="return confirm('Delete this category?')"
+                            class="absolute -right-1 -top-1 hidden group-hover:block">
+                            @csrf
 
-    <button type="submit"
-        class="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow hover:bg-red-600">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-</form>
-                </div>
-            @endforeach
+                            <button type="submit"
+                                class="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow hover:bg-red-600">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </form>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Button kanan --}}
+        <div class="flex shrink-0 items-center justify-end gap-3">
+            <button onclick="openCategoryModal()"
+                class="inline-flex items-center gap-3 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
+                <span>Add Category</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+
+            <button onclick="openMediaModal()"
+                class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+                <span>Add Media</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
         </div>
     </div>
-
-    {{-- Button kanan --}}
-<div class="flex shrink-0 items-center justify-end gap-3">
-    <button onclick="openCategoryModal()"
-        class="inline-flex items-center gap-3 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
-        <span>Add Category</span>
-        <i class="fa-solid fa-plus"></i>
-    </button>
-
-    <button onclick="openMediaModal()"
-        class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
-        <span>Add Media</span>
-        <i class="fa-solid fa-plus"></i>
-    </button>
-</div>
-</div>
 
     {{-- Media Grid --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-7">
@@ -83,7 +85,8 @@
             <div class="group relative bg-white rounded-xl shadow-sm p-4 border border-gray-200 transition hover:shadow-md">
 
                 {{-- Edit Delete --}}
-                <div class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
+                <div
+                    class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
                     <button type="button"
                         onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}')"
                         class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition">
@@ -104,9 +107,8 @@
 
                 {{-- Image --}}
                 <div class="relative overflow-hidden rounded-lg">
-                    @if($item->image)
-                        <img src="{{ asset('storage/' . $item->image) }}"
-                            alt="{{ $item->title }}"
+                    @if ($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
                             class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
                     @else
                         <div class="flex w-full h-48 items-center justify-center bg-gray-100 text-sm text-gray-400">
@@ -114,7 +116,8 @@
                         </div>
                     @endif
 
-                    <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
+                    <span
+                        class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
                         {{ $item->category->name ?? '-' }}
                     </span>
                 </div>
@@ -125,13 +128,14 @@
                         {{ $item->title }}
                     </h3>
 
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
+                    <div
+                        class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
                         Category: {{ $item->category->name ?? '-' }}
                     </div>
                 </div>
 
                 {{-- Preview --}}
-                @if($item->image)
+                @if ($item->image)
                     <button type="button"
                         onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', '{{ $item->title }}')"
                         class="block w-full text-center mt-4 bg-[#4155C6] text-white py-2.5 rounded-lg font-medium transition hover:bg-[#3444a1]">
@@ -145,7 +149,8 @@
                 @endif
             </div>
         @empty
-            <div class="col-span-full flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white italic text-gray-400">
+            <div
+                class="col-span-full flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white italic text-gray-400">
                 No media available yet.
             </div>
         @endforelse
@@ -207,7 +212,7 @@
                     <select name="media_category_id" required
                         class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
                         <option value="">Select Category</option>
-                        @foreach($categories as $category)
+                        @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
@@ -215,8 +220,7 @@
 
                 <div class="mb-5">
                     <label class="mb-2 block text-sm text-white">Image</label>
-                    <input type="file" name="image" required
-                        class="w-full rounded-md bg-white px-3 py-2 text-sm">
+                    <input type="file" name="image" required class="w-full rounded-md bg-white px-3 py-2 text-sm">
                 </div>
 
                 <div class="flex justify-end gap-2">
@@ -235,7 +239,8 @@
     </div>
 
     {{-- Edit Media Modal --}}
-    <div id="editMediaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+    <div id="editMediaModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
         <div class="w-full max-w-lg rounded-2xl bg-acmi-darkblue p-6 shadow-2xl">
             <div class="mb-5 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-white">Edit Media</h2>
@@ -258,7 +263,7 @@
                     <label class="mb-2 block text-sm text-white">Category</label>
                     <select id="editCategory" name="media_category_id" required
                         class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
-                        @foreach($categories as $category)
+                        @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
@@ -266,8 +271,7 @@
 
                 <div class="mb-5">
                     <label class="mb-2 block text-sm text-white">Change Image</label>
-                    <input type="file" name="image"
-                        class="w-full rounded-md bg-white px-3 py-2 text-sm">
+                    <input type="file" name="image" class="w-full rounded-md bg-white px-3 py-2 text-sm">
                 </div>
 
                 <div class="flex justify-end gap-2">
@@ -286,7 +290,8 @@
     </div>
 
     {{-- Preview Modal --}}
-    <div id="previewModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+    <div id="previewModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
         <div class="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-2xl">
             <div class="mb-4 flex items-center justify-between">
                 <h2 id="previewTitle" class="text-lg font-semibold text-gray-900">Preview</h2>
@@ -297,8 +302,7 @@
             </div>
 
             <div class="overflow-hidden rounded-xl bg-gray-100">
-                <img id="previewImage" src="" alt="Preview Image"
-                    class="max-h-[70vh] w-full object-contain">
+                <img id="previewImage" src="" alt="Preview Image" class="max-h-[70vh] w-full object-contain">
             </div>
         </div>
     </div>
