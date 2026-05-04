@@ -78,7 +78,7 @@
             </div>
 
             <button onclick="approveAllSelected()"
-                class="bg-black text-white px-3 py-2 rounded-lg text-sm font-base flex items-center gap-2 hover:bg-gray-800 transition shadow-sm">
+                class="bg-[#0014A8] hover:bg-blue-900 text-white px-3 py-2 rounded-lg text-sm font-base flex items-center gap-2 transition shadow-sm">
                 <i class="fas fa-check text-[10px]"></i> Approve all
             </button>
         </div>
@@ -86,7 +86,7 @@
         <!-- 3. Data Table -->
         <div class="bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
             <table class="w-full text-left border-collapse">
-                <thead class="bg-[#DBDBDB] border-b border-gray-400 text-[10.5px] uppercase font-bold text-black">
+                <thead class="bg-[#DAE6FF] border-b border-gray-400 text-[10.5px] font-bold text-black">
                     <tr>
                         <th class="p-4 w-10 text-center border-r border-gray-400">
                             <input type="checkbox" id="selectAll"
@@ -94,47 +94,47 @@
                         </th>
                         <th class="p-4 border-r border-gray-400">
                             <div class="flex items-center justify-between">
-                                <span class="flex items-center gap-2 font-medium"><i class="far fa-user"></i> Profile</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-user"></i> Profile</span>
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>
                         </th>
                         <th class="p-4 border-r border-gray-400">
                             <div class="flex items-center justify-between">
-                                <span class="flex items-center gap-2 font-medium"><i class="far fa-address-card"></i>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-address-card"></i>
                                     Contact</span>
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>
                         </th>
                         <th class="p-4 border-r border-gray-400">
                             <div class="flex items-center justify-between">
-                                <span class="flex items-center gap-2 font-medium"><i class="far fa-building"></i>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-building"></i>
                                     Company</span>
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>
                         </th>
                         <th class="p-4 border-r border-gray-400">
                             <div class="flex items-center justify-between">
-                                <span class="flex items-center gap-2 font-medium"><i class="fas fa-cubes"></i>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-cubes"></i>
                                     Industry</span>
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>
                         </th>
                         <th class="p-4 border-r border-gray-400">
                             <div class="flex items-center justify-between">
-                                <span class="flex items-center gap-2 font-medium"><i class="fas fa-briefcase"></i>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-briefcase"></i>
                                     Position</span>
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>
                         </th>
                         <th class="p-4 border-r border-gray-400">
                             <div class="flex items-center justify-between">
-                                <span class="flex items-center gap-2 font-medium"><i class="fas fa-link"></i> Company
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-link"></i> Company
                                     URL</span>
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>
                         </th>
                         <th class="p-4 text-center">
-                            <div class="flex items-center justify-center gap-2 font-medium">
+                            <div class="flex items-center justify-center gap-2 font-base text-[12px]">
                                 <i class="far fa-dot-circle"></i> Action
                                 <i class="fas fa-sort text-gray-400 text-[10px]"></i>
                             </div>

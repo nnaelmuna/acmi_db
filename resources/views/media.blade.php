@@ -4,7 +4,7 @@
 @section('page_title', 'Media')
 
 @section('content')
-    @if (session('success'))
+    @if  (session('success'))
         <div id="successAlert"
             class="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500 ease-in-out">
             {{ session('success') }}
@@ -95,6 +95,8 @@
                 {{-- Edit Delete --}}
                 <div
                     class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
+                <div
+                    class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
                     <button type="button"
                         onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}')"
                         class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition">
@@ -117,6 +119,8 @@
                 <div class="relative overflow-hidden rounded-lg">
                     @if ($item->image)
                         <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
+                    @if ($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
                             class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
                     @else
                         <div class="flex w-full h-48 items-center justify-center bg-gray-100 text-sm text-gray-400">
@@ -125,6 +129,7 @@
                     @endif
 
                     <span
+                       
                         class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
                         {{ $item->category->name ?? '-' }}
                     </span>
@@ -137,13 +142,14 @@
                     </h3>
 
                     <div
+                       
                         class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
                         Category: {{ $item->category->name ?? '-' }}
                     </div>
                 </div>
 
                 {{-- Preview --}}
-                @if ($item->image)
+                @if  ($item->image)
                     <button type="button"
                         onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', '{{ $item->title }}')"
                         class="block w-full text-center mt-4 bg-[#4155C6] text-white py-2.5 rounded-lg font-medium transition hover:bg-[#3444a1]">
@@ -158,6 +164,7 @@
             </div>
         @empty
             <div
+               
                 class="col-span-full flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white italic text-gray-400">
                 No media available yet.
             </div>

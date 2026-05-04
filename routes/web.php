@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\MediaCategoryController;
 use App\Http\Controllers\Admin\MediaItemController;
+use App\Http\Controllers\Admin\MediaPartnerController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CRM\InboundController;
@@ -77,6 +78,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
         Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
         Route::delete('/media/{id}', [MediaItemController::class, 'destroy'])->name('media.categories.destroy');
+    });
+
+    // Media Partner
+    Route::controller(MediaPartnerController::class)->group(function () {
+        Route::get('/media-partner', 'index')->name('media-partner');
+        Route::post('/media-partner', 'store')->name('media-partner.store');
+        Route::put('/media-partner/{id}', 'update')->name('media-partner.update');
+        Route::delete('/media-partner/{id}', 'destroy')->name('media-partner.destroy');
     });
 
     // Inbound
