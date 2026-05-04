@@ -20,14 +20,36 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">Product Category</label>
-                        @php $currentCat = old('category', $product->category ?? ''); @endphp
-                        <select name="category"
-                            class="w-full rounded-md border {{ $errors->has('category') ? 'border-red-500' : 'border-gray-200' }} py-2 px-3 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] transition appearance-none bg-white bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2rem_1.2rem] bg-no-repeat bg-[right_1rem_center] pr-10">
-                            @foreach (['Energi', 'Software', 'FnB', 'Manufaktur', 'Properti', 'Fintech'] as $opt)
-                                <option value="{{ $opt }}" {{ $currentCat == $opt ? 'selected' : '' }}>
-                                    {{ $opt }}</option>
-                            @endforeach
-                        </select>
+
+                        <!-- Wrapper utama: Ini yang jadi "satu kolom" -->
+                        <div
+                            class="relative w-full border border-gray-200 rounded-md bg-white focus-within:ring-2 focus-within:ring-[#0014A8]/20 focus-within:border-[#0014A8] transition p-1.5 flex flex-wrap gap-2 items-center">
+
+                            <!-- Wadah Tags: Muncul di dalem kotak -->
+                            <div id="category-tags" class="flex flex-wrap gap-2">
+                                <!-- Tags muncul di sini -->
+                            </div>
+
+                            <!-- Input/Dropdown Tersembunyi tapi fungsional -->
+                            <div class="flex-1 min-w-[120px] relative">
+                                <select id="category-select"
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                    <option value="" class="" disabled selected>Pilih Kategori</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+
+                                <div
+                                    class="flex items-center justify-between pl-0 pr-2 py-1 text-sm text-gray-500 pointer-events-none">
+                                    <span id="placeholder-text" class="text-sm">Select Category</span>
+                                    <i class="fas fa-plus text-sm text-gray-500"></i>
+                                </div>
+                            </div>
+
+                            <!-- Hidden Inputs buat Laravel -->
+                            <div id="category-hidden-inputs"></div>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">Product Title</label>
@@ -61,14 +83,14 @@
                         <div class="flex flex-wrap gap-4">
                             <!-- Tombol Upload -->
                             <div onclick="document.getElementById('mainImageInput').click()"
-                                class="w-32 h-40 bg-white rounded-2xl border-2 border-dashed {{ $errors->has('product_images') ? 'border-red-400' : 'border-gray-200' }} flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-[#0014A8] transition group shrink-0 shadow-sm">
+                                class="w-32 h-40 bg-white rounded-lg border-2 border-dashed {{ $errors->has('product_images') ? 'border-red-400' : 'border-gray-200' }} flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-[#0014A8] transition group shrink-0 shadow-sm">
                                 <i class="fas fa-upload text-xl mb-2 group-hover:text-[#0014A8]"></i>
                                 <span class="text-[9px] font-bold uppercase group-hover:text-[#0014A8]">Upload Image</span>
                             </div>
 
                             <!-- Slot Preview 1 (Primary) -->
                             <div id="preview-slot-1"
-                                class="w-32 h-40 bg-white rounded-2xl flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
+                                class="w-32 h-40 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
                                 @if (isset($product) && $product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}"
                                         class="w-full h-full object-cover">
@@ -79,13 +101,13 @@
 
                             <!-- Slot Preview 2 -->
                             <div id="preview-slot-2"
-                                class="w-32 h-40 bg-white rounded-2xl flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
+                                class="w-32 h-40 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
                                 <span class="text-[12px] font-medium text-gray-400">Image 2</span>
                             </div>
 
                             <!-- Slot Preview 3 -->
                             <div id="preview-slot-3"
-                                class="w-32 h-40 bg-white rounded-2xl flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
+                                class="w-32 h-40 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
                                 <span class="text-[12px] font-medium text-gray-400">Image 3</span>
                             </div>
                         </div>
@@ -307,5 +329,51 @@
                 this.classList.add('border-gray-200');
             });
         });
+    </script>
+
+    <script>
+        let selectedCategories = @json(isset($product) && is_array($product->category) ? $product->category : []);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCategoryTags();
+        });
+
+        document.getElementById('category-select').addEventListener('change', function() {
+            const value = this.value;
+            if (value && !selectedCategories.includes(value)) {
+                selectedCategories.push(value);
+                renderCategoryTags();
+            }
+            this.value = "";
+        });
+
+        function renderCategoryTags() {
+            const tagContainer = document.getElementById('category-tags');
+            const hiddenContainer = document.getElementById('category-hidden-inputs');
+            const placeholder = document.getElementById('placeholder-text');
+
+            tagContainer.innerHTML = '';
+            hiddenContainer.innerHTML = '';
+
+            // Kalau sudah ada tag, hilangkan tulisan "Pilih Kategori" biar gak sempit
+            placeholder.style.display = selectedCategories.length > 0 ? 'none' : 'block';
+
+            selectedCategories.forEach((cat, index) => {
+                tagContainer.innerHTML += `
+            <div class="flex items-center gap-2 bg-gray-100 px-2 py-1 rounded-md text-xs font-medium text-gray-700 border border-gray-200">
+                ${cat}
+                <button type="button" onclick="removeCategory(${index})" class="text-gray-400 hover:text-red-500">
+                    <i class="fas fa-times text-[10px]"></i>
+                </button>
+            </div>
+        `;
+                hiddenContainer.innerHTML += `<input type="hidden" name="category[]" value="${cat}">`;
+            });
+        }
+
+        function removeCategory(index) {
+            selectedCategories.splice(index, 1);
+            renderCategoryTags();
+        }
     </script>
 @endsection
