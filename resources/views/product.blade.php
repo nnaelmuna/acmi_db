@@ -31,7 +31,7 @@
                 
                 <!-- Panah Kiri (Id: leftArrow) -->
                 <button id="leftArrow" onclick="scrollCat('left')" 
-                    class="hidden absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
+                    class="hidden absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
                     <i class="fa-solid fa-chevron-left text-[10px]"></i>
                 </button>
     

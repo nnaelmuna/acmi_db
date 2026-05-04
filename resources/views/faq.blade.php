@@ -29,7 +29,7 @@
 
             <div class="flex justify-end">
                 <button type="button" onclick="openAddModal()"
-                    class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+                    class="inline-flex items-center gap-3 rounded-lg bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
                     <span>Add FAQ</span>
                     <i class="fa-solid fa-plus"></i>
                 </button>
