@@ -9,7 +9,9 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\MediaCategoryController;
 use App\Http\Controllers\Admin\MediaItemController;
 use App\Http\Controllers\Admin\MediaPartnerController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CRM\InboundController;
 
 // Redirect ke login
 Route::get('/', function () {
@@ -26,16 +28,6 @@ Route::middleware('guest')->group(function () {
 
 // Kalau user SUDAH login
 Route::middleware('auth')->group(function () {
-
-    // --- PRODUCT ROUTES ---
-    Route::controller(ProductController::class)->group(function () {
-        Route::get('/product', 'index')->name('product.index');
-        Route::get('/product/create', 'create')->name('product.create');
-        Route::post('/product', 'store')->name('product.store');
-        Route::get('/product/{id}/edit', 'edit')->name('product.edit');
-        Route::put('/product/{id}', 'update')->name('product.update');
-        Route::delete('/product/{id}', 'destroy')->name('product.destroy');
-    });
 
     // --- DASHBOARD ---
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -61,7 +53,18 @@ Route::middleware('auth')->group(function () {
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
     });
 
-    // --- Media ---
+    // --- PRODUCT ROUTES ---
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/product', 'index')->name('product.index');
+        Route::get('/product/create', 'create')->name('product.create');
+        Route::post('/product', 'store')->name('product.store');
+        Route::get('/product/{id}/edit', 'edit')->name('product.edit');
+        Route::put('/product/{id}', 'update')->name('product.update');
+        Route::delete('/product/{id}', 'destroy')->name('product.destroy');
+    });
+
+    Route::post('/product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');
+    Route::delete('/product-categories/{id}', [ProductCategoryController::class, 'destroy'])->name('product.categories.destroy');
 
     // Media Category
     Route::get('/categories', [MediaCategoryController::class, 'index'])->name('media.categories');
@@ -83,6 +86,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/media-partner', 'store')->name('media-partner.store');
         Route::put('/media-partner/{id}', 'update')->name('media-partner.update');
         Route::delete('/media-partner/{id}', 'destroy')->name('media-partner.destroy');
+    });
+
+    // Inbound
+    Route::prefix('crm')->group(function () {
+        Route::get('/inbound', [InboundController::class, 'index'])->name('inbound.index');
+        Route::get('/inbound/{id}', [InboundController::class, 'show'])->name('inbound.show');
+        Route::patch('/inbound/{id}/status', [InboundController::class, 'updateStatus'])->name('inbound.status');
+        Route::post('/inbound/bulk-approve', [InboundController::class, 'bulkApprove'])->name('inbound.bulkApprove');
     });
 
     // --- LOGOUT ---

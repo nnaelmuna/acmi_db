@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany; // Tambahin ini
 
 class Category extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'slug'];
 
     /**
      * Relasi ke model Product

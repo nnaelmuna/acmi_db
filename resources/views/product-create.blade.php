@@ -19,7 +19,7 @@
                 {{-- Top Row: Basic Info --}}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div>
-                        <label class="block text-sm font-bold text-gray-800 mb-2">Kategori Produk</label>
+                        <label class="block text-sm font-bold text-gray-800 mb-2">Product Category</label>
                         @php $currentCat = old('category', $product->category ?? ''); @endphp
                         <select name="category"
                             class="w-full rounded-md border {{ $errors->has('category') ? 'border-red-500' : 'border-gray-200' }} py-2 px-3 focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] transition appearance-none bg-white bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1.2rem_1.2rem] bg-no-repeat bg-[right_1rem_center] pr-10">
@@ -30,7 +30,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-800 mb-2">Judul Produk</label>
+                        <label class="block text-sm font-bold text-gray-800 mb-2">Product Title</label>
                         <input type="text" name="title" value="{{ old('title', $product->title ?? '') }}"
                             placeholder="Green Energy Solutions"
                             class="w-full rounded-md border {{ $errors->has('title') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-[#0014A8] focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] outline-none">
@@ -39,7 +39,7 @@
                         @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-800 mb-2">Nama Perusahaan</label>
+                        <label class="block text-sm font-bold text-gray-800 mb-2">Company Name</label>
                         <input type="text" name="company_name"
                             value="{{ old('company_name', $product->company_name ?? '') }}"
                             placeholder="PT Energi Hijau Indonesia"
@@ -57,7 +57,7 @@
                         multiple onchange="handleImageUpload(this)">
 
                     <div class="md:col-span-8">
-                        <label class="block text-sm font-bold text-gray-800 mb-4">Gambar Produk (Max 3)</label>
+                        <label class="block text-sm font-bold text-gray-800 mb-4">Product Image (Max 3)</label>
                         <div class="flex flex-wrap gap-4">
                             <!-- Tombol Upload -->
                             <div onclick="document.getElementById('mainImageInput').click()"
@@ -101,8 +101,8 @@
 
                 {{-- Description Section --}}
                 <div class="mb-8">
-                    <label class="block text-sm font-bold text-gray-800 mb-2">Deskripsi Produk</label>
-                    <textarea name="description" rows="4" placeholder="Green Energy Solutions menyediakan..."
+                    <label class="block text-sm font-bold text-gray-800 mb-2">Product Description</label>
+                    <textarea name="description" rows="4" placeholder="Green Energy Solution provides..."
                         class="w-full rounded-sm border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-200' }} p-4 caret-[#0014A8] focus:ring-2 focus:ring-[#0014A8]/20 focus:border-[#0014A8] outline-none shadow-sm text-sm leading-relaxed">{{ old('description', $product->description ?? '') }}</textarea>
                 </div>
 
@@ -111,7 +111,7 @@
 
                     {{-- Key Features --}}
                     <div class="space-y-4">
-                        <h3 class="text-sm font-bold text-gray-800">Fitur Utama</h3>
+                        <h3 class="text-sm font-bold text-gray-800">Key Features</h3>
                         <div id="feature-container" class="space-y-3">
                             {{-- Kalau ada data lama (pas edit), tampilin di sini --}}
                             @if (isset($product) && $product->features)
@@ -138,7 +138,7 @@
                                 class="w-10 h-10 shrink-0 bg-white rounded-xl border border-gray-200 flex items-center justify-center text-gray-300 hover:text-[#0014A8] hover:border-[#0014A8] transition shadow-sm">
                                 <i class="fas fa-check text-xs"></i>
                             </button>
-                            <input type="text" id="feature-input" placeholder="Tambahckan Fitur Utama.."
+                            <input type="text" id="feature-input" placeholder="Add Key Features.."
                                 class="flex-1 rounded-xl border border-gray-200 py-2.5 px-4 outline-none text-sm"
                                 onkeypress="if(event.key === 'Enter') { event.preventDefault(); addFeatureToList(); }">
                         </div>
@@ -146,7 +146,7 @@
 
                     {{-- Company Contact Details --}}
                     <div class="space-y-4">
-                        <h3 class="text-sm font-bold text-gray-800">Rincian Kontak Perusahaan</h3>
+                        <h3 class="text-sm font-bold text-gray-800">Contact Company Details</h3>
                         <div class="space-y-3">
                             {{-- Website --}}
                             <div class="relative">
@@ -201,10 +201,10 @@
                 {{-- Buttons --}}
                 <div class="mt-12 flex justify-end gap-4">
                     <a href="{{ route('product.index') }}"
-                        class="px-7 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">Batal</a>
+                        class="px-7 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">Cancel</a>
                     <button type="submit"
                         class="px-7 py-2 rounded-lg bg-[#0014A8] text-white font-bold hover:bg-blue-900 transition shadow-lg">
-                        {{ isset($product) ? 'Update Product' : 'Simpan Perubahan' }}
+                        {{ isset($product) ? 'Update Product' : 'Save Changes' }}
                     </button>
                 </div>
             </div>
@@ -231,60 +231,60 @@
                 input.value = "";
             }
         }
-    
-       // --- IMAGE LOGIC (Versi Nabung Gambar) ---
-    let uploadedFiles = []; // Ini tabungan gambar kita
 
-function handleImageUpload(input) {
-    if (input.files && input.files.length > 0) {
-        // Ambil file yang baru dipilih
-        const newFiles = Array.from(input.files);
-        
-        // Masukin ke tabungan, tapi maksimal tetep cuma 3
-        newFiles.forEach(file => {
-            if (uploadedFiles.length < 3) {
-                uploadedFiles.push(file);
+        // --- IMAGE LOGIC (Versi Nabung Gambar) ---
+        let uploadedFiles = []; // Ini tabungan gambar kita
+
+        function handleImageUpload(input) {
+            if (input.files && input.files.length > 0) {
+                // Ambil file yang baru dipilih
+                const newFiles = Array.from(input.files);
+
+                // Masukin ke tabungan, tapi maksimal tetep cuma 3
+                newFiles.forEach(file => {
+                    if (uploadedFiles.length < 3) {
+                        uploadedFiles.push(file);
+                    }
+                });
+
+                // Penting: Reset input biar kalau pilih file yang sama bisa kepicu lagi onchange-nya
+                input.value = '';
+
+                renderPreviews();
             }
-        });
+        }
 
-        // Penting: Reset input biar kalau pilih file yang sama bisa kepicu lagi onchange-nya
-        input.value = ''; 
-        
-        renderPreviews();
-    }
-}
+        function renderPreviews() {
+            const defaultLabels = ['Image 1', 'Image 2', 'Image 3'];
 
-function renderPreviews() {
-    const defaultLabels = ['Image 1', 'Image 2', 'Image 3'];
-    
-    for (let i = 1; i <= 3; i++) {
-        const slot = document.getElementById(`preview-slot-${i}`);
-        const file = uploadedFiles[i - 1]; 
-        
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                // Kasih tombol hapus kecil biar kalau salah upload bisa dibuang
-                slot.innerHTML = `
+            for (let i = 1; i <= 3; i++) {
+                const slot = document.getElementById(`preview-slot-${i}`);
+                const file = uploadedFiles[i - 1];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        // Kasih tombol hapus kecil biar kalau salah upload bisa dibuang
+                        slot.innerHTML = `
                     <img src="${e.target.result}" class="w-full h-full object-cover">
                     <button type="button" onclick="removeImage(${i-1})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center shadow-lg">
                         <i class="fas fa-times"></i>
                     </button>
                 `;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i-1]}</span>`;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i-1]}</span>`;
+                }
+            }
         }
-    }
-}
 
-// Fungsi tambahan buat hapus kalau salah pilih
-function removeImage(index) {
-    uploadedFiles.splice(index, 1);
-    renderPreviews();
-}
-    
+        // Fungsi tambahan buat hapus kalau salah pilih
+        function removeImage(index) {
+            uploadedFiles.splice(index, 1);
+            renderPreviews();
+        }
+
         // --- 3. SUBMIT LOGIC (Paksa file masuk ke Form) ---
         document.getElementById('productForm').onsubmit = function(e) {
             // Ini bagian krusial biar 3 gambarnya beneran kekirim ke Laravel
@@ -295,7 +295,7 @@ function removeImage(index) {
             }
             // Lu bisa tambah validasi lain di sini kalau perlu
         };
-    
+
         // --- 4. REAL-TIME ERROR REMOVAL ---
         document.querySelectorAll('input, textarea, select').forEach(el => {
             el.addEventListener('input', function() {

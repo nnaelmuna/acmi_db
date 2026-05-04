@@ -4,7 +4,7 @@
 @section('page_title', 'Media')
 
 @section('content')
-    @if (session('success'))
+    @if  (session('success'))
         <div id="successAlert"
             class="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500 ease-in-out">
             {{ session('success') }}
@@ -47,11 +47,11 @@
                             </span>
                         </a>
 
-                        {{-- Delete category --}}
-                        <form action="{{ route('media.categories.delete', $cat->id) }}" method="POST"
-                            onsubmit="return confirm('Delete this category?')"
-                            class="absolute -right-1 -top-1 hidden group-hover:block">
-                            @csrf
+                    {{-- Delete category --}}
+                    <form action="{{ route('media.categories.delete', $cat->id) }}" method="POST"
+    onsubmit="return confirm('Delete this category?')"
+    class="absolute -right-1 -top-1 hidden group-hover:block">
+    @csrf
 
                             <button type="submit"
                                 class="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow hover:bg-red-600">
@@ -66,13 +66,13 @@
         {{-- Button kanan --}}
         <div class="flex shrink-0 items-center justify-end gap-3">
             <button onclick="openCategoryModal()"
-                class="inline-flex items-center gap-3 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
+                class="inline-flex items-center gap-3 rounded-lg bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-orange-600">
                 <span>Add Category</span>
                 <i class="fa-solid fa-plus"></i>
             </button>
 
             <button onclick="openMediaModal()"
-                class="inline-flex items-center gap-3 rounded-2xl bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+                class="inline-flex items-center gap-3 rounded-lg bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
                 <span>Add Media</span>
                 <i class="fa-solid fa-plus"></i>
             </button>
@@ -85,6 +85,8 @@
             <div class="group relative bg-white rounded-xl shadow-sm p-4 border border-gray-200 transition hover:shadow-md">
 
                 {{-- Edit Delete --}}
+                <div
+                    class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
                 <div
                     class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
                     <button type="button"
@@ -109,6 +111,8 @@
                 <div class="relative overflow-hidden rounded-lg">
                     @if ($item->image)
                         <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
+                    @if ($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
                             class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
                     @else
                         <div class="flex w-full h-48 items-center justify-center bg-gray-100 text-sm text-gray-400">
@@ -117,6 +121,7 @@
                     @endif
 
                     <span
+                       
                         class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
                         {{ $item->category->name ?? '-' }}
                     </span>
@@ -129,13 +134,14 @@
                     </h3>
 
                     <div
+                       
                         class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
                         Category: {{ $item->category->name ?? '-' }}
                     </div>
                 </div>
 
                 {{-- Preview --}}
-                @if ($item->image)
+                @if  ($item->image)
                     <button type="button"
                         onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', '{{ $item->title }}')"
                         class="block w-full text-center mt-4 bg-[#4155C6] text-white py-2.5 rounded-lg font-medium transition hover:bg-[#3444a1]">
@@ -150,6 +156,7 @@
             </div>
         @empty
             <div
+               
                 class="col-span-full flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white italic text-gray-400">
                 No media available yet.
             </div>

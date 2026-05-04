@@ -28,6 +28,10 @@ class MediaItemController extends Controller
 
     $media = $query->latest()->get();
 
+    $counts = $categories->mapWithKeys(function ($cat) use ($allMedia) {
+        return [$cat->slug => $allMedia->where('media_category_id', $cat->id)->count()];
+    })->toArray();
+
     return view('media', compact('media', 'categories', 'allMedia'));
 }
 

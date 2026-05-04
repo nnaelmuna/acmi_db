@@ -175,7 +175,62 @@
 @endif
 
 {{-- Modal pop-up Category --}}
-<x-modal-popup-category :categories="$categories" />
+{{-- Kita panggil bingkainya, kasih judul dan fungsi close-nya --}}
+<x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
+    
+    {{-- SEMUA KODE DI BAWAH INI OTOMATIS MASUK KE DALAM {{ $slot }} --}}
+    
+    {{-- Daftar Kategori yang Ada --}}
+    <div class="mb-5">
+        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Existing Categories</p>
+        <div id="categoryList" class="max-h-52 overflow-y-auto space-y-2 pr-1">
+            @foreach($categories as $category)
+                <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5" id="category-item-{{ $category->id }}">
+                    
+                    {{-- Normal State --}}
+                    <div class="flex items-center justify-between normal-state-{{ $category->id }}">
+                        <span class="text-sm text-gray-700">{{ $category->name }}</span>
+                        <button type="button" onclick="askDeleteCategory({{ $category->id }})" class="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+    
+                    {{-- Confirm State (hidden by default) --}}
+                    <div class="hidden items-center justify-between gap-3 confirm-state-{{ $category->id }}">
+                        <span class="text-sm font-medium text-red-500 whitespace-nowrap">Delete "{{ $category->name }}"?</span>
+                        <div class="flex gap-2 flex-shrink-0">
+                            <button type="button" onclick="cancelDeleteCategory({{ $category->id }})" class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 transition">Cancel</button>
+                            <button type="button" onclick="confirmDeleteCategory({{ $category->id }})" class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">Yes, Delete</button>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Divider --}}
+    <div class="mb-5 border-t border-gray-200"></div>
+
+    {{-- Form Tambah Kategori Baru --}}
+    <div>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Add New Category</p>
+        <form action="{{ route('categories.store') }}" method="POST" id="formAddCategory">
+            @csrf
+            <div class="flex gap-2">
+                <input type="text" name="name" id="newCategoryInput" placeholder="e.g. Technology" class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20" required>
+                <button type="submit" class="rounded-lg bg-acmi-blueprimer px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue whitespace-nowrap">+ Add</button>
+            </div>
+        </form>
+    </div>
+
+    {{-- Tombol Close di bawah --}}
+    <div class="mt-5 flex justify-end">
+        <button type="button" onclick="closeCategoryModal()" class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
+            Save Changes
+        </button>
+    </div>
+
+</x-modal-popup-category>
 @endsection
 
 @push('scripts')
@@ -238,7 +293,8 @@
     }
     
     function confirmDeleteCategory(id) {
-        fetch(`/categories/${id}`, {
+        // 👇 Ubah URL di bawah ini agar sama persis dengan Route Laravel-mu
+        fetch(`/post-categories/${id}`, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -252,7 +308,12 @@
                 document.getElementById(`category-item-${id}`)?.remove();
                 // Hapus dari checkbox list di form utama
                 document.querySelector(`input[name="categories[]"][value="${id}"]`)?.closest('label')?.remove();
+            } else {
+                alert('Gagal menghapus kategori.');
             }
+        })
+        .catch(error => {
+            console.error("Ada error:", error);
         });
     }
     
