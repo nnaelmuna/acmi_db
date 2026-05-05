@@ -73,7 +73,7 @@
     
         <!-- Tombol New Product -->
         <div class="flex items-center">
-            <a href="{{ route('product.create') }}" class="inline-flex items-center gap-3 rounded-lg bg-[#0014A8] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+            <a href="{{ route('product.create') }}" class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
                 <span>New Product</span>
                 <i class="fa-solid fa-plus"></i>
             </a>

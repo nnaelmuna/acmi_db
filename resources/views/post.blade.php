@@ -38,7 +38,7 @@
         <div class="flex justify-start xl:justify-end">
             <a
                 href="{{ route('post.create') }}"
-                class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-acmi-darkblue">
+                class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
                 <span>New Post</span>
                 <i class="fa-solid fa-plus"></i>
             </a>
