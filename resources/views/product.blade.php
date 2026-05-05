@@ -135,6 +135,7 @@
     </div>
 
 
+
     <x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
 
 
@@ -192,7 +193,11 @@
         </div>
     </x-modal-popup-category>
 
-
+    {{-- Form Rahasia buat eksekusi Delete --}}
+    <form id="delete-item-form" action="" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
 
 @push('scripts')

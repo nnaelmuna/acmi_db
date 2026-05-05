@@ -32,7 +32,7 @@ class Inbound extends Model
         return $query->where(function($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
               ->orWhere('email', 'like', "%{$term}%")
-              ->orWhere('company_name', 'like', "%{$term}%")
+              ->orWhere('company', 'like', "%{$term}%")
               ->orWhere('industry', 'like', "%{$term}%");
         });
     }

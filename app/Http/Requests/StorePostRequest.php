@@ -19,7 +19,7 @@ class StorePostRequest extends FormRequest
             'content'     => 'nullable|string',
             'categories'  => 'nullable|array',
             'image'       => 'nullable|image|max:2048',
-            'status'      => 'nullable|in:draft,published',
+            'status'      => 'nullable|in:draft,published,archived',
         ];
     }
 
