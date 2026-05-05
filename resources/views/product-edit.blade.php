@@ -122,7 +122,7 @@
 
             <div class="mt-12 flex justify-end gap-4">
                 <a href="{{ route('product.index') }}" class="px-7 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">Cancel</a>
-                <button type="submit" class="px-7 py-2 rounded-lg bg-[#0014A8] text-white font-bold hover:bg-blue-900 transition shadow-lg">
+                <button type="submit" class="px-7 py-2 rounded-lg bg-acmi-blueprimer text-white font-medium hover:bg-acmi-darkblue transition shadow-lg">
                     Update Product
                 </button>
             </div>
@@ -133,7 +133,7 @@
 <script>
     // --- 1. IMAGE LOGIC ---
     let uploadedFiles = []; 
-    let existingFiles = @json($product->images ?? []); 
+    let existingFiles = @json($product->image ? [$product->image] : []);
 
     window.onload = function() {
         renderPreviews();

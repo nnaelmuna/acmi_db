@@ -30,50 +30,52 @@
     {{-- Category Tabs + Button --}}
     <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
 
-        <div class="relative group flex-1 xl:flex-none">
+        <div class="flex items-center gap-3 w-full xl:w-auto">
 
-            <button id="leftArrow" onclick="scrollCat('left')"
-                class="hidden absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
-                <i class="fa-solid fa-chevron-left text-[10px]"></i>
-            </button>
+            <div class="relative group flex-1 xl:flex-none">
 
-            <div id="catSlider"
-                class="flex overflow-x-auto scroll-smooth items-center gap-2 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5 max-w-[300px] md:max-w-[500px] lg:max-w-[700px]">
+                <button id="leftArrow" onclick="scrollCat('left')"
+                    class="hidden absolute -left-8 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
+                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                </button>
 
-                <a href="{{ route('media') }}"
-                    class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ !request('category') ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                    <span>All</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                        {{ isset($counts) ? array_sum($counts) : $media->count() }}
-                    </span>
-                </a>
+                <div id="catSlider"
+                    class="flex overflow-x-auto scroll-smooth items-center gap-2 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5 max-w-[300px] md:max-w-[500px] lg:max-w-[700px]">
 
-                @foreach ($categories as $cat)
-                    <a id="slider-cat-{{ $cat->id }}" href="{{ route('media', ['category' => $cat->name]) }}"
-                        class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ request('category') == $cat->name ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                        <span>{{ $cat->name }}</span>
+                    <a href="{{ route('media') }}"
+                        class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ !request('category') ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
+                        <span>All</span>
                         <span
                             class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                            {{ $counts[$cat->name] ?? 0 }}
+                            {{ isset($counts) ? array_sum($counts) : $media->count() }}
                         </span>
                     </a>
-                @endforeach
+
+                    @foreach ($categories as $cat)
+                        <a id="slider-cat-{{ $cat->id }}" href="{{ route('media', ['category' => $cat->name]) }}"
+                            class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ request('category') == $cat->name ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
+                            <span>{{ $cat->name }}</span>
+                            <span
+                                class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
+                                {{ $counts[$cat->name] ?? 0 }}
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
+
+                <button id="rightArrow" onclick="scrollCat('right')"
+                    class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </button>
             </div>
 
-            <button id="rightArrow" onclick="scrollCat('right')"
-                class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
-                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <button type="button" onclick="openCategoryModal()"
+                class="flex h-10 w-10  ml-3 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 shadow-sm transition hover:text-[#0014A8]">
+                <i class="fa-solid fa-plus text-sm"></i>
             </button>
         </div>
 
         <div class="flex shrink-0 items-center justify-end gap-3">
-            <button onclick="openCategoryModal()"
-                class="inline-flex items-center gap-3 justify-center rounded-lg bg-white border border-gray-300 px-5 py-3 text-sm font-medium text-gray-600 transition hover:text-[#0014A8]">
-                <span>Add Category</span>
-                <i class="fa-solid fa-plus"></i>
-            </button>
-
             <button onclick="openMediaModal()"
                 class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
                 <span>Add Media</span>
@@ -221,18 +223,12 @@
             </form>
         </div>
 
-        <div class="mt-5 flex justify-end">
-            <button type="button" onclick="closeCategoryModal()"
-                class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
-                Save Changes
-            </button>
-        </div>
 
     </x-modal-popup-category>
 
     {{-- Add Media Modal --}}
     <div id="mediaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-        <div class="rounded-2xl bg-acmi-darkblue px-5 py-3 shadow-2xl">
+        <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
             <div class="mb-5 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-white">Add Media</h2>
                 <button type="button" onclick="closeMediaModal()" class="text-white/80 hover:text-white">

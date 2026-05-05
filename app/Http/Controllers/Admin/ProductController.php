@@ -47,7 +47,7 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'company_name' => 'required',
-            'category' => 'required|array', // Pastikan divalidasi sebagai array
+            'category' => 'required|array',
             'ceo_name' => 'required',
             'description' => 'required',
             'product_images' => 'required|array',
@@ -126,5 +126,12 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return view('product-show', compact('product'));
     }
 }
