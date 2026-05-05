@@ -226,7 +226,7 @@
                         class="px-7 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">Cancel</a>
                     <button type="submit"
                         class="px-7 py-2 rounded-lg bg-[#0014A8] text-white font-bold hover:bg-blue-900 transition shadow-lg">
-                        {{ isset($product) ? 'Update Product' : 'Save Changes' }}
+                        {{ isset($product) ? 'Update Product' : 'Publish' }}
                     </button>
                 </div>
             </div>

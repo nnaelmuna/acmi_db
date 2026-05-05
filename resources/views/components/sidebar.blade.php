@@ -56,12 +56,17 @@
                 </button>
 
                 <div class="hidden flex-col gap-1 bg-[#142062] rounded-lg mt-1 py-2">
+                    {{-- Update bagian Inbound --}}
+                    <a href="{{ route('inbound.index') }}"
+                        class="pl-[52px] py-2 text-[14px] {{ request()->routeIs('inbound.*') ? 'text-[#958DFF] font-semibold' : 'text-white' }} hover:text-[#958DFF] transition-colors duration-200">
+                        <i class="fas fa-user-plus mr-3"></i>Inbound
+                    </a>
+                
+                    {{-- Update bagian Members (sesuaikan nama route kamu kalau sudah ada) --}}
                     <a href="#"
                         class="pl-[52px] py-2 text-[14px] text-white hover:text-[#958DFF] transition-colors duration-200">
-                        <i class="fas fa-user-plus mr-3"></i>Inbound</a>
-                    <a href="#"
-                        class="pl-[52px] py-2 text-[14px] text-white hover:text-[#958DFF] transition-colors duration-200">
-                        <i class="fas fa-user mr-3"></i>Members</a>
+                        <i class="fas fa-user mr-3"></i>Members
+                    </a>
                 </div>
             </div>
 
