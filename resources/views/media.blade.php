@@ -35,7 +35,7 @@
             <div class="relative group flex-1 xl:flex-none">
 
                 <button id="leftArrow" onclick="scrollCat('left')"
-                    class="hidden absolute -left-8 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
+                    class="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex bg-white shadow-md rounded-full items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
                     <i class="fa-solid fa-chevron-left text-[10px]"></i>
                 </button>
 
@@ -47,7 +47,7 @@
                         <span>All</span>
                         <span
                             class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                            {{ isset($counts) ? array_sum($counts) : $media->count() }}
+                            {{ $allMedia->count() }}
                         </span>
                     </a>
 
@@ -57,7 +57,7 @@
                             <span>{{ $cat->name }}</span>
                             <span
                                 class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                                {{ $counts[$cat->name] ?? 0 }}
+                                {{ $allMedia->where('media_category_id', $cat->id)->count() }}
                             </span>
                         </a>
                     @endforeach
@@ -92,12 +92,12 @@
                 <div
                     class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
                     <button type="button"
-                        onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}')"
+                        onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}', '{{ $item->image ? asset('storage/' . $item->image) : '' }}')"
                         class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition">
                         <i class="fa-solid fa-pen-to-square text-xs"></i>
                     </button>
 
-                    <form action="{{ route('media.categories.destroy', $item->id) }}" method="POST"
+                    <form action="{{ route('media.destroy', $item->id) }}" method="POST"
                         onsubmit="return confirm('Delete this media?')">
                         @csrf
                         @method('DELETE')
@@ -189,6 +189,7 @@
 
                                 <form action="{{ route('media.categories.destroy', $category->id) }}" method="POST">
                                     @csrf
+                                    @method('DELETE')
                                     <button type="submit"
                                         class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">
                                         Yes, Delete
@@ -222,17 +223,16 @@
                 </div>
             </form>
         </div>
-
-
     </x-modal-popup-category>
 
     {{-- Add Media Modal --}}
     <div id="mediaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
         <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
             <div class="mb-5 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-white">Add Media</h2>
-                <button type="button" onclick="closeMediaModal()" class="text-white/80 hover:text-white">
-                    <i class="fa-solid fa-xmark"></i>
+                <h2 class="text-lg font-semibold text-gray-800">Add Media</h2>
+
+                <button type="button" onclick="closeMediaModal()" class="text-gray-500 transition hover:text-gray-800">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
@@ -240,15 +240,15 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm text-white">Title</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Title</label>
                     <input type="text" name="title" required
-                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
+                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm text-white">Category</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Category</label>
                     <select name="media_category_id" required
-                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
+                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -257,18 +257,14 @@
                 </div>
 
                 <div class="mb-5">
-                    <label class="mb-2 block text-sm text-white">Image</label>
-                    <input type="file" name="image" required class="w-full rounded-md bg-white px-3 py-2 text-sm">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Image</label>
+                    <input type="file" name="image" required
+                        class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
-                <div class="flex justify-end gap-2">
-                    <button type="button" onclick="closeMediaModal()"
-                        class="rounded-md border border-white/50 px-4 py-2 text-sm text-white hover:bg-white/10">
-                        Cancel
-                    </button>
-
+                <div class="flex justify-end">
                     <button type="submit"
-                        class="rounded-md bg-white px-4 py-2 text-sm font-medium text-acmi-darkblue hover:bg-gray-100">
+                        class="rounded-md bg-acmi-blueprimer px-5 py-2 text-sm font-medium text-white transition hover:bg-acmi-darkblue">
                         Save
                     </button>
                 </div>
@@ -279,11 +275,11 @@
     {{-- Edit Media Modal --}}
     <div id="editMediaModal"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-        <div class="w-full max-w-lg rounded-2xl bg-acmi-darkblue p-6 shadow-2xl">
+        <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
             <div class="mb-5 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-white">Edit Media</h2>
+                <h2 class="text-lg font-semibold text-gray-800">Edit Media</h2>
                 <button type="button" onclick="closeEditMediaModal()" class="text-white/80 hover:text-white">
-                    <i class="fa-solid fa-xmark"></i>
+                    <i class="fa-solid fa-xmark text-gray-600"></i>
                 </button>
             </div>
 
@@ -292,13 +288,13 @@
                 @method('PUT')
 
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm text-white">Title</label>
+                    <label class="mb-2 block text-sm text-gray-800">Title</label>
                     <input type="text" id="editTitle" name="title" required
                         class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
                 </div>
 
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm text-white">Category</label>
+                    <label class="mb-2 block text-sm text-gray-800">Category</label>
                     <select id="editCategory" name="media_category_id" required
                         class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
                         @foreach ($categories as $category)
@@ -308,18 +304,24 @@
                 </div>
 
                 <div class="mb-5">
-                    <label class="mb-2 block text-sm text-white">Change Image</label>
-                    <input type="file" name="image" class="w-full rounded-md bg-white px-3 py-2 text-sm">
+                    {{-- Current Image --}}
+                    <div class="mb-4">
+                        <label class="mb-2 block text-sm text-gray-700">Current Image</label>
+                        <img id="editImagePreview" src=""
+                            class="hidden h-40 w-full rounded-xl object-cover border border-gray-200">
+                    </div>
+
+                    {{-- Change Image --}}
+                    <div class="mb-5">
+                        <label class="mb-2 block text-sm text-gray-700">Change Image</label>
+                        <input type="file" name="image"
+                            class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-2">
-                    <button type="button" onclick="closeEditMediaModal()"
-                        class="rounded-md border border-white/50 px-4 py-2 text-sm text-white hover:bg-white/10">
-                        Cancel
-                    </button>
-
                     <button type="submit"
-                        class="rounded-md bg-white px-4 py-2 text-sm font-medium text-acmi-darkblue hover:bg-gray-100">
+                        class="rounded-md bg-acmi-blueaccent px-4 py-2 text-sm font-medium text-white hover:bg-acmi-darkblue">
                         Update
                     </button>
                 </div>
@@ -420,10 +422,20 @@
             document.getElementById('mediaModal').classList.remove('flex');
         }
 
-        function openEditMediaModal(id, title, categoryId) {
+        function openEditMediaModal(id, title, categoryId, imageUrl) {
             document.getElementById('editMediaForm').action = `/media/${id}`;
             document.getElementById('editTitle').value = title;
             document.getElementById('editCategory').value = categoryId;
+
+            const preview = document.getElementById('editImagePreview');
+
+            if (imageUrl) {
+                preview.src = imageUrl;
+                preview.classList.remove('hidden');
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
 
             document.getElementById('editMediaModal').classList.remove('hidden');
             document.getElementById('editMediaModal').classList.add('flex');
