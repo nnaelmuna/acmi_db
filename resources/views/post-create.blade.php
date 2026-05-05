@@ -380,13 +380,12 @@
     }
 
     function saveDraft() {
-        console.log(document.getElementById('postStatus'));
         document.getElementById('postStatus').value = 'draft';
-        tinymce.triggerSave();
-        setTimeout(function() {
-            document.getElementById('postForm').submit();
-        }, 100);
         
+        if (typeof tinymce !== 'undefined' && tinymce.get('acmi-editor')) {
+            tinymce.get('acmi-editor').save();
+        }
+        document.getElementById('postForm').submit();
     }
 
     document.getElementById('postForm').addEventListener('submit', function() {
