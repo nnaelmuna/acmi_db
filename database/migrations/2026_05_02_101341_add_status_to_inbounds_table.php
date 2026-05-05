@@ -10,12 +10,12 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::table('inbounds', function (Blueprint $table) {
-            // Kita tambahin kolom status setelah kolom ID ya
-            $table->string('status')->default('requested')->after('id');
-        });
-    }
+{
+    Schema::table('inbounds', function (Blueprint $table) {
+        // Kasih default 'pending' biar data baru otomatis masuk kategori requested
+        $table->string('status')->default('pending')->after('company_url'); 
+    });
+}
 
     /**
      * Reverse the migrations.

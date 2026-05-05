@@ -16,7 +16,7 @@
     {{-- Header --}}
     <div class="flex justify-end">
         <button type="button" onclick="openAddModal()"
-            class="inline-flex items-center gap-3 rounded-2xl bg-acmi-darkblue px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-900">
+            class="inline-flex items-center gap-3 rounded-lg bg-acmi-darkblue px-5 py-3 text-sm font-medium text-white shadow-sm transition">
             <span>Add Partner</span>
             <i class="fa-solid fa-plus"></i>
         </button>
@@ -121,10 +121,6 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-1">
-                    <button type="button" onclick="closeAddModal()"
-                        class="rounded-md border border-gray-300 px-5 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
-                        Cancel
-                    </button>
 
                     <button type="submit"
                         class="rounded-md bg-acmi-darkblue px-5 py-2 text-xs font-medium text-white transition hover:bg-blue-900">
@@ -143,7 +139,7 @@
             <div class="flex items-center justify-between px-6 pt-6">
                 <h2 class="text-lg font-semibold text-gray-800">Edit Media Partner</h2>
 
-                <button type="button" onclick="closeAddModal()"
+                <button type="button" onclick="closeEditModal()"
                     class="inline-flex items-center justify-center text-gray-500 transition hover:text-gray-800">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
@@ -186,10 +182,6 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-1">
-                    <button type="button" onclick="closeEditModal()"
-                        class="rounded-md border border-gray-300 px-5 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
-                        Cancel
-                    </button>
 
                     <button type="submit"
                         class="rounded-md bg-acmi-darkblue px-5 py-2 text-xs font-medium text-white transition hover:bg-blue-900">
