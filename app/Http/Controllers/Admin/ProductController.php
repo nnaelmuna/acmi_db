@@ -13,32 +13,24 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Ambil semua kategori dari database
         $categories = ProductCategory::all();
-
-        // 2. Hitung jumlah produk per kategori secara otomatis (tanpa hardcode)
-        // Ini akan menghasilkan array seperti: ['Software' => 5, 'Energi' => 2]
-        $counts = Product::select('category', DB::raw('count(*) as total'))
-            ->groupBy('category')
-            ->pluck('total', 'category')
-            ->toArray();
-
-        // 3. Filter produk berdasarkan kategori yang di-klik
         $categoryFilter = $request->query('category');
+
         $products = Product::when($categoryFilter, function ($query, $categoryFilter) {
-            return $query->where('category', $categoryFilter);
+            return $query->whereJsonContains('category', $categoryFilter);
         })->get();
 
-        // 4. Kirim variabelnya ke view
+        $counts = [];
+        foreach ($categories as $cat) {
+            $counts[$cat->name] = Product::whereJsonContains('category', $cat->name)->count();
+        }
+
         return view('product', compact('products', 'categories', 'counts'));
     }
 
     public function create()
     {
-        // Ambil semua kategori dari database biar dinamis
         $categories = ProductCategory::all();
-
-        // Kirim variabel $categories ke view
         return view('product-create', compact('categories'));
     }
 
@@ -47,7 +39,7 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'company_name' => 'required',
-            'category' => 'required|array', // Pastikan divalidasi sebagai array
+            'category' => 'required|array',
             'ceo_name' => 'required',
             'description' => 'required',
             'product_images' => 'required|array',
@@ -55,13 +47,16 @@ class ProductController extends Controller
 
         $data = $request->except(['product_images']);
 
-        // Handle Image
         if ($request->hasFile('product_images')) {
             $files = $request->file('product_images');
-            $data['image'] = $files[0]->store('products', 'public');
+            $imagePaths = [];
+            foreach ($files as $file) {
+                $imagePaths[] = $file->store('products', 'public');
+            }
+            $data['image'] = $imagePaths[0]; // Thumbnail utama
+            $data['images'] = $imagePaths;   // Array gallery
         }
 
-        // Karena Model sudah dicast 'array', Laravel otomatis simpan jadi JSON di DB
         Product::create($data);
 
         return redirect()->route('product.index')->with('success', 'Produk berhasil dibuat!');
@@ -70,7 +65,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $categories = ProductCategory::all(); // Lu butuh ini juga di halaman edit!
+        $categories = ProductCategory::all();
         return view('product-edit', compact('product', 'categories'));
     }
 
@@ -78,11 +73,10 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // 1. Ambil list gambar yang TIDAK dihapus (dari input hidden di JS)
-        // Kalau user nggak hapus apa-apa, isinya array gambar lama lengkap.
+        // 1. Ambil list gambar lama yang TIDAK dihapus (dari input hidden JS)
         $finalImages = $request->input('existing_images', []);
 
-        // 2. Hapus file fisik HANYA untuk gambar yang diklik "X"
+        // 2. Hapus file fisik HANYA untuk gambar yang diklik hapus ("X")
         $oldImagesInDb = $product->images ?? [];
         foreach ($oldImagesInDb as $oldPath) {
             if (!in_array($oldPath, $finalImages)) {
@@ -93,21 +87,28 @@ class ProductController extends Controller
         // 3. Tambah gambar baru kalau ada upload tambahan
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $file) {
-                // Tetep jaga maksimal 3 gambar
-                if (count($finalImages) < 3) {
-                    $finalImages[] = $file->store('products', 'public');
+                // CEK VALIDASI FILE BIAR GAK ERROR SYMFONY
+                if ($file && $file->isValid()) {
+                    if (count($finalImages) < 3) {
+                        $finalImages[] = $file->store('products', 'public');
+                    }
                 }
             }
         }
 
-        // 4. Update database dengan array final (gabungan lama & baru)
+        // 4. Tentukan Thumbnail Utama (Kolom 'image' string)
+        // Kita ambil index [0] dari array finalImages
+        $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
+
+        // 5. Update database
         $product->update([
             'category' => $request->category,
             'title' => $request->title,
             'company_name' => $request->company_name,
             'ceo_name' => $request->ceo_name,
             'description' => $request->description,
-            'images' => $finalImages, // Ini kuncinya biar gak ngulang semua
+            'image' => $mainThumbnail,   // Update thumbnail depan
+            'images' => $finalImages,    // Update array gallery
             'features' => $request->features,
             'website' => $request->website,
             'email' => $request->email,
@@ -120,11 +121,16 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+
+        // Opsional: Hapus semua gambar dari storage saat produk dihapus
+        if ($product->images) {
+            foreach ($product->images as $img) {
+                Storage::disk('public')->delete($img);
+            }
         }
+
         $product->delete();
 
-        return response()->json(['success' => true]);
+        return redirect()->route('product.index')->with('success', 'Product deleted successfully');
     }
 }
