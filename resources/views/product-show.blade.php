@@ -14,7 +14,7 @@
         <p class="mt-2 text-sm font-semibold text-gray-700">{{ $product->company_name }}</p>
 
         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
-            <p><b>Category:</b> {{ $product->category }}</p>
+            <p><b>Category:</b> {{ is_array($product->category) ? implode(', ', $product->category) : $product->category }}</p>
             <p><b>CEO:</b> {{ $product->ceo_name }}</p>
             <p><b>Website:</b> {{ $product->website }}</p>
             <p><b>Email:</b> {{ $product->email }}</p>
