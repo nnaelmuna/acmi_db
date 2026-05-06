@@ -103,6 +103,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/inbound/bulk-approve', [InboundController::class, 'bulkApprove'])->name('inbound.bulkApprove');
     });
 
+    Route::get('/cek-session', function () {
+        return config('session.lifetime'); // harusnya return 480
+    });
+
     // --- LOGOUT ---
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

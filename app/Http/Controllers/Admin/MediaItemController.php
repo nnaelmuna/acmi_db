@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MediaItem;
 use App\Models\MediaCategory;
 use Illuminate\Http\Request;
+use App\Services\TabFilterService;
 
 class MediaItemController extends Controller
 {
@@ -32,7 +33,17 @@ class MediaItemController extends Controller
             return [$cat->slug => $allMedia->where('media_category_id', $cat->id)->count()];
         })->toArray();
 
-        return view('media', compact('media', 'categories', 'allMedia', 'counts'));
+        $status = $request->get('status', 'published');
+
+        if ($status === 'trash') {
+            $media = MediaItem::onlyTrashed()->latest()->get();
+        } else {
+            $media = MediaItem::with('category')->where('status', $status)->latest()->get();
+        }
+
+        $tabs = TabFilterService::getTabs(MediaItem::class);
+
+        return view('media', compact('media', 'categories', 'allMedia', 'counts', 'tabs', 'status'));
     }
 
     // STORE (Add Media)

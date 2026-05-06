@@ -14,6 +14,7 @@ class MediaItem extends Model
     'media_category_id',
     'title',
     'image',
+    'status',
 ];
 
 public function category()

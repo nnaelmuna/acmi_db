@@ -8,6 +8,7 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Services\TabFilterService;
 
 class ProductController extends Controller
 {
@@ -25,7 +26,17 @@ class ProductController extends Controller
             $counts[$cat->name] = Product::whereJsonContains('category', $cat->name)->count();
         }
 
-        return view('product', compact('products', 'categories', 'counts'));
+        $status = $request->get('status', 'published');
+
+        if ($status === 'trash') {
+            $products = Product::onlyTrashed()->latest()->get();
+        } else {
+            $products = Product::where('status', $status)->latest()->get();
+        }
+
+        $tabs = TabFilterService::getTabs(Product::class);
+
+        return view('product', compact('products', 'categories', 'counts', 'tabs', 'status'));
     }
 
     public function create()
@@ -72,7 +83,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-    
+
         // --- BAGIAN VALIDASI (WAJIB ADA BIAR GAK ERROR NULL) ---
         $request->validate([
             'title'    => 'required',
@@ -80,10 +91,10 @@ class ProductController extends Controller
             'email'    => 'required|email',
             // Tambahkan validasi lain jika perlu
         ]);
-    
+
         // 1. Logika Gambar (List gambar lama yang TIDAK dihapus)
         $finalImages = $request->input('existing_images', []);
-    
+
         // 2. Hapus file fisik untuk gambar yang dibuang
         $oldImagesInDb = $product->images ?? [];
         foreach ($oldImagesInDb as $oldPath) {
@@ -91,7 +102,7 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($oldPath);
             }
         }
-    
+
         // 3. Tambah gambar baru (Maksimal total 3 gambar)
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $file) {
@@ -102,10 +113,10 @@ class ProductController extends Controller
                 }
             }
         }
-    
+
         // 4. Tentukan Thumbnail Utama
         $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
-    
+
         // 5. Update database (Manual mapping biar aman)
         $product->update([
             'category'     => $request->category, // Data ini dijamin ada karena sudah lewat validasi
@@ -120,24 +131,24 @@ class ProductController extends Controller
             'email'        => $request->email,
             'phone'        => $request->phone,
         ]);
-    
+
         return redirect()->route('product.index')->with('success', 'Produk berhasil diupdate!');
     }
 
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-    
+
         // 1. Hapus file gambar dari folder storage agar tidak menumpuk (sampah)
         if ($product->images) {
             foreach ($product->images as $path) {
                 Storage::disk('public')->delete($path);
             }
         }
-    
+
         // 2. Hapus data dari database
         $product->delete();
-    
+
         // 3. INI YANG PENTING: Redirect balik ke halaman index
         return redirect()->route('product.index')->with('success', 'Produk berhasil dihapus!');
     }

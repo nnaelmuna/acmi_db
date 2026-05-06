@@ -14,7 +14,9 @@
     @endif
 
     {{-- Header --}}
-    <div class="flex justify-end">
+    <div class="flex items-center justify-between">
+        <x-filters-tab :tabs="$tabs" />
+
         <button type="button" onclick="openAddModal()"
             class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
             <span>Add Partner</span>

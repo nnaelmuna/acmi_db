@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use Illuminate\Http\Request;
+use App\Services\TabFilterService;
 
 class FaqController extends Controller
 {
@@ -18,7 +19,17 @@ class FaqController extends Controller
             ->latest()
             ->get();
 
-        return view('faq', compact('faqs', 'allFaqs'));
+        $tabs = TabFilterService::getTabs(Faq::class);
+
+        $status = $request->get('status', 'published');
+
+        if ($status === 'trash') {
+            $faqs = Faq::onlyTrashed()->latest()->get();
+        } else {
+            $faqs = Faq::where('status', $status)->latest()->get();
+        }
+
+        return view('faq', compact('faqs', 'allFaqs', 'tabs', 'status'));
     }
 
     public function store(Request $request)

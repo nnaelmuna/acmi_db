@@ -193,6 +193,8 @@
         </div>
     </x-modal-popup-category>
 
+    <x-filters-tab :tabs="$tabs"/>
+
     {{-- Form Rahasia buat eksekusi Delete --}}
     <form id="delete-item-form" action="" method="POST" style="display: none;">
         @csrf

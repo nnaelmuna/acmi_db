@@ -6,14 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\MediaPartner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\TabFilterService;
 
 class MediaPartnerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $partners = MediaPartner::latest()->get();
+        $tabs = TabFilterService::getTabs(MediaPartner::class);
 
-        return view('media-partner', compact('partners'));
+        $status = $request->get('status', 'published');
+
+        if ($status === 'trash') {
+            $partners = MediaPartner::onlyTrashed()->latest()->get();
+        } else {
+            $partners = MediaPartner::where('status', $status)->latest()->get();
+        }
+
+        return view('media-partner', compact('partners', 'tabs', 'status'));
     }
 
     public function store(Request $request)

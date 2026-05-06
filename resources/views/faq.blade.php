@@ -21,11 +21,7 @@
         {{-- Filter Tabs + Button --}}
         <div class="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-            <x-filters-tab :tabs="[
-                ['label' => 'Published', 'count' => $allFaqs->where('status', 'published')->count()],
-                ['label' => 'Draft', 'count' => $allFaqs->where('status', 'draft')->count()],
-                ['label' => 'Archived', 'count' => $allFaqs->where('status', 'archived')->count()],
-            ]" />
+            <x-filters-tab :tabs="$tabs"/>
 
             <div class="flex justify-end">
                 <button type="button" onclick="openAddModal()"

@@ -16,5 +16,6 @@ class MediaPartner extends Model
         'link',
         'start_date',
         'end_date',
+        'status',
     ];
 }
