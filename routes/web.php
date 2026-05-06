@@ -40,6 +40,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/post/{post}/edit', 'edit')->name('post.edit');
         Route::put('/post/{post}', 'update')->name('post.update');
     });
+    
+    // POST CATEGORY
+    Route::controller(CategoryController::class)->group(function () {
+        Route::post('/post-categories', 'store')->name('categories.store');
+        Route::delete('/post-categories/{category}', 'destroy')->name('categories.destroy');
+    });
 
     // Category Post
     Route::post('/post-categories', [CategoryController::class, 'store'])->name('categories.store');
