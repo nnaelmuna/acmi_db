@@ -13,7 +13,7 @@ return new class extends Migration
 {
     Schema::table('inbounds', function (Blueprint $table) {
         // Kasih default 'pending' biar data baru otomatis masuk kategori requested
-        $table->string('status')->default('pending')->after('company_url'); 
+        $table->string('status')->default('pending'); 
     });
 }
 

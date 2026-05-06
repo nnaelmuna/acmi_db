@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasColumn('posts', 'slug')) {
-            Schema::table('posts', function (Blueprint $table) {
-                $table->string('slug')->after('title');
-            });
-        }
+        Schema::table('categories', function (Blueprint $table) {
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -23,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            //
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropSoftDeletes();
         });
     }
 };

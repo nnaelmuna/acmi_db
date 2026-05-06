@@ -39,6 +39,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/post', 'store')->name('post.store');
         Route::get('/post/{post}/edit', 'edit')->name('post.edit');
         Route::put('/post/{post}', 'update')->name('post.update');
+        // Tambahkan route baru untuk Trash actions
+        Route::post('/posts/{id}/restore', [PostController::class, 'restore'])
+            ->name('posts.restore');
+
+        Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])
+            ->name('posts.forceDelete');
     });
     
     // POST CATEGORY
