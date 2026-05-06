@@ -72,22 +72,29 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-
-        // 1. Ambil list gambar lama yang TIDAK dihapus (dari input hidden JS)
+    
+        // --- BAGIAN VALIDASI (WAJIB ADA BIAR GAK ERROR NULL) ---
+        $request->validate([
+            'title'    => 'required',
+            'category' => 'required|array', // Ini pengunci biar gak error Integrity Constraint
+            'email'    => 'required|email',
+            // Tambahkan validasi lain jika perlu
+        ]);
+    
+        // 1. Logika Gambar (List gambar lama yang TIDAK dihapus)
         $finalImages = $request->input('existing_images', []);
-
-        // 2. Hapus file fisik HANYA untuk gambar yang diklik hapus ("X")
+    
+        // 2. Hapus file fisik untuk gambar yang dibuang
         $oldImagesInDb = $product->images ?? [];
         foreach ($oldImagesInDb as $oldPath) {
             if (!in_array($oldPath, $finalImages)) {
                 Storage::disk('public')->delete($oldPath);
             }
         }
-
-        // 3. Tambah gambar baru kalau ada upload tambahan
+    
+        // 3. Tambah gambar baru (Maksimal total 3 gambar)
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $file) {
-                // CEK VALIDASI FILE BIAR GAK ERROR SYMFONY
                 if ($file && $file->isValid()) {
                     if (count($finalImages) < 3) {
                         $finalImages[] = $file->store('products', 'public');
@@ -95,45 +102,45 @@ class ProductController extends Controller
                 }
             }
         }
-
-        // 4. Tentukan Thumbnail Utama (Kolom 'image' string)
-        // Kita ambil index [0] dari array finalImages
+    
+        // 4. Tentukan Thumbnail Utama
         $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
-
-        // 5. Update database
+    
+        // 5. Update database (Manual mapping biar aman)
         $product->update([
-            'category' => $request->category,
-            'title' => $request->title,
+            'category'     => $request->category, // Data ini dijamin ada karena sudah lewat validasi
+            'title'        => $request->title,
             'company_name' => $request->company_name,
-            'ceo_name' => $request->ceo_name,
-            'description' => $request->description,
-            'image' => $mainThumbnail,   // Update thumbnail depan
-            'images' => $finalImages,    // Update array gallery
-            'features' => $request->features,
-            'website' => $request->website,
-            'email' => $request->email,
-            'phone' => $request->phone,
+            'ceo_name'     => $request->ceo_name,
+            'description'  => $request->description,
+            'image'        => $mainThumbnail,
+            'images'       => $finalImages,
+            'features'     => $request->features,
+            'website'      => $request->website,
+            'email'        => $request->email,
+            'phone'        => $request->phone,
         ]);
-
+    
         return redirect()->route('product.index')->with('success', 'Produk berhasil diupdate!');
     }
 
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-
-        // Opsional: Hapus semua gambar dari storage saat produk dihapus
+    
+        // 1. Hapus file gambar dari folder storage agar tidak menumpuk (sampah)
         if ($product->images) {
-            foreach ($product->images as $img) {
-                Storage::disk('public')->delete($img);
+            foreach ($product->images as $path) {
+                Storage::disk('public')->delete($path);
             }
         }
-
+    
+        // 2. Hapus data dari database
         $product->delete();
-
-        return response()->json(['success' => true]);
+    
+        // 3. INI YANG PENTING: Redirect balik ke halaman index
+        return redirect()->route('product.index')->with('success', 'Produk berhasil dihapus!');
     }
-
     public function show($id)
     {
         $product = Product::findOrFail($id);
