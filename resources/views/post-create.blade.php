@@ -5,6 +5,23 @@
 
 @section('content')
 
+@if (session('success'))
+    <div id="successAlert"
+        class="mb-6 rounded-xl bg-green-100 px-5 py-4 text-sm font-semibold text-green-700 shadow-sm">
+        {{ session('success') }}
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alert = document.getElementById('successAlert');
+
+            if (alert) {
+                alert.remove();
+            }
+        }, 3000);
+    </script>
+@endif
+
 
     <form id="postForm" action="{{ route('post.store') }}" enctype="multipart/form-data" method="POST"
         class="grid grid-cols-1 gap-8 pb-20 xl:grid-cols-12">
@@ -210,7 +227,6 @@
             branding: false,
         });
 
-        // Fungsi untuk memunculkan modal
         function openCategoryModal() {
             const modal = document.getElementById('categoryModal');
             const modalBox = modal.querySelector('.scale-95');
@@ -223,7 +239,6 @@
             }, 10);
         }
 
-        // Fungsi untuk menyembunyikan modal
         function closeCategoryModal() {
             const modal = document.getElementById('categoryModal');
             const modalBox = modal.querySelector('.scale-100');
@@ -238,12 +253,26 @@
             }, 200);
         }
 
-        // Fungsi delete category via AJAX
+        function showToast(message) {
+            const toast = document.createElement('div');
+
+            toast.className =
+                'fixed top-6 right-6 z-[9999] rounded-xl bg-green-500 px-5 py-3 text-sm font-semibold text-white shadow-lg';
+
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
         function askDeleteCategory(id) {
             document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.add('hidden'));
             document.querySelectorAll(`.confirm-state-${id}`).forEach(el => {
                 el.classList.remove('hidden');
-                el.classList.add('flex', 'w-full'); // tambah w-full di sini
+                el.classList.add('flex', 'w-full');
             });
         }
 
@@ -252,11 +281,11 @@
                 el.classList.add('hidden');
                 el.classList.remove('flex', 'w-full');
             });
+
             document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.remove('hidden'));
         }
 
         function confirmDeleteCategory(id) {
-            // 👇 Ubah URL di bawah ini agar sama persis dengan Route Laravel-mu
             fetch(`/post-categories/${id}`, {
                     method: 'DELETE',
                     headers: {
@@ -267,28 +296,28 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Hapus dari list di modal
                         document.getElementById(`category-item-${id}`)?.remove();
-                        // Hapus dari checkbox list di form utama
                         document.querySelector(`input[name="categories[]"][value="${id}"]`)?.closest('label')?.remove();
+
+                        showToast('Category berhasil dihapus!');
                     } else {
                         alert('Gagal menghapus kategori.');
                     }
                 })
                 .catch(error => {
                     console.error("Ada error:", error);
+                    alert('Gagal menghapus kategori.');
                 });
         }
 
-        // Tutup modal kalau klik luar
         window.addEventListener('click', function(e) {
             const modal = document.getElementById('categoryModal');
+
             if (e.target === modal) {
                 closeCategoryModal();
             }
         });
 
-        // Upload Image Preview
         const imageInput = document.getElementById('imageInput');
         const imagePreview = document.getElementById('imagePreview');
         const uploadPlaceholder = document.getElementById('uploadPlaceholder');
@@ -300,7 +329,6 @@
             if (file) showPreview(file);
         });
 
-        // Drag & Drop support
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('border-acmi-blueprimer', 'bg-acmi-softblue');
@@ -312,8 +340,11 @@
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
+
             dropZone.classList.remove('border-acmi-blueprimer', 'bg-acmi-softblue');
+
             const file = e.dataTransfer.files[0];
+
             if (file && file.type.startsWith('image/')) {
                 imageInput.files = e.dataTransfer.files;
                 showPreview(file);
@@ -322,6 +353,7 @@
 
         function showPreview(file) {
             const reader = new FileReader();
+
             reader.onload = (e) => {
                 imagePreview.src = e.target.result;
                 imagePreview.classList.remove('hidden');
@@ -329,11 +361,13 @@
                 removeImageBtn.classList.remove('hidden');
                 removeImageBtn.classList.add('flex');
             };
+
             reader.readAsDataURL(file);
         }
 
         function removeImage(event) {
-            event.stopPropagation(); // supaya tidak trigger file picker
+            event.stopPropagation();
+
             imagePreview.src = '';
             imagePreview.classList.add('hidden');
             uploadPlaceholder.classList.remove('hidden');
@@ -348,6 +382,7 @@
             if (typeof tinymce !== 'undefined' && tinymce.get('acmi-editor')) {
                 tinymce.get('acmi-editor').save();
             }
+
             document.getElementById('postForm').submit();
         }
 
@@ -383,55 +418,56 @@
                     const categoryWrapper = document.getElementById('categoryCheckboxList');
 
                     categoryWrapper.insertAdjacentHTML('beforeend', `
-                <label class="group flex cursor-pointer items-center gap-3 text-xs text-gray-700">
-                    <input
-                        type="checkbox"
-                        name="categories[]"
-                        value="${data.category.id}"
-                        checked
-                        class="h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer accent-acmi-blueprimer"
-                    >
-                    <span class="transition group-hover:text-black">${data.category.name}</span>
-                </label>
-            `);
+                        <label class="group flex cursor-pointer items-center gap-3 text-xs text-gray-700">
+                            <input
+                                type="checkbox"
+                                name="categories[]"
+                                value="${data.category.id}"
+                                checked
+                                class="h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer accent-acmi-blueprimer"
+                            >
+                            <span class="transition group-hover:text-black">${data.category.name}</span>
+                        </label>
+                    `);
 
                     document.getElementById('categoryList').insertAdjacentHTML('beforeend', `
-                <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5" id="category-item-${data.category.id}">
-                    
-                    <div class="flex items-center justify-between normal-state-${data.category.id}">
-                        <span class="text-sm text-gray-700">${data.category.name}</span>
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5" id="category-item-${data.category.id}">
+                            <div class="flex items-center justify-between normal-state-${data.category.id}">
+                                <span class="text-sm text-gray-700">${data.category.name}</span>
 
-                        <button type="button"
-                            onclick="askDeleteCategory(${data.category.id})"
-                            class="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition">
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-                        </button>
-                    </div>
+                                <button type="button"
+                                    onclick="askDeleteCategory(${data.category.id})"
+                                    class="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
 
-                    <div class="hidden items-center justify-between gap-3 confirm-state-${data.category.id}">
-                        <span class="text-sm font-medium text-red-500 whitespace-nowrap">
-                            Delete "${data.category.name}"?
-                        </span>
+                            <div class="hidden items-center justify-between gap-3 confirm-state-${data.category.id}">
+                                <span class="text-sm font-medium text-red-500 whitespace-nowrap">
+                                    Delete "${data.category.name}"?
+                                </span>
 
-                        <div class="flex gap-2 flex-shrink-0">
-                            <button type="button"
-                                onclick="cancelDeleteCategory(${data.category.id})"
-                                class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 transition">
-                                Cancel
-                            </button>
+                                <div class="flex gap-2 flex-shrink-0">
+                                    <button type="button"
+                                        onclick="cancelDeleteCategory(${data.category.id})"
+                                        class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 transition">
+                                        Cancel
+                                    </button>
 
-                            <button type="button"
-                                onclick="confirmDeleteCategory(${data.category.id})"
-                                class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">
-                                Yes, Delete
-                            </button>
+                                    <button type="button"
+                                        onclick="confirmDeleteCategory(${data.category.id})"
+                                        class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">
+                                        Yes, Delete
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            `);
+                    `);
 
                     input.value = '';
 
+                    closeCategoryModal();
+                    showToast('Category berhasil ditambahkan!');
                 } else {
                     alert('Gagal menambahkan category');
                 }
