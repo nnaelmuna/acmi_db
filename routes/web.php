@@ -46,6 +46,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])
             ->name('posts.forceDelete');
     });
+    
+    // POST CATEGORY
+    Route::controller(CategoryController::class)->group(function () {
+        Route::post('/post-categories', 'store')->name('categories.store');
+        Route::delete('/post-categories/{category}', 'destroy')->name('categories.destroy');
+    });
 
     // Category Post
     Route::post('/post-categories', [CategoryController::class, 'store'])->name('categories.store');
