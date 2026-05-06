@@ -237,7 +237,7 @@
 <script>
 
     tinymce.init({
-        selector: '#acmi-editor-id, #acmi-editor-en',
+        selector: '#acmi-editor',
         license_key: 'gpl',
         height: 500,
         menubar: false,

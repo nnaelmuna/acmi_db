@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Services\PostService;
+use App\Services\TabFilterService;
 
 class PostController extends Controller
 {
@@ -21,15 +22,17 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status', 'published');
-        $posts = Post::where('status', $status)->latest()->get();
-        $counts = [
-            'published' => Post::where('status', 'published')->count(),
-            'draft'     => Post::where('status', 'draft')->count(),
-            'archived'  => Post::where('status', 'archived')->count(),
-        ];
-        
+        // Query berbeda untuk tab Trash vs tab lainnya
+        if ($status === 'trash') {
+            $posts = Post::onlyTrashed()->latest()->get();
+        } else {
+            $posts = Post::where('status', $status)->latest()->get();
+        }
 
-        return view('post', compact('posts', 'counts'));
+        // Satu baris ini menggantikan array $counts yang panjang
+        $tabs = TabFilterService::getTabs(Post::class);
+
+        return view('post', compact('posts', 'tabs', 'status'));
     }
 
     // Menampilkan form buat post baru
@@ -57,10 +60,29 @@ class PostController extends Controller
         $categories = Category::all();
         return view('post-edit', compact('post', 'categories'));
     }
-    
+
     public function update(UpdatePostRequest $request, Post $post)
     {
         $this->postService->update($request->validated(), $request->file('image'), $post);
         return redirect()->route('post')->with('success', 'Post berhasil diperbarui!');
+    }
+
+    public function restore($id)
+    {
+        // withTrashed() diperlukan agar bisa menemukan data yang sudah soft-deleted
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->restore();
+
+        return redirect()->route('posts.index', ['status' => 'trash'])
+            ->with('success', "Post \"{$post->title}\" berhasil dipulihkan.");
+    }
+
+    public function forceDelete($id)
+    {
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->forceDelete();
+
+        return redirect()->route('posts.index', ['status' => 'trash'])
+            ->with('success', "Post \"{$post->title}\" berhasil dihapus permanen.");
     }
 }
