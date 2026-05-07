@@ -13,20 +13,14 @@ class FaqController extends Controller
     {
         $allFaqs = Faq::all();
 
-        $status = $request->get('status', 'published');
-
-        $faqs = Faq::where('status', $status)
-            ->latest()
-            ->get();
-
         $tabs = TabFilterService::getTabs(Faq::class);
 
         $status = $request->get('status', 'published');
 
         if ($status === 'trash') {
-            $faqs = Faq::onlyTrashed()->latest()->get();
+            $faqs = Faq::onlyTrashed()->latest()->paginate(10);
         } else {
-            $faqs = Faq::where('status', $status)->latest()->get();
+            $faqs = Faq::where('status', $status)->latest()->paginate(10);
         }
 
         return view('faq', compact('faqs', 'allFaqs', 'tabs', 'status'));

@@ -121,14 +121,7 @@
                             class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
                     </div>
                 </div>
-
-                <div class="flex justify-end gap-2 pt-1">
-
-                    <button type="submit"
-                        class="rounded-md bg-acmi-darkblue px-5 py-2 text-xs font-medium text-white transition hover:bg-blue-900">
-                        Save Partner
-                    </button>
-                </div>
+                <x-form-status-buttons />
             </form>
         </div>
     </div>
@@ -183,8 +176,9 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-2 pt-1">
+                <x-form-status-select id="edit_status" name="status" />
 
+                <div class="flex justify-end gap-2 pt-1">
                     <button type="submit"
                         class="rounded-md bg-acmi-darkblue px-5 py-2 text-xs font-medium text-white transition hover:bg-blue-900">
                         Update Partner
@@ -193,6 +187,8 @@
             </form>
         </div>
     </div>
+
+    <x-pagination :paginator="$partners" />
 
 @endsection
 
@@ -266,5 +262,16 @@
             if (e.target === addModal) closeAddModal();
             if (e.target === editModal) closeEditModal();
         });
+
+        function openEditModal(data) {
+            document.getElementById('editForm').action = '/media-partner/' + data.id;
+            document.getElementById('edit_name').value = data.name ?? '';
+            document.getElementById('edit_link').value = data.link ?? '';
+            document.getElementById('edit_start').value = data.start_date ?? '';
+            document.getElementById('edit_end').value = data.end_date ?? '';
+            document.getElementById('edit_status').value = data.status ?? 'published';
+
+            animateModalOpen('editModal', 'editBox');
+        }
     </script>
 @endpush

@@ -12,14 +12,14 @@
                 class="flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-table-columns"></i>
                 <span
-                    class="text-md font-medium text-white {{ request()->routeIs('dashboard') ? 'font-semibold' : 'font-medium' }}">Dashboard</span>
+                    class="text-md font-medium text-white {{ request()->routeIs('dashboard')}}">Dashboard</span>
             </a>
 
             <a href="{{ route('post') }}"
                 class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('post') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-rectangle-list"></i>
                 <span
-                    class="text-md font-medium text-white {{ request()->routeIs('post') ? 'font-semibold' : 'font-medium' }}">Post</span>
+                    class="text-md font-medium text-white {{ request()->routeIs('post')}}">Post</span>
             </a>
 
             <a href="{{ route('faq') }}"
@@ -35,7 +35,7 @@
             </a>
 
             <a href="{{ route('media') }}"
-                class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100">
+                class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('media') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-folder-open"></i>
                 <span class="text-[15px] font-medium text-white">Media</span>
             </a>

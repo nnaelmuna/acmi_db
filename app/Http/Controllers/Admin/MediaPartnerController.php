@@ -12,15 +12,15 @@ class MediaPartnerController extends Controller
 {
     public function index(Request $request)
     {
-        $partners = MediaPartner::latest()->get();
+        $partners = MediaPartner::latest()->paginate(9);
         $tabs = TabFilterService::getTabs(MediaPartner::class);
 
         $status = $request->get('status', 'published');
 
         if ($status === 'trash') {
-            $partners = MediaPartner::onlyTrashed()->latest()->get();
+            $partners = MediaPartner::onlyTrashed()->latest()->paginate(9);
         } else {
-            $partners = MediaPartner::where('status', $status)->latest()->get();
+            $partners = MediaPartner::where('status', $status)->latest()->paginate(9);
         }
 
         return view('media-partner', compact('partners', 'tabs', 'status'));
@@ -34,6 +34,7 @@ class MediaPartnerController extends Controller
             'link' => ['nullable', 'url'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'status' => ['required', 'in:published,draft,archived'],
         ]);
 
         $imagePath = $request->file('image')->store('media-partners', 'public');
@@ -44,6 +45,7 @@ class MediaPartnerController extends Controller
             'link' => $validated['link'] ?? null,
             'start_date' => $validated['start_date'] ?? null,
             'end_date' => $validated['end_date'] ?? null,
+            'status' => $validated['status'],
         ]);
 
         return back()->with('success', 'Media partner added successfully.');
@@ -59,6 +61,7 @@ class MediaPartnerController extends Controller
             'link' => ['nullable', 'url'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'status' => ['required', 'in:published,draft,archived'],
         ]);
 
         if ($request->hasFile('image')) {
@@ -75,6 +78,7 @@ class MediaPartnerController extends Controller
             'start_date' => $validated['start_date'] ?? null,
             'end_date' => $validated['end_date'] ?? null,
             'image' => $partner->image,
+            'status' => $validated['status'],
         ]);
 
         return back()->with('success', 'Media partner updated successfully.');
