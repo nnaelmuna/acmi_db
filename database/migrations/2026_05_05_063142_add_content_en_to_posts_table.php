@@ -19,7 +19,7 @@ return new class extends Migration
                 $table->text('description_en')->nullable()->after('description');
             }
             if (!Schema::hasColumn('posts', 'content_en')) {
-                $table->longText('content_en')->nullable()->after('content');
+                $table->longText('content_en')->nullable();
             }
         });
     }
