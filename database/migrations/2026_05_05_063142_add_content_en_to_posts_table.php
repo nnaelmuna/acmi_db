@@ -12,19 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->string('title_en')->nullable()->after('title');
-            $table->text('description_en')->nullable()->after('description');
-            $table->longText('content_en')->nullable()->after('content');
+            if (!Schema::hasColumn('posts', 'title_en')) {
+                $table->string('title_en')->nullable()->after('title');
+            }
+            if (!Schema::hasColumn('posts', 'description_en')) {
+                $table->text('description_en')->nullable()->after('description');
+            }
+            if (!Schema::hasColumn('posts', 'content_en')) {
+                $table->longText('content_en')->nullable()->after('content');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn(['title_en', 'description_en', 'content_en']);
+            $table->dropColumn(
+                array_filter(
+                    ['title_en', 'description_en', 'content_en'],
+                    fn($col) => Schema::hasColumn('posts', $col)
+                )
+            );
         });
     }
 };
