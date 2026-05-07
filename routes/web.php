@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])
             ->name('posts.forceDelete');
     });
-    
+
     // POST CATEGORY
     Route::controller(CategoryController::class)->group(function () {
         Route::post('/post-categories', 'store')->name('categories.store');
@@ -74,6 +74,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/product/{id}', 'update')->name('product.update');
         Route::delete('/product/{id}', 'destroy')->name('product.destroy');
         Route::get('/product/{id}', 'show')->name('product.show');
+        Route::post('/product/{id}/restore')->name('product.restore');
+        Route::delete('/product/{id}/force-delete')->name('product.forceDelete');
     });
 
     Route::post('/product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');

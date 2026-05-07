@@ -8,35 +8,37 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Services\TabFilterService;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
         $categories = ProductCategory::all();
-        $categoryFilter = $request->query('category');
-
-        $products = Product::when($categoryFilter, function ($query, $categoryFilter) {
-            return $query->whereJsonContains('category', $categoryFilter);
-        })->get();
-
-        $counts = [];
-        foreach ($categories as $cat) {
-            $counts[$cat->name] = Product::whereJsonContains('category', $cat->name)->count();
-        }
 
         $status = $request->get('status', 'published');
+        $categoryFilter = $request->get('category');
 
+        // ← PERBAIKAN 1: pisahkan query trash dan non-trash
         if ($status === 'trash') {
-            $products = Product::onlyTrashed()->latest()->get();
+            $query = Product::onlyTrashed();
         } else {
-            $products = Product::where('status', $status)->latest()->get();
+            $query = Product::where('status', $status);
         }
 
-        $tabs = TabFilterService::getTabs(Product::class);
+        if ($categoryFilter) {
+            $query->whereJsonContains('category', $categoryFilter);
+        }
 
-        return view('product', compact('products', 'categories', 'counts', 'tabs', 'status'));
+        $products = $query->latest()->get();
+
+        $statusCounts = [
+            'published' => Product::where('status', 'published')->count(),
+            'draft'     => Product::where('status', 'draft')->count(),
+            'archived'  => Product::where('status', 'archived')->count(),
+            'trash'     => Product::onlyTrashed()->count(), // ← PERBAIKAN 2
+        ];
+
+        return view('product', compact('products', 'categories', 'statusCounts'));
     }
 
     public function create()
@@ -48,29 +50,34 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'company_name' => 'required',
-            'category' => 'required|array',
-            'ceo_name' => 'required',
-            'description' => 'required',
+            'title'          => 'required',
+            'company_name'   => 'required',
+            'category'       => 'required|array',
+            'ceo_name'       => 'required',
+            'description'    => 'required',
             'product_images' => 'required|array',
         ]);
 
         $data = $request->except(['product_images']);
 
         if ($request->hasFile('product_images')) {
-            $files = $request->file('product_images');
             $imagePaths = [];
-            foreach ($files as $file) {
+            foreach ($request->file('product_images') as $file) {
                 $imagePaths[] = $file->store('products', 'public');
             }
-            $data['image'] = $imagePaths[0]; // Thumbnail utama
-            $data['images'] = $imagePaths;   // Array gallery
+            $data['image']  = $imagePaths[0];
+            $data['images'] = $imagePaths;
         }
 
         Product::create($data);
 
         return redirect()->route('product.index')->with('success', 'Produk berhasil dibuat!');
+    }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('product-show', compact('product'));
     }
 
     public function edit($id)
@@ -84,18 +91,14 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // --- BAGIAN VALIDASI (WAJIB ADA BIAR GAK ERROR NULL) ---
         $request->validate([
             'title'    => 'required',
-            'category' => 'required|array', // Ini pengunci biar gak error Integrity Constraint
+            'category' => 'required|array',
             'email'    => 'required|email',
-            // Tambahkan validasi lain jika perlu
         ]);
 
-        // 1. Logika Gambar (List gambar lama yang TIDAK dihapus)
         $finalImages = $request->input('existing_images', []);
 
-        // 2. Hapus file fisik untuk gambar yang dibuang
         $oldImagesInDb = $product->images ?? [];
         foreach ($oldImagesInDb as $oldPath) {
             if (!in_array($oldPath, $finalImages)) {
@@ -103,23 +106,18 @@ class ProductController extends Controller
             }
         }
 
-        // 3. Tambah gambar baru (Maksimal total 3 gambar)
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $file) {
-                if ($file && $file->isValid()) {
-                    if (count($finalImages) < 3) {
-                        $finalImages[] = $file->store('products', 'public');
-                    }
+                if ($file && $file->isValid() && count($finalImages) < 3) {
+                    $finalImages[] = $file->store('products', 'public');
                 }
             }
         }
 
-        // 4. Tentukan Thumbnail Utama
         $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
 
-        // 5. Update database (Manual mapping biar aman)
         $product->update([
-            'category'     => $request->category, // Data ini dijamin ada karena sudah lewat validasi
+            'category'     => $request->category,
             'title'        => $request->title,
             'company_name' => $request->company_name,
             'ceo_name'     => $request->ceo_name,
@@ -135,27 +133,40 @@ class ProductController extends Controller
         return redirect()->route('product.index')->with('success', 'Produk berhasil diupdate!');
     }
 
+    // ← PERBAIKAN 3: destroy hanya soft delete, TIDAK hapus file
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
+        $product->delete(); // soft delete → pindah ke trash
 
-        // 1. Hapus file gambar dari folder storage agar tidak menumpuk (sampah)
+        return redirect()->route('product.index', ['status' => 'trash'])
+            ->with('success', 'Produk dipindahkan ke trash!');
+    }
+
+    // ← TAMBAHAN: Restore dari trash
+    public function restore($id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+
+        return redirect()->route('product.index', ['status' => 'published'])
+            ->with('success', 'Produk berhasil direstore!');
+    }
+
+    // ← TAMBAHAN: Hapus permanen + hapus file
+    public function forceDelete($id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+
         if ($product->images) {
             foreach ($product->images as $path) {
                 Storage::disk('public')->delete($path);
             }
         }
 
-        // 2. Hapus data dari database
-        $product->delete();
+        $product->forceDelete();
 
-        // 3. INI YANG PENTING: Redirect balik ke halaman index
-        return redirect()->route('product.index')->with('success', 'Produk berhasil dihapus!');
-    }
-    public function show($id)
-    {
-        $product = Product::findOrFail($id);
-
-        return view('product-show', compact('product'));
+        return redirect()->route('product.index', ['status' => 'trash'])
+            ->with('success', 'Produk berhasil dihapus permanen!');
     }
 }

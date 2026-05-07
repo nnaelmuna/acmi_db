@@ -25,66 +25,97 @@
         </div>
     @endif
 
-    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div class="flex items-center gap-3 w-full xl:w-auto">
+    <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-            <!-- Wrapper Utama -->
-            <div class="relative group flex-1 xl:flex-none">
+        {{-- BAGIAN KIRI: Status Tabs --}}
+        <div class="flex flex-wrap items-center gap-2">
 
-                <!-- Panah Kiri (Id: leftArrow) -->
-                <button id="leftArrow" onclick="scrollCat('left')"
-                    class="hidden absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
-                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                </button>
-
-                <!-- Container Kategori -->
-                <div id="catSlider"
-                    class="flex no-scrollbar overflow-x-auto scroll-smooth items-center gap-2 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5 max-w-[300px] md:max-w-[500px] lg:max-w-[700px]">
-                    <a href="{{ route('product.index') }}"
-                        class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ !request('category') ? 'bg-white text-black shadow-sm' : 'text-gray-00 hover:text-black' }}">
-                        <span>All</span>
-                        <span
-                            class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                            {{ isset($counts) ? array_sum($counts) : $products->count() }}
-                        </span>
-                    </a>
-
-                    <!-- Looping langsung dari variabel $categories yang dikirim Controller -->
-                    @foreach ($categories as $cat)
-                        <a id="slider-cat-{{ $cat->id }}"
-                            href="{{ route('product.index', ['category' => $cat->name]) }}"
-                            class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ request('category') == $cat->name ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                            <span>{{ $cat->name }}</span>
-
-                            <span
-                                class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                                {{ $counts[$cat->name] ?? 0 }}
-                            </span>
-                        </a>
-                    @endforeach
-                </div>
-
-                <!-- Panah Kanan (Id: rightArrow) -->
-                <button id="rightArrow" onclick="scrollCat('right')"
-                    class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </button>
+            {{-- Status Tabs --}}
+            <div class="inline-flex items-center gap-1 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5">
+                <a href="{{ route('product.index', ['status' => 'published'] + request()->except('status')) }}"
+                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
+                    {{ request('status', 'published') === 'published' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
+                    <span>Published</span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
+                        {{ $statusCounts['published'] ?? 0 }}
+                    </span>
+                </a>
+                <a href="{{ route('product.index', ['status' => 'draft'] + request()->except('status')) }}"
+                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
+                    {{ request('status') === 'draft' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
+                    <span>Draft</span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
+                        {{ $statusCounts['draft'] ?? 0 }}
+                    </span>
+                </a>
+                <a href="{{ route('product.index', ['status' => 'archived'] + request()->except('status')) }}"
+                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
+                    {{ request('status') === 'archived' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
+                    <span>Archived</span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
+                        {{ $statusCounts['archived'] ?? 0 }}
+                    </span>
+                </a>
+                <a href="{{ route('product.index', ['status' => 'trash'] + request()->except('status')) }}"
+                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
+                    {{ request('status') === 'trash' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
+                    <span>Trash</span>
+                    <span
+                        class="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+                        {{ $statusCounts['trash'] ?? 0 }}
+                    </span>
+                </a>
             </div>
-
-            <!-- Tombol Tambah Kategori -->
-            <button type="button" onclick="openCategoryModal()"
-                class="flex h-10 w-10 ml-3 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 shadow-sm transition hover:text-[#0014A8]">
-                <i class="fa-solid fa-plus text-sm"></i>
-            </button>
         </div>
 
-        <!-- Tombol New Product -->
-        <div class="flex items-center">
+        {{-- BAGIAN KANAN: Filter Dropdown, Add Category & New Product --}}
+        <div class="flex items-center gap-1">
+            
+            {{-- Filter Dropdown --}}
+            <div class="relative" id="filterDropdownWrapper">
+                <button type="button" onclick="toggleFilterDropdown()"
+                    class="inline-flex h-11 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50">
+                    <span>Filter</span>
+                    <i class="fa-solid fa-chevron-down text-xs transition duration-200" id="filterChevron"></i>
+                </button>
+
+                {{-- Dropdown Panel --}}
+                <div id="filterDropdown"
+                    class="absolute right-0 top-full z-50 mt-2 hidden w-56 rounded-2xl border border-gray-200 bg-white p-3 shadow-lg">
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">Category</p>
+                    <div class="space-y-1">
+                        <a href="{{ route('product.index', array_merge(request()->except('category'), ['status' => request('status', 'published')])) }}"
+                            class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition
+                            {{ !request('category') ? 'bg-acmi-blueprimer/10 text-acmi-blueprimer font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                            All Categories
+                        </a>
+                        @foreach ($categories as $cat)
+                            <a href="{{ route('product.index', array_merge(request()->except('category'), ['category' => $cat->name, 'status' => request('status', 'published')])) }}"
+                                class="flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition
+                            {{ request('category') == $cat->name ? 'bg-acmi-blueprimer/10 text-acmi-blueprimer font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
+                                {{ $cat->name }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- Tombol Tambah Kategori --}}
+            <button type="button" onclick="openCategoryModal()"
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-400 shadow-sm transition hover:text-acmi-blueprimer">
+                <i class="fa-solid fa-plus text-sm"></i>
+            </button>
+
+            {{-- Tombol New Product --}}
             <a href="{{ route('product.create') }}"
-                class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
+                class="inline-flex ml-4 h-11 items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-acmi-darkblue">
                 <span>New Product</span>
                 <i class="fa-solid fa-plus"></i>
             </a>
+            
         </div>
     </div>
 
@@ -193,8 +224,6 @@
         </div>
     </x-modal-popup-category>
 
-    <x-filters-tab :tabs="$tabs"/>
-
     {{-- Form Rahasia buat eksekusi Delete --}}
     <form id="delete-item-form" action="" method="POST" style="display: none;">
         @csrf
@@ -259,7 +288,7 @@
 
         function openCategoryModal() {
             const modal = document.getElementById('categoryModal');
-            const modalBox = modal.querySelector('.scale-95') || modal.children[0];
+            const modalBox = modal.querySelector('.scale-95') || modal.children;
 
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -270,7 +299,7 @@
 
         function closeCategoryModal() {
             const modal = document.getElementById('categoryModal');
-            const modalBox = modal.querySelector('.scale-100') || modal.children[0];
+            const modalBox = modal.querySelector('.scale-100') || modal.children;
 
             if (modalBox) {
                 modalBox.classList.remove('scale-100');
@@ -354,5 +383,21 @@
                 modal.classList.remove('flex');
             }, 200);
         }
+
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            const chevron = document.getElementById('filterChevron');
+            dropdown.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+
+        // Tutup dropdown kalau klik luar
+        document.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('filterDropdownWrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                document.getElementById('filterDropdown').classList.add('hidden');
+                document.getElementById('filterChevron').classList.remove('rotate-180');
+            }
+        });
     </script>
 @endpush
