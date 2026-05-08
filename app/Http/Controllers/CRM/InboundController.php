@@ -11,7 +11,7 @@ class InboundController extends Controller
     public function index(Request $request)
     {
         // 1. Inisialisasi Query
-        $query = Inbound::query();
+        $query = Inbound::query()->where('status', 'requested');
 
         // 2. Fitur Search (Nama, Perusahaan, atau Email)
         if ($request->has('search') && $request->search != '') {
@@ -35,6 +35,29 @@ class InboundController extends Controller
 
         return view('crm.inbound', compact('inbounds', 'stats'));
     }
+
+    public function approve(string $id)
+{
+    // 1. Cari data di tabel Inbound
+    $inbound = \App\Models\Inbound::findOrFail($id);
+
+    // 2. Copy data ke tabel Member
+    \App\Models\Member::create([
+        'name'          => $inbound->name,
+        'email'         => $inbound->email,
+        'phone'         => $inbound->phone,
+        'company_name'  => $inbound->company_name,
+        'industry'      => $inbound->industry,
+        'position'      => $inbound->position,
+        'company_url'   => $inbound->company_url, // Pastikan di Inbound juga ada kolom ini
+        'status'        => 'active', // Langsung active di tabel Member
+    ]);
+
+    // 3. Update status di tabel Inbound jadi approved biar ilang dari list 'Requested'
+    $inbound->update(['status' => 'approved']);
+
+    return redirect()->back()->with('success', 'Member approved and moved to CRM!');
+}
 
     /**
      * Detail Pop-up Modal (Mengambil data satuan untuk modal)

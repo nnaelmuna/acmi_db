@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\MediaPartnerController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CRM\InboundController;
+use App\Http\Controllers\Admin\MemberController;
 
 // Redirect ke login
 Route::get('/', function () {
@@ -112,10 +113,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/inbound/{id}', [InboundController::class, 'show'])->name('inbound.show');
         Route::patch('/inbound/{id}/status', [InboundController::class, 'updateStatus'])->name('inbound.status');
         Route::post('/inbound/bulk-approve', [InboundController::class, 'bulkApprove'])->name('inbound.bulkApprove');
+        Route::post('/inbound/{id}/approve', [InboundController::class, 'approve'])->name('inbound.approve');
     });
 
     Route::get('/cek-session', function () {
         return config('session.lifetime'); // harusnya return 480
+    });
+
+    // Members
+    Route::prefix('crm')->group(function () {
+        Route::get('/members', [MemberController::class, 'index'])->name('members.index');
+        Route::get('/members/{id}', [MemberController::class, 'show'])->name('members.show');
+        Route::put('/members/{id}', [MemberController::class, 'update'])->name('members.update');
+        Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
     });
 
     // --- LOGOUT ---

@@ -9,17 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('members', function (Blueprint $table) {
-            $table->id();
-            $table->string('full_name');
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('status')->default('active');
-            $table->timestamps();
-        });
-    }
+   public function up(): void
+{
+    Schema::create('members', function (Blueprint $table) {
+        $table->id();
+        $table->string('name'); // Sesuaikan jadi 'name' biar sama kayak Inbound
+        $table->string('email')->unique();
+        $table->string('phone');
+        $table->string('linkedin_url')->nullable();
+        $table->string('company_name');
+        $table->string('industry'); // Penting buat filter industri!
+        $table->string('position');
+        $table->string('company_url')->nullable();
+        $table->string('status')->default('active'); // active, inactive
+        $table->softDeletes(); // INI WAJIB biar error deleted_at tadi ilang
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
