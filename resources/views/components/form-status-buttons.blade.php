@@ -6,7 +6,7 @@
 
     <button type="submit" name="status" value="archived"
         class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
-        Archive
+        Archived
     </button>
 
     <button type="submit" name="status" value="published"

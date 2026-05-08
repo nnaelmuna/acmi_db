@@ -27,25 +27,31 @@
         }
     </style>
 
-    {{-- Category Tabs + Button --}}
-    <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+    {{-- Top Action Section --}}
+    <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-        <div class="flex items-center gap-3 w-full xl:w-auto">
+        {{-- BAGIAN KIRI: Status Tabs --}}
+        <div class="flex flex-wrap items-center gap-2">
+            <x-filters-tab :tabs="$tabs" />
+        </div>
 
-            <div class="relative group flex-1 xl:flex-none">
+        {{-- BAGIAN KANAN: Add Category, Filter Dropdown, Add Media --}}
+        <div class="flex flex-wrap items-center gap-3 xl:justify-end">
+            
+            {{-- Tombol Tambah Kategori --}}
+            <button type="button" onclick="openCategoryModal()"
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-400 shadow-sm transition hover:text-acmi-blueprimer">
+                <i class="fa-solid fa-plus text-sm"></i>
+            </button>
 
+            {{-- Filter Dropdown Component --}}
+            <div class="relative">
                 <x-filters-dropdown-category :categories="$categories" routeName="media" />
             </div>
 
-            <button type="button" onclick="openCategoryModal()"
-                class="flex h-10 w-10  ml-3 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 shadow-sm transition hover:text-[#0014A8]">
-                <i class="fa-solid fa-plus text-sm"></i>
-            </button>
-        </div>
-
-        <div class="flex shrink-0 items-center justify-end gap-3">
+            {{-- Tombol Add Media --}}
             <button onclick="openMediaModal()"
-                class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
+                class="inline-flex h-11 items-center gap-3 rounded-xl bg-acmi-blueprimer px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-acmi-darkblue">
                 <span>Add Media</span>
                 <i class="fa-solid fa-plus"></i>
             </button>
@@ -125,8 +131,62 @@
         @endforelse
     </div>
 
-    {{-- Add Category Modal --}}
-    <x-filters-tab :tabs="$tabs" />
+    {{-- Category Modal --}}
+    <x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
+        {{-- Daftar Kategori yang Ada --}}
+        <div class="mb-5">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Existing Categories</p>
+            <div id="categoryList" class="max-h-52 overflow-y-auto space-y-2 pr-1">
+                @foreach ($categories as $category)
+                    <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5"
+                        id="category-item-{{ $category->id }}">
+
+                        {{-- Normal State --}}
+                        <div class="flex items-center justify-between normal-state-{{ $category->id }}">
+                            <span class="text-sm text-gray-700">{{ $category->name }}</span>
+                            <button type="button" onclick="askDeleteCategory({{ $category->id }})"
+                                class="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+
+                        {{-- Confirm State --}}
+                        <div class="hidden items-center justify-between gap-3 confirm-state-{{ $category->id }}">
+                            <span class="text-sm font-medium text-red-500 whitespace-nowrap">Delete
+                                "{{ $category->name }}"?</span>
+                            <div class="flex gap-2 flex-shrink-0">
+                                <button type="button" onclick="cancelDeleteCategory({{ $category->id }})"
+                                    class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 transition">Cancel</button>
+                                <button type="button" onclick="confirmDeleteCategory({{ $category->id }})"
+                                    class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">Yes,
+                                    Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Divider --}}
+        <div class="mb-5 border-t border-gray-200"></div>
+
+        {{-- Form Tambah Kategori Baru --}}
+        <div>
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Add New Category</p>
+            {{-- Sesuaikan route ini dengan route kategori media di web.php kamu --}}
+            <form action="{{ route('media.categories.store') ?? url('/media-categories') }}" method="POST" id="formAddCategory">
+                @csrf
+                <div class="flex gap-2">
+                    <input type="text" name="name" id="newCategoryInput" placeholder="e.g. Campaign"
+                        class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"
+                        required>
+                    <button type="submit"
+                        class="rounded-lg bg-acmi-blueprimer px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue whitespace-nowrap">+
+                        Add</button>
+                </div>
+            </form>
+        </div>
+    </x-modal-popup-category>
 
     {{-- Add Media Modal --}}
     <div id="mediaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
@@ -165,12 +225,7 @@
                         class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="rounded-md bg-acmi-blueprimer px-5 py-2 text-sm font-medium text-white transition hover:bg-acmi-darkblue">
-                        Save
-                    </button>
-                </div>
+                    <x-form-status-buttons />
             </form>
         </div>
     </div>
@@ -222,10 +277,12 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-2">
+                <x-form-status-select id="edit_status" name="status" />
+
+                <div class="flex justify-end gap-3 pt-2">
                     <button type="submit"
-                        class="rounded-md bg-acmi-blueaccent px-4 py-2 text-sm font-medium text-white hover:bg-acmi-darkblue">
-                        Update
+                        class="rounded-md bg-acmi-darkblue px-5 py-2 text-xs font-medium text-white transition hover:bg-blue-900">
+                        Save Changes
                     </button>
                 </div>
             </form>

@@ -13,34 +13,42 @@ class MediaItemController extends Controller
     // LIST MEDIA
     public function index(Request $request)
     {
+        // 1. Siapkan data kategori untuk dropdown
         $categories = MediaCategory::orderBy('is_default', 'desc')
             ->orderBy('id', 'asc')
             ->get();
 
+        // 2. (Opsional) Hitung jumlah media per kategori
         $allMedia = MediaItem::with('category')->get();
-
-        $query = MediaItem::with('category');
-
-        if ($request->filled('category')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('slug', $request->category);
-            });
-        }
-
-        $media = $query->latest()->get();
-
         $counts = $categories->mapWithKeys(function ($cat) use ($allMedia) {
             return [$cat->slug => $allMedia->where('media_category_id', $cat->id)->count()];
         })->toArray();
 
-        $status = $request->get('status', 'published');
+        // 3. MULAI QUERY BUILDER (JANGAN DI-GET DULU!)
+        $query = MediaItem::with('category');
 
+        // A. Filter Status & Trash
+        $status = $request->get('status', 'published');
         if ($status === 'trash') {
-            $media = MediaItem::onlyTrashed()->latest()->get();
+            $query->onlyTrashed();
         } else {
-            $media = MediaItem::with('category')->where('status', $status)->latest()->get();
+            // (Pastikan tabel media_items kamu punya kolom 'status' ya)
+            $query->where('status', $status);
         }
 
+        // B. Filter Kategori
+        if ($request->filled('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                // Ubah jadi 'name' karena di Blade kamu ngirim ->name
+                $q->where('name', $request->category);
+            });
+        }
+
+        // C. Eksekusi Query Gabungan
+        $media = $query->latest()->get();
+        // ==========================================
+
+        // 4. Siapkan komponen Tab
         $tabs = TabFilterService::getTabs(MediaItem::class);
 
         return view('media', compact('media', 'categories', 'allMedia', 'counts', 'tabs', 'status'));
