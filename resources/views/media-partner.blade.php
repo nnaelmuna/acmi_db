@@ -17,11 +17,13 @@
     <div class="flex items-center justify-between">
         <x-filters-tab :tabs="$tabs" />
 
-        <button type="button" onclick="openAddModal()"
-            class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
-            <span>Add Partner</span>
-            <i class="fa-solid fa-plus"></i>
-        </button>
+        @if (request('status') !== 'trash')
+            <button type="button" onclick="openAddModal()"
+                class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
+                <span>Add Partner</span>
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        @endif
     </div>
 
     {{-- Card Grid --}}
@@ -33,20 +35,23 @@
                     <img src="{{ asset('storage/' . $item->image) }}"
                         class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105">
 
-                    <div class="absolute right-3 top-3 flex gap-2 opacity-0 transition group-hover:opacity-100">
+                    {{-- Edit & Delete hanya muncul kalau bukan Trash --}}
+                    @if (request('status') !== 'trash')
+                        <div class="absolute right-3 top-3 flex gap-2 opacity-0 transition group-hover:opacity-100">
 
-                        <button type="button" onclick='openEditModal(@json($item))'
-                            class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-blue-600 shadow hover:bg-blue-600 hover:text-white">
-                            <i class="fa-solid fa-pen text-xs"></i>
-                        </button>
+                            <button type="button" onclick='openEditModal(@json($item))'
+                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-blue-600 shadow hover:bg-blue-600 hover:text-white">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
 
-                        <button type="button"
-                            onclick="openDeleteModal('{{ route('media-partner.destroy', $item->id) }}', 'Are you sure want to delete this media partner?')"
-                            class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-red-500 shadow hover:bg-red-500 hover:text-white">
-                            <i class="fa-solid fa-trash text-xs"></i>
-                        </button>
+                            <button type="button"
+                                onclick="openDeleteModal('{{ route('media-partner.destroy', $item->id) }}', 'Are you sure want to delete this media partner?')"
+                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-red-500 shadow hover:bg-red-500 hover:text-white">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
 
-                    </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mt-4">
@@ -62,6 +67,29 @@
                     <p class="mt-2 text-xs text-gray-500">
                         {{ $item->start_date ?? '-' }} - {{ $item->end_date ?? '-' }}
                     </p>
+
+                    {{-- Tombol khusus saat Trash --}}
+                    @if (request('status') === 'trash')
+                        <form action="{{ route('media-partner.restore', $item->id) }}" method="POST" class="mt-4 w-full">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full rounded-lg border border-blue-900 py-2.5 text-center font-medium text-acmi-blueprimer transition hover:bg-acmi-blueprimer hover:text-white">
+                                Restore
+                            </button>
+                        </form>
+
+                        <form action="{{ route('media-partner.forceDelete', $item->id) }}" method="POST"
+                            class="mt-2 w-full">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="button"
+                                onclick="openDeleteModal('{{ route('media-partner.forceDelete', $item->id) }}', 'HAPUS PERMANEN? DATA INI TIDAK BISA DIKEMBALIKAN!')"
+                                class="block w-full rounded-lg border border-red-600 py-2.5 text-center font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
+                                Permanently Delete
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         @empty
@@ -121,6 +149,7 @@
                             class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
                     </div>
                 </div>
+
                 <x-form-status-buttons />
             </form>
         </div>
@@ -190,6 +219,12 @@
 
     <x-pagination :paginator="$partners" />
 
+    {{-- Form global untuk delete modal --}}
+    <form id="delete-item-form" action="" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
 @endsection
 
 @push('scripts')
@@ -211,6 +246,8 @@
             const modal = document.getElementById(modalId);
             const box = document.getElementById(boxId);
 
+            if (!modal || !box) return;
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
@@ -223,6 +260,8 @@
         function animateModalClose(modalId, boxId) {
             const modal = document.getElementById(modalId);
             const box = document.getElementById(boxId);
+
+            if (!modal || !box) return;
 
             box.classList.remove('scale-100', 'opacity-100');
             box.classList.add('scale-95', 'opacity-0');
@@ -247,6 +286,7 @@
             document.getElementById('edit_link').value = data.link ?? '';
             document.getElementById('edit_start').value = data.start_date ?? '';
             document.getElementById('edit_end').value = data.end_date ?? '';
+            document.getElementById('edit_status').value = data.status ?? 'published';
 
             animateModalOpen('editModal', 'editBox');
         }
@@ -262,16 +302,5 @@
             if (e.target === addModal) closeAddModal();
             if (e.target === editModal) closeEditModal();
         });
-
-        function openEditModal(data) {
-            document.getElementById('editForm').action = '/media-partner/' + data.id;
-            document.getElementById('edit_name').value = data.name ?? '';
-            document.getElementById('edit_link').value = data.link ?? '';
-            document.getElementById('edit_start').value = data.start_date ?? '';
-            document.getElementById('edit_end').value = data.end_date ?? '';
-            document.getElementById('edit_status').value = data.status ?? 'published';
-
-            animateModalOpen('editModal', 'editBox');
-        }
     </script>
 @endpush

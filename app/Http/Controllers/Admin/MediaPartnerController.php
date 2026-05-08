@@ -12,9 +12,6 @@ class MediaPartnerController extends Controller
 {
     public function index(Request $request)
     {
-        $partners = MediaPartner::latest()->paginate(9);
-        $tabs = TabFilterService::getTabs(MediaPartner::class);
-
         $status = $request->get('status', 'published');
 
         if ($status === 'trash') {
@@ -22,6 +19,8 @@ class MediaPartnerController extends Controller
         } else {
             $partners = MediaPartner::where('status', $status)->latest()->paginate(9);
         }
+
+        $tabs = TabFilterService::getTabs(MediaPartner::class);
 
         return view('media-partner', compact('partners', 'tabs', 'status'));
     }
@@ -88,12 +87,37 @@ class MediaPartnerController extends Controller
     {
         $partner = MediaPartner::findOrFail($id);
 
+        // Jangan hapus image di sini, karena ini hanya soft delete
+        $partner->delete();
+
+        return redirect()
+            ->route('media-partner', ['status' => 'trash'])
+            ->with('success', 'Media partner moved to trash successfully.');
+    }
+
+    public function restore($id)
+    {
+        $partner = MediaPartner::onlyTrashed()->findOrFail($id);
+
+        $partner->restore();
+
+        return redirect()
+            ->route('media-partner', ['status' => 'published'])
+            ->with('success', 'Media partner restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $partner = MediaPartner::onlyTrashed()->findOrFail($id);
+
         if ($partner->image && Storage::disk('public')->exists($partner->image)) {
             Storage::disk('public')->delete($partner->image);
         }
 
-        $partner->delete();
+        $partner->forceDelete();
 
-        return back()->with('success', 'Media partner deleted successfully.');
+        return redirect()
+            ->route('media-partner', ['status' => 'trash'])
+            ->with('success', 'Media partner permanently deleted successfully.');
     }
 }

@@ -35,7 +35,7 @@ class ProductController extends Controller
             'published' => Product::where('status', 'published')->count(),
             'draft'     => Product::where('status', 'draft')->count(),
             'archived'  => Product::where('status', 'archived')->count(),
-            'trash'     => Product::onlyTrashed()->count(), // ← PERBAIKAN 2
+            'trash'     => Product::onlyTrashed()->count(),
         ];
 
         return view('product', compact('products', 'categories', 'statusCounts'));
@@ -49,6 +49,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $request->validate([
             'title'          => 'required',
             'company_name'   => 'required',
