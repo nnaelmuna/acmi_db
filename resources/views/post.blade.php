@@ -22,10 +22,15 @@
         <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
             {{-- Tabs --}}
-            <x-filters-tab :tabs="$tabs"/>
+            <x-filters-tab :tabs="$tabs" />
 
-            {{-- New Post Button --}}
-            <div class="flex justify-start xl:justify-end">
+            {{-- Kanan: Filter + New Post --}}
+            <div class="flex items-center gap-2 justify-start xl:justify-end">
+
+                {{-- Filter Dropdown --}}
+                <x-filters-dropdown-category :categories="$categories" routeName="post" />
+
+                {{-- New Post Button --}}
                 <a href="{{ route('post.create') }}"
                     class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
                     <span>New Post</span>
@@ -77,7 +82,7 @@
 
                         {{-- Date --}}
                         <div class="col-span-2 text-xs text-gray-600">
-                            {{ optional($post->created_at)->format('Y/m/d \a\t h.i a') }}
+                            {{ optional($post->created_at)->format('Y/m/d \a\t h:i a') }}
                         </div>
 
                     </div>
@@ -92,4 +97,3 @@
         </div>
     </div>
 @endsection
-

@@ -34,39 +34,7 @@
 
             <div class="relative group flex-1 xl:flex-none">
 
-                <button id="leftArrow" onclick="scrollCat('left')"
-                    class="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex bg-white shadow-md rounded-full items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
-                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                </button>
-
-                <div id="catSlider"
-                    class="flex overflow-x-auto scroll-smooth items-center gap-2 rounded-2xl border border-gray-200 bg-[#F6F6F6] p-1.5 max-w-[300px] md:max-w-[500px] lg:max-w-[700px]">
-
-                    <a href="{{ route('media') }}"
-                        class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ !request('category') ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                        <span>All</span>
-                        <span
-                            class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                            {{ $allMedia->count() }}
-                        </span>
-                    </a>
-
-                    @foreach ($categories as $cat)
-                        <a id="slider-cat-{{ $cat->id }}" href="{{ route('media', ['category' => $cat->name]) }}"
-                            class="shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition {{ request('category') == $cat->name ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                            <span>{{ $cat->name }}</span>
-                            <span
-                                class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                                {{ $allMedia->where('media_category_id', $cat->id)->count() }}
-                            </span>
-                        </a>
-                    @endforeach
-                </div>
-
-                <button id="rightArrow" onclick="scrollCat('right')"
-                    class="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-white shadow-md rounded-full flex items-center justify-center text-gray-600 border border-gray-100 transition hover:scale-110">
-                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </button>
+                <x-filters-dropdown-category :categories="$categories" routeName="media" />
             </div>
 
             <button type="button" onclick="openCategoryModal()"

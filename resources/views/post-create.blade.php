@@ -96,7 +96,7 @@
 
                     {{-- Remove Button (hidden by default) --}}
                     <button id="removeImageBtn" type="button" onclick="removeImage(event)"
-                        class="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md hover:bg-red-600 transition">
+                        class="hidden absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md hover:bg-red-600 transition">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
 
