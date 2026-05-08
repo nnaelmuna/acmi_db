@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(PostController::class)->group(function () {
         Route::get('/post', 'index')->name('post');
         Route::get('/post/create', 'create')->name('post.create');
+        Route::post('/post/bulk-destroy', 'bulkDestory')->name('post.bulkDestroy');
         Route::post('/post', 'store')->name('post.store');
         Route::get('/post/{post}/edit', 'edit')->name('post.edit');
         Route::put('/post/{post}', 'update')->name('post.update');

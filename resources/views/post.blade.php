@@ -45,28 +45,46 @@
             {{-- Table Header --}}
             <div
                 class="grid grid-cols-12 items-center gap-3 border-b border-acmi-blueprimer px-4 py-3 text-xs font-medium text-gray-600">
-                <div class="col-span-8 flex items-center gap-3">
-                    <input type="checkbox" class="h-4 w-4 rounded border-gray-300">
+                <div class="col-span-7 flex items-center gap-3">
+                    <input type="checkbox" id="selectAll" class="h-4 w-4 rounded border-gray-300 cursor-pointer">
                     <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Title</span>
                 </div>
-
                 <div class="col-span-2 text-center">
                     <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Stats</span>
                 </div>
-
                 <div class="col-span-2 text-left">
                     <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Date</span>
+                </div>
+
+                {{-- Titik 3 di header untuk bulk action --}}
+                <div class="col-span-1 flex justify-center">
+                    <div class="relative" id="bulkActionWrapper">
+                        <button type="button" id="bulkActionBtn" onclick="toggleBulkMenu()"
+                            class="hidden h-7 w-7 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
+                            <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                        </button>
+
+                        <div id="bulkActionMenu"
+                            class="absolute right-0 top-full z-50 mt-1 hidden w-36 rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
+                            <button type="button" onclick="bulkDelete()"
+                                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                                Delete Selected
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {{-- Table Body --}}
             <div class="divide-y divide-acmi-blueprimer/70">
                 @forelse($posts as $post)
-                    <div class="grid grid-cols-12 items-center gap-3 px-4 py-4 transition hover:bg-gray-50">
+                    <div class="grid grid-cols-12 items-center gap-3 px-4 py-4 transition hover:bg-gray-50 row-item">
 
                         {{-- Title --}}
-                        <div class="col-span-8 flex items-center gap-3">
-                            <input type="checkbox" class="h-4 w-4 rounded border-gray-300">
+                        <div class="col-span-7 flex items-center gap-3">
+                            <input type="checkbox" name="selected_posts[]" value="{{ $post->id }}"
+                                class="post-checkbox h-4 w-4 rounded border-gray-300 cursor-pointer">
                             <p class="text-sm font-medium text-gray-900">
                                 <a href="{{ route('post.edit', $post) }}" class="hover:text-acmi-blueprimer transition">
                                     {{ $post->title }}
@@ -85,6 +103,26 @@
                             {{ optional($post->created_at)->format('Y/m/d \a\t h:i a') }}
                         </div>
 
+                        {{-- Titik 3 per row --}}
+                        <div class="col-span-1 flex justify-center">
+                            <div class="relative" id="action-wrapper-{{ $post->id }}">
+                                <button type="button" onclick="toggleActionMenu({{ $post->id }})"
+                                    class="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
+                                    <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                                </button>
+
+                                <div id="action-menu-{{ $post->id }}"
+                                    class="absolute right-0 top-full z-50 mt-1 hidden w-36 rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
+                                    <button type="button"
+                                        onclick="openDeleteModal('{{ route('post.destroy', $post->id) }}', 'Are you sure want to delete this post?')"
+                                        class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 @empty
                     <div class="flex min-h-[340px] items-center justify-center px-6 py-10">
@@ -96,4 +134,103 @@
             </div>
         </div>
     </div>
+
+    <form id="delete-item-form" action="" method="POST" style="display:none;">
+        @csrf
+        @method('DELETE')
+    </form>
+
 @endsection
+
+
+@push('scripts')
+    <script>
+        // Select All
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.post-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = this.checked;
+                cb.closest('.row-item').classList.toggle('bg-blue-50', this.checked);
+            });
+            updateBulkButton();
+        });
+
+        // Select individual
+        document.querySelectorAll('.post-checkbox').forEach(cb => {
+            cb.addEventListener('change', function() {
+                this.closest('.row-item').classList.toggle('bg-blue-50', this.checked);
+
+                const all = document.querySelectorAll('.post-checkbox');
+                const checked = document.querySelectorAll('.post-checkbox:checked');
+                document.getElementById('selectAll').checked = all.length === checked.length;
+                document.getElementById('selectAll').indeterminate = checked.length > 0 && checked.length <
+                    all.length;
+                updateBulkButton();
+            });
+        });
+
+        // Tampilkan/sembunyikan bulk action button di header
+        function updateBulkButton() {
+            const checked = document.querySelectorAll('.post-checkbox:checked');
+            const btn = document.getElementById('bulkActionBtn');
+            if (checked.length > 0) {
+                btn.classList.remove('hidden');
+                btn.classList.add('flex');
+            } else {
+                btn.classList.add('hidden');
+                btn.classList.remove('flex');
+            }
+        }
+
+        // Toggle bulk menu di header
+        function toggleBulkMenu() {
+            document.getElementById('bulkActionMenu').classList.toggle('hidden');
+        }
+
+        // Bulk delete
+        function bulkDelete() {
+            const checked = document.querySelectorAll('.post-checkbox:checked');
+            if (checked.length === 0) return;
+
+            if (!confirm(`Are you sure want to delete ${checked.length} post(s)?`)) return;
+
+            const ids = Array.from(checked).map(cb => cb.value);
+
+            fetch('{{ route('post.bulkDestroy') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ids
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                });
+        }
+
+        // Toggle action menu per row
+        function toggleActionMenu(id) {
+            document.querySelectorAll('[id^="action-menu-"]').forEach(menu => {
+                if (menu.id !== `action-menu-${id}`) menu.classList.add('hidden');
+            });
+            document.getElementById(`action-menu-${id}`).classList.toggle('hidden');
+        }
+
+        // Tutup semua dropdown kalau klik luar
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('[id^="action-wrapper-"]')) {
+                document.querySelectorAll('[id^="action-menu-"]').forEach(m => m.classList.add('hidden'));
+            }
+            if (!e.target.closest('#bulkActionWrapper')) {
+                document.getElementById('bulkActionMenu').classList.add('hidden');
+            }
+        });
+    </script>
+@endpush

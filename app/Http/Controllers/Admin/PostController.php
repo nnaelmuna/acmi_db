@@ -69,6 +69,19 @@ class PostController extends Controller
         return redirect()->route('post')->with('success', 'Post berhasil dihapus.');
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No posts selected']);
+        }
+
+        Post::whereIn('id', $ids)->delete(); // soft delete karena model pakai SoftDeletes
+
+        return response()->json(['success' => true]);
+    }
+
     public function update(UpdatePostRequest $request, Post $post)
     {
         $this->postService->update($request->validated(), $request->file('image'), $post);
