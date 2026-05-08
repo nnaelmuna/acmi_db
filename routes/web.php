@@ -102,6 +102,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/media-partner', 'store')->name('media-partner.store');
         Route::put('/media-partner/{id}', 'update')->name('media-partner.update');
         Route::delete('/media-partner/{id}', 'destroy')->name('media-partner.destroy');
+        Route::post('/media-partner/{id}/restore', 'restore')->name('media-partner.restore');
+        Route::delete('/media-partner/{id}/force-delete', 'forceDelete')->name('media-partner.forceDelete');
     });
 
     // Inbound
