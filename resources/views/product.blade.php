@@ -168,10 +168,7 @@
         @endforelse
     </div>
 
-
-
     <x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
-
 
         {{-- Daftar Kategori yang Ada --}}
         <div class="mb-5">

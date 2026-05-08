@@ -100,6 +100,11 @@
         {{-- Bottom Action Buttons --}}
         <div class="xl:col-span-12">
             <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-end">
+                <button type="button"
+                    onclick="openDeleteModal('{{ route('post.destroy', $post->id) }}', 'Are you sure want to delete this post?')"
+                    class="rounded-md border border-red-300 px-4 py-2 text-xs font-medium text-red-500 transition hover:bg-red-50">
+                    Delete
+                </button>
                 <button type="button" onclick="window.location='{{ route('post') }}'"
                     class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
                     Cancel

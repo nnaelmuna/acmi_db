@@ -31,8 +31,9 @@ class PostController extends Controller
 
         // Satu baris ini menggantikan array $counts yang panjang
         $tabs = TabFilterService::getTabs(Post::class);
+        $categories = Category::all();
 
-        return view('post', compact('posts', 'tabs', 'status'));
+        return view('post', compact('posts', 'tabs', 'status', 'categories'));
     }
 
     // Menampilkan form buat post baru
@@ -59,6 +60,13 @@ class PostController extends Controller
         $post->load('categories');
         $categories = Category::all();
         return view('post-edit', compact('post', 'categories'));
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+
+        return redirect()->route('post')->with('success', 'Post berhasil dihapus.');
     }
 
     public function update(UpdatePostRequest $request, Post $post)
