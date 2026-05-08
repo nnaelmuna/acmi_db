@@ -221,13 +221,14 @@
                 </div>
 
                 {{-- Buttons --}}
-                <div class="mt-12 flex justify-end gap-4">
-                    <a href="{{ route('product.index') }}"
-                        class="px-7 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition">Cancel</a>
-                    <button type="submit"
-                        class="px-7 py-2 rounded-lg bg-[#0014A8] text-white font-bold hover:bg-blue-900 transition shadow-lg">
-                        {{ isset($product) ? 'Update Product' : 'Publish' }}
+                <div class="mt-12 flex items-center justify-end gap-2">
+                    {{-- Cancel dipindah ke sini, setelah form-status-buttons --}}
+                    <button type="button"
+                        onclick="window.location='{{ route('product.index')}}'"
+                        class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
+                        Cancel
                     </button>
+                    <x-form-status-buttons />
                 </div>
             </div>
         </form>

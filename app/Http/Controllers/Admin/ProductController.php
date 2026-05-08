@@ -76,13 +76,13 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withTrashed()->findOrFail($id);
         return view('product-show', compact('product'));
     }
 
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withTrashed()->findOrFail($id);
         $categories = ProductCategory::all();
         return view('product-edit', compact('product', 'categories'));
     }
@@ -94,7 +94,7 @@ class ProductController extends Controller
         $request->validate([
             'title'    => 'required',
             'category' => 'required|array',
-            'email'    => 'required|email',
+            'email'    => 'nullable|email',
         ]);
 
         $finalImages = $request->input('existing_images', []);
@@ -117,6 +117,7 @@ class ProductController extends Controller
         $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
 
         $product->update([
+            'status'       => $request->input('status', $product->status),
             'category'     => $request->category,
             'title'        => $request->title,
             'company_name' => $request->company_name,

@@ -74,8 +74,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/product/{id}', 'update')->name('product.update');
         Route::delete('/product/{id}', 'destroy')->name('product.destroy');
         Route::get('/product/{id}', 'show')->name('product.show');
-        Route::post('/product/{id}/restore')->name('product.restore');
-        Route::delete('/product/{id}/force-delete')->name('product.forceDelete');
+        Route::post('/product/{id}/restore', 'restore')->name('product.restore');
+        Route::delete('/product/{id}/force-delete', 'force-delete')->name('product.forceDelete');
     });
 
     Route::post('/product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');

@@ -124,20 +124,12 @@
         {{-- Bottom Action Buttons --}}
         <div class="xl:col-span-12">
             <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-end">
-                <a href="{{ route('post') }}"
-                    class="inline-flex items-center justify-center rounded-xl border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
+                <button type="button"
+                    onclick="window.location='{{ route('post')}}'"
+                    class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
                     Cancel
-                </a>
-
-                <button type="button" onclick="saveDraft()"
-                    class="inline-flex items-center justify-center rounded-xl border border-gray-300 px-6 py-2.5 text-sm font-medium text-black transition hover:bg-gray-50">
-                    Save to Draft
                 </button>
-
-                <button type="submit"
-                    class="inline-flex items-center justify-center rounded-xl bg-acmi-blueprimer px-8 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue">
-                    Publish Now
-                </button>
+                <x-form-status-buttons />
             </div>
         </div>
     </form>
