@@ -1,4 +1,5 @@
 @extends('layouts.app')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('title', 'Inbound CRM - ACMI')
 @section('page_title', 'Inbound CRM')
@@ -8,9 +9,9 @@
 
         <div class="relative pointer-events-none">
             <div class="absolute -top-16 -mt-3 right-0 flex justify-end w-full">
-                {{-- FIXED: Form Search ditaruh di sini tanpa tombol approve --}}
                 <form action="{{ route('inbound.index') }}" method="GET" class="relative group mr-48 pointer-events-auto">
-                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#0014A8] transition-colors"></i>
+                    <i
+                        class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-[#0014A8] transition-colors"></i>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search inbound..."
                         class="w-full rounded-full border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </form>
@@ -32,13 +33,15 @@
                     <p class="text-[10px] text-gray-400"><span class="text-blue-600 font-bold">+ 0</span> vs yesterday</p>
                 </div>
 
-                <div class="relative pl-6 pr-4 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-4 before:w-[1px] before:bg-gray-200">
+                <div
+                    class="relative pl-6 pr-4 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-4 before:w-[1px] before:bg-gray-200">
                     <p class="text-xs text-gray-500 font-semibold mb-1">Approved</p>
                     <p class="text-3xl font-bold text-gray-900 mb-1">{{ $stats['approved'] ?? 0 }}</p>
                     <p class="text-[10px] text-gray-400"><span class="text-gray-400 font-bold">0</span> vs yesterday</p>
                 </div>
 
-                <div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-4 before:w-[1px] before:bg-gray-200">
+                <div
+                    class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-4 before:w-[1px] before:bg-gray-200">
                     <p class="text-xs text-gray-500 font-semibold mb-1">Rejected</p>
                     <p class="text-3xl font-bold text-gray-900 mb-1">{{ $stats['rejected'] ?? 0 }}</p>
                     <p class="text-[10px] text-gray-400"><span class="text-gray-400 font-bold">0</span> vs yesterday</p>
@@ -52,11 +55,15 @@
                     <select onchange="window.location.href=this.value"
                         class="appearance-none bg-white border border-gray-200 rounded-xl pl-4 pr-10 py-2 text-sm outline-none shadow-sm cursor-pointer hover:border-gray-300 transition">
                         <option value="{{ route('inbound.index') }}">Filter Status</option>
-                        <option value="{{ route('inbound.index', ['status' => 'requested']) }}" {{ request('status') == 'requested' ? 'selected' : '' }}>Requested</option>
-                        <option value="{{ route('inbound.index', ['status' => 'approved']) }}" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                        <option value="{{ route('inbound.index', ['status' => 'rejected']) }}" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="{{ route('inbound.index', ['status' => 'requested']) }}"
+                            {{ request('status') == 'requested' ? 'selected' : '' }}>Requested</option>
+                        <option value="{{ route('inbound.index', ['status' => 'approved']) }}"
+                            {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="{{ route('inbound.index', ['status' => 'rejected']) }}"
+                            {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
                     </select>
-                    <i class="fas fa-chevron-down absolute right-4 top-3.5 text-[8px] text-gray-400 pointer-events-none"></i>
+                    <i
+                        class="fas fa-chevron-down absolute right-4 top-3.5 text-[8px] text-gray-400 pointer-events-none"></i>
                 </div>
             </div>
 
@@ -71,22 +78,39 @@
                 <thead class="bg-[#DAE6FF] border-b border-gray-400 text-[10.5px] font-bold text-black">
                     <tr>
                         <th class="p-4 w-10 text-center border-r border-gray-400">
-                            <input type="checkbox" id="selectAll" class="rounded border-gray-400 text-[#0014A8] focus:ring-[#0014A8]">
+                            <input type="checkbox" id="selectAll"
+                                class="rounded border-gray-400 text-[#0014A8] focus:ring-[#0014A8]">
                         </th>
-                        <th class="p-4 border-r border-gray-400"><span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-user"></i> Profile</span></th>
-                        <th class="p-4 border-r border-gray-400"><span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-address-card"></i> Contact</span></th>
-                        <th class="p-4 border-r border-gray-400"><span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-building"></i> Company</span></th>
-                        <th class="p-4 border-r border-gray-400"><span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-cubes"></i> Industry</span></th>
-                        <th class="p-4 border-r border-gray-400"><span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-briefcase"></i> Position</span></th>
-                        <th class="p-4 border-r border-gray-400"><span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-link"></i> Company URL</span></th>
-                        <th class="p-4 text-center"><span class="flex items-center justify-center gap-2 font-base text-[12px]"><i class="far fa-dot-circle"></i> Action</span></th>
+                        <th class="p-4 border-r border-gray-400"><span
+                                class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-user"></i>
+                                Profile</span></th>
+                        <th class="p-4 border-r border-gray-400"><span
+                                class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-address-card"></i>
+                                Contact</span></th>
+                        <th class="p-4 border-r border-gray-400"><span
+                                class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-building"></i>
+                                Company</span></th>
+                        <th class="p-4 border-r border-gray-400"><span
+                                class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-cubes"></i>
+                                Industry</span></th>
+                        <th class="p-4 border-r border-gray-400"><span
+                                class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-briefcase"></i>
+                                Position</span></th>
+                        <th class="p-4 border-r border-gray-400"><span
+                                class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-link"></i> Company
+                                URL</span></th>
+                        <th class="p-4 text-center"><span
+                                class="flex items-center justify-center gap-2 font-base text-[12px]"><i
+                                    class="far fa-dot-circle"></i> Action</span></th>
                     </tr>
                 </thead>
                 <tbody class="text-sm text-gray-700">
                     @forelse($inbounds as $item)
-                        <tr class="border-b border-gray-200 hover:bg-gray-50/50 transition cursor-pointer" onclick="openDetailModal({{ $item->id }})">
+                        <tr class="border-b border-gray-200 hover:bg-gray-50/50 transition cursor-pointer"
+                            onclick="openDetailModal({{ $item->id }})">
                             <td class="p-4 text-center border-r border-gray-200" onclick="event.stopPropagation()">
-                                <input type="checkbox" class="inbound-checkbox rounded border-gray-300 text-[#0014A8]" value="{{ $item->id }}">
+                                <input type="checkbox" class="inbound-checkbox rounded border-gray-300 text-[#0014A8]"
+                                    value="{{ $item->id }}">
                             </td>
                             <td class="p-4 border-r border-gray-200">
                                 <p class="font-bold text-gray-800">{{ $item->name }}</p>
@@ -94,8 +118,10 @@
                             </td>
                             <td class="p-4 border-r border-gray-200 text-[11px]">
                                 <div class="flex flex-col gap-1">
-                                    <span class="flex items-center gap-2"><i class="far fa-envelope text-gray-400"></i> {{ $item->email }}</span>
-                                    <span class="flex items-center gap-2"><i class="fas fa-phone-alt text-gray-400"></i> {{ $item->phone }}</span>
+                                    <span class="flex items-center gap-2"><i class="far fa-envelope text-gray-400"></i>
+                                        {{ $item->email }}</span>
+                                    <span class="flex items-center gap-2"><i class="fas fa-phone-alt text-gray-400"></i>
+                                        {{ $item->phone }}</span>
                                 </div>
                             </td>
                             <td class="p-4 font-medium border-r border-gray-200">{{ $item->company_name }}</td>
@@ -112,25 +138,42 @@
                                 @endif
                             </td>
                             <td class="p-4 text-center" onclick="event.stopPropagation()">
-                                @if ($item->status == 'requested')
-                                    <div class="flex justify-center gap-2">
-                                        {{-- FIXED: Menggunakan function updateStatus yang ada di script --}}
-                                        <button onclick="updateStatus({{ $item->id }}, 'rejected')"
-                                            class="w-8 h-8 border border-red-500 text-red-500 rounded-lg hover:bg-red-50 flex items-center justify-center transition"><i class="fas fa-times text-[10px]"></i></button>
-                                        <button onclick="updateStatus({{ $item->id }}, 'approved')"
-                                            class="w-8 h-8 border border-green-500 text-green-500 rounded-lg hover:bg-green-50 flex items-center justify-center transition"><i class="fas fa-check text-[10px]"></i></button>
+                                <div class="relative inline-block text-left group">
+                                    <button
+                                        class="inline-flex items-center justify-between w-28 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase border transition-all 
+                                        {{ $item->status == 'approved' ? 'bg-green-100 text-green-700 border-green-200' : '' }}
+                                        {{ $item->status == 'rejected' ? 'bg-red-100 text-red-700 border-red-200' : '' }}
+                                        {{ $item->status == 'requested' || $item->status == 'review' ? 'bg-blue-100 text-blue-700 border-blue-200' : '' }}">
+                                        <span>{{ $item->status == 'requested' || $item->status == 'review' ? 'Review' : ucfirst($item->status) }}</span>
+                                        <i class="fas fa-chevron-down text-[8px] ml-1"></i>
+                                    </button>
+
+                                    <div
+                                        class="absolute right-0 mt-1 w-32 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100]">
+                                        <div class="p-1.5 flex flex-col gap-1">
+                                            <button type="button"
+                                                onclick="updateStatus({{ $item->id }}, 'approved')"
+                                                class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition text-left">
+                                                <i class="fas fa-check-circle mr-2 text-green-500"></i> Approved
+                                            </button>
+                                            <button type="button"
+                                                onclick="updateStatus({{ $item->id }}, 'rejected')"
+                                                class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition text-left">
+                                                <i class="fas fa-times-circle mr-2 text-red-500"></i> Rejected
+                                            </button>
+                                            <button type="button" onclick="updateStatus({{ $item->id }}, 'review')"
+                                                class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition text-left">
+                                                <i class="fas fa-sync-alt mr-2 text-blue-500"></i> Review
+                                            </button>
+                                        </div>
                                     </div>
-                                @else
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase shadow-sm inline-flex items-center gap-1 border
-                                {{ $item->status == 'approved' ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200' }}">
-                                        {{ $item->status }} <i class="fas fa-chevron-down text-[8px]"></i>
-                                    </span>
-                                @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="p-10 text-center text-gray-400 italic border-b border-gray-200">No inbound data found.</td>
+                            <td colspan="8" class="p-10 text-center text-gray-400 italic border-b border-gray-200">No
+                                inbound data found.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -145,32 +188,60 @@
         <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl m-4">
             <div class="p-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
                 <h2 class="text-lg font-bold text-gray-800">Member Detail Screen</h2>
-                <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times"></i></button>
+                <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600 transition"><i
+                        class="fas fa-times"></i></button>
             </div>
+
             <div class="p-8 max-h-[70vh] overflow-y-auto">
                 <form id="modalForm">
                     <div class="mb-8">
                         <h3 class="text-blue-700 font-bold text-xs uppercase tracking-wider mb-4">Informasi Pribadi</h3>
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Nama</label><input type="text" id="m_name" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Email</label><input type="email" id="m_email" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Nomor Telepon</label><input type="text" id="m_phone" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Linkedin Profile</label><input type="text" id="m_linkedin" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Nama</label><input
+                                    type="text" id="m_name"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Email</label><input
+                                    type="email" id="m_email"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Nomor Telepon</label><input
+                                    type="text" id="m_phone"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Linkedin
+                                    Profile</label><input type="text" id="m_linkedin"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
                         </div>
                     </div>
+
                     <div class="mb-8">
                         <h3 class="text-blue-700 font-bold text-xs uppercase tracking-wider mb-4">Informasi Perusahaan</h3>
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Nama Perusahaan</label><input type="text" id="m_company" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Jabatan</label><input type="text" id="m_position" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
-                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Website Perusahaan</label><input type="text" id="m_url" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30"></div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Nama
+                                    Perusahaan</label><input type="text" id="m_company"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Jabatan</label><input
+                                    type="text" id="m_position"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
+                            <div><label class="text-[10px] font-bold text-gray-800 block mb-1">Website
+                                    Perusahaan</label><input type="text" id="m_url"
+                                    class="w-full border border-gray-200 rounded-lg p-2.5 text-sm outline-none bg-gray-50/30">
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
+
             <div class="p-6 bg-gray-50 flex justify-end gap-3 border-t border-gray-100">
-                <button onclick="closeDetailModal()" class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-medium bg-white hover:bg-gray-50 transition">Close</button>
-                <button class="px-6 py-2.5 rounded-xl bg-[#0014A8] text-white text-sm font-bold shadow-lg hover:bg-blue-900 transition">Save Changes</button>
+                <button onclick="closeDetailModal()"
+                    class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-medium bg-white hover:bg-gray-50 transition">Close</button>
+                <button
+                    class="px-6 py-2.5 rounded-xl bg-[#0014A8] text-white text-sm font-bold shadow-lg hover:bg-blue-900 transition">Save
+                    Changes</button>
             </div>
         </div>
     </div>
@@ -202,9 +273,77 @@
             checkboxes.forEach(cb => cb.checked = this.checked);
         }
 
+        function updateStatus(id, status) {
+            let statusText = status === 'approved' ? 'Approve' : (status === 'rejected' ? 'Reject' : 'Review');
+            let confirmButtonColor = status === 'approved' ? '#10B981' : (status === 'rejected' ? '#EF4444' : '#3B82F6');
+
+            Swal.fire({
+                title: 'Konfirmasi Status',
+                text: `Yakin mau mengubah status menjadi ${statusText}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: confirmButtonColor,
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Ya, Ubah!',
+                cancelButtonText: 'Batal',
+                borderRadius: '15px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/crm/inbound/${id}/status`, {
+                        method: "PATCH",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            status: status
+                        })
+                    }).then(() => {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Status sudah diperbarui.',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    });
+                }
+            });
+        }
+
         function approveAllSelected() {
             let selectedIds = [];
             document.querySelectorAll('.inbound-checkbox:checked').forEach(cb => {
                 selectedIds.push(cb.value);
             });
-            if (
+
+            if (selectedIds.length === 0) {
+                Swal.fire('Oops!', 'Pilih data dulu ya, Nis!', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Bulk Approve',
+                text: `Approve ${selectedIds.length} data yang dipilih?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0014A8',
+                confirmButtonText: 'Ya, Approve Semua!',
+                borderRadius: '15px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch("{{ route('inbound.bulkApprove') }}", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            ids: selectedIds
+                        })
+                    }).then(() => window.location.reload());
+                }
+            });
+        }
+    </script>
+@endsection
