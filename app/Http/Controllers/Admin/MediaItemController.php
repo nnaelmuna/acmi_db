@@ -13,30 +13,24 @@ class MediaItemController extends Controller
     // LIST MEDIA
     public function index(Request $request)
     {
-        // 1. Siapkan data kategori untuk dropdown
         $categories = MediaCategory::orderBy('is_default', 'desc')
             ->orderBy('id', 'asc')
             ->get();
 
-        // 2. (Opsional) Hitung jumlah media per kategori
         $allMedia = MediaItem::with('category')->get();
         $counts = $categories->mapWithKeys(function ($cat) use ($allMedia) {
             return [$cat->slug => $allMedia->where('media_category_id', $cat->id)->count()];
         })->toArray();
 
-        // 3. MULAI QUERY BUILDER (JANGAN DI-GET DULU!)
         $query = MediaItem::with('category');
 
-        // A. Filter Status & Trash
         $status = $request->get('status', 'published');
         if ($status === 'trash') {
             $query->onlyTrashed();
         } else {
-            // (Pastikan tabel media_items kamu punya kolom 'status' ya)
             $query->where('status', $status);
         }
 
-        // B. Filter Kategori
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {
                 // Ubah jadi 'name' karena di Blade kamu ngirim ->name
@@ -44,17 +38,13 @@ class MediaItemController extends Controller
             });
         }
 
-        // C. Eksekusi Query Gabungan
-        $media = $query->latest()->get();
-        // ==========================================
+        $media = $query->latest()->paginate(9)->withQueryString();
 
-        // 4. Siapkan komponen Tab
         $tabs = TabFilterService::getTabs(MediaItem::class);
 
         return view('media', compact('media', 'categories', 'allMedia', 'counts', 'tabs', 'status'));
     }
 
-    // STORE (Add Media)
     public function store(Request $request)
     {
         $request->validate([
@@ -75,7 +65,6 @@ class MediaItemController extends Controller
         return back()->with('success', 'Media added successfully');
     }
 
-    // UPDATE (Edit Media)
     public function update(Request $request, $id)
     {
         $media = MediaItem::findOrFail($id);
@@ -99,7 +88,6 @@ class MediaItemController extends Controller
         return back()->with('success', 'Media updated successfully');
     }
 
-    // DELETE
     public function destroy($id)
     {
         $media = MediaItem::findOrFail($id);

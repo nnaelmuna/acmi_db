@@ -37,7 +37,7 @@
 
         {{-- BAGIAN KANAN: Add Category, Filter Dropdown, Add Media --}}
         <div class="flex flex-wrap items-center gap-3 xl:justify-end">
-            
+
             {{-- Tombol Tambah Kategori --}}
             <button type="button" onclick="openCategoryModal()"
                 class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-400 shadow-sm transition hover:text-acmi-blueprimer">
@@ -59,76 +59,84 @@
     </div>
 
     {{-- Media Grid --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-7">
-        @forelse($media as $item)
-            <div class="group relative bg-white rounded-xl shadow-sm p-4 border border-gray-200 transition hover:shadow-md">
-
+    <div class="flex min-h-[calc(100vh-230px)] flex-col">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-7">
+            @forelse($media as $item)
                 <div
-                    class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
-                    <button type="button"
-                        onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}', '{{ $item->image ? asset('storage/' . $item->image) : '' }}')"
-                        class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition">
-                        <i class="fa-solid fa-pen-to-square text-xs"></i>
-                    </button>
-
-                    <form action="{{ route('media.destroy', $item->id) }}" method="POST"
-                        onsubmit="return confirm('Delete this media?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition">
-                            <i class="fa-solid fa-trash text-xs"></i>
-                        </button>
-                    </form>
-                </div>
-
-                <div class="relative overflow-hidden rounded-lg">
-                    @if ($item->image)
-                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
-                            class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
-                    @else
-                        <div class="flex w-full h-48 items-center justify-center bg-gray-100 text-sm text-gray-400">
-                            No Image
-                        </div>
-                    @endif
-
-                    <span
-                        class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
-                        {{ $item->category->name ?? '-' }}
-                    </span>
-                </div>
-
-                <div class="mt-4">
-                    <h3 class="font-bold text-lg text-gray-900 leading-tight">
-                        {{ $item->title }}
-                    </h3>
+                    class="group relative bg-white rounded-xl shadow-sm p-4 border border-gray-200 transition hover:shadow-md">
 
                     <div
-                        class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
-                        Category: {{ $item->category->name ?? '-' }}
+                        class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
+                        <button type="button"
+                            onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}', '{{ $item->image ? asset('storage/' . $item->image) : '' }}')"
+                            class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                        </button>
+
+                        <form action="{{ route('media.destroy', $item->id) }}" method="POST"
+                            onsubmit="return confirm('Delete this media?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </form>
                     </div>
+
+                    <div class="relative overflow-hidden rounded-lg">
+                        @if ($item->image)
+                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
+                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+                        @else
+                            <div class="flex w-full h-48 items-center justify-center bg-gray-100 text-sm text-gray-400">
+                                No Image
+                            </div>
+                        @endif
+
+                        <span
+                            class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
+                            {{ $item->category->name ?? '-' }}
+                        </span>
+                    </div>
+
+                    <div class="mt-4">
+                        <h3 class="font-bold text-lg text-gray-900 leading-tight">
+                            {{ $item->title }}
+                        </h3>
+
+                        <div
+                            class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
+                            Category: {{ $item->category->name ?? '-' }}
+                        </div>
+                    </div>
+
+                    @if ($item->image)
+                        <button type="button"
+                            onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', '{{ $item->title }}')"
+                            class="block w-full text-center mt-4 bg-[#4155C6] text-white py-2.5 rounded-lg font-medium transition hover:bg-[#3444a1]">
+                            Preview
+                        </button>
+                    @else
+                        <button type="button" disabled
+                            class="block w-full text-center mt-4 bg-gray-300 text-white py-2.5 rounded-lg font-medium cursor-not-allowed">
+                            No Preview
+                        </button>
+                    @endif
+
                 </div>
+            @empty
+                <div
+                    class="col-span-full flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white italic text-gray-400">
+                    No media available yet.
+                </div>
+            @endforelse
+        </div>
 
-                @if ($item->image)
-                    <button type="button"
-                        onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', '{{ $item->title }}')"
-                        class="block w-full text-center mt-4 bg-[#4155C6] text-white py-2.5 rounded-lg font-medium transition hover:bg-[#3444a1]">
-                        Preview
-                    </button>
-                @else
-                    <button type="button" disabled
-                        class="block w-full text-center mt-4 bg-gray-300 text-white py-2.5 rounded-lg font-medium cursor-not-allowed">
-                        No Preview
-                    </button>
-                @endif
+        <div class="mt-auto">
+            <x-pagination :paginator="$media" />
+        </div>
 
-            </div>
-        @empty
-            <div
-                class="col-span-full flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white italic text-gray-400">
-                No media available yet.
-            </div>
-        @endforelse
     </div>
 
     {{-- Category Modal --}}
@@ -174,7 +182,8 @@
         <div>
             <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Add New Category</p>
             {{-- Sesuaikan route ini dengan route kategori media di web.php kamu --}}
-            <form action="{{ route('media.categories.store') ?? url('/media-categories') }}" method="POST" id="formAddCategory">
+            <form action="{{ route('media.categories.store') ?? url('/media-categories') }}" method="POST"
+                id="formAddCategory">
                 @csrf
                 <div class="flex gap-2">
                     <input type="text" name="name" id="newCategoryInput" placeholder="e.g. Campaign"
@@ -225,7 +234,7 @@
                         class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
-                    <x-form-status-buttons />
+                <x-form-status-buttons />
             </form>
         </div>
     </div>

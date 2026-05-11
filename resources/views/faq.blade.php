@@ -4,7 +4,7 @@
 @section('page_title', 'FAQ')
 
 @section('content')
-    <div class="w-full space-y-4">
+    <div class="w-full space-y-4 pb-10">
 
         {{-- Success Notification --}}
         @if (session('success'))
@@ -21,7 +21,7 @@
         {{-- Filter Tabs + Button --}}
         <div class="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-            <x-filters-tab :tabs="$tabs"/>
+            <x-filters-tab :tabs="$tabs" />
 
             <div class="flex justify-end">
                 <button type="button" onclick="openAddModal()"
@@ -33,47 +33,55 @@
         </div>
 
         {{-- FAQ List --}}
-        @forelse($faqs as $faq)
-            <div class="overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
-                <div class="flex items-center justify-between gap-4 px-5 py-4">
-                    <p class="flex-1 text-sm font-medium leading-6 text-gray-900 md:text-[15px]">
-                        {{ $faq->question }}
-                    </p>
+        <div class="flex min-h-[calc(100vh-230px)] w-full flex-col">
+            <div class="space-y-4">
+                @forelse($faqs as $faq)
+                    <div class="overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
+                        <div class="flex items-center justify-between gap-4 px-5 py-4">
+                            <p class="flex-1 text-sm font-medium leading-6 text-gray-900 md:text-[15px]">
+                                {{ $faq->question }}
+                            </p>
 
-                    <div class="flex shrink-0 items-center gap-3">
-                        <button type="button" data-id="{{ $faq->id }}" data-question="{{ e($faq->question) }}"
-                            data-answer="{{ e($faq->answer) }}" data-status="{{ $faq->status ?? 'published' }}"
-                            onclick="openEditModalFromButton(this)"
-                            class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-blueaccent text-white transition hover:bg-acmi-blueprimer">
-                            <i class="fa-solid fa-pen text-sm"></i>
-                        </button>
+                            <div class="flex shrink-0 items-center gap-3">
+                                <button type="button" data-id="{{ $faq->id }}" data-question="{{ e($faq->question) }}"
+                                    data-answer="{{ e($faq->answer) }}" data-status="{{ $faq->status ?? 'published' }}"
+                                    onclick="openEditModalFromButton(this)"
+                                    class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-blueaccent text-white transition hover:bg-acmi-blueprimer">
+                                    <i class="fa-solid fa-pen text-sm"></i>
+                                </button>
 
-                        <button type="button"
-                            onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FAQ?')"
-                            class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-yellowaccent text-white transition hover:opacity-90">
-                            <i class="fa-solid fa-trash text-sm"></i>
-                        </button>
+                                <button type="button"
+                                    onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FAQ?')"
+                                    class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-yellowaccent text-white transition hover:opacity-90">
+                                    <i class="fa-solid fa-trash text-sm"></i>
+                                </button>
 
-                        <button type="button" onclick="toggleFaq(this)"
-                            class="flex h-8 w-8 items-center justify-center text-gray-800 transition">
-                            <i class="faq-arrow fa-solid fa-chevron-down text-sm transition-transform duration-300"></i>
-                        </button>
+                                <button type="button" onclick="toggleFaq(this)"
+                                    class="flex h-8 w-8 items-center justify-center text-gray-800 transition">
+                                    <i
+                                        class="faq-arrow fa-solid fa-chevron-down text-sm transition-transform duration-300"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="faq-answer hidden border-t border-white/70 bg-[#F4F8FF] px-5 py-4">
+                            <p class="text-sm leading-relaxed text-gray-700">
+                                {{ $faq->answer }}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                @empty
+                    <div
+                        class="flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-acmi-bordercolor bg-white">
+                        <p class="text-sm italic text-gray-400">No FAQ available yet.</p>
+                    </div>
+                @endforelse
+            </div>
 
-                <div class="faq-answer hidden border-t border-white/70 bg-[#F4F8FF] px-5 py-4">
-                    <p class="text-sm leading-relaxed text-gray-700">
-                        {{ $faq->answer }}
-                    </p>
-                </div>
+            <div class="mt-auto">
+                <x-pagination :paginator="$faqs" />
             </div>
-        @empty
-            <div
-                class="flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-acmi-bordercolor bg-white">
-                <p class="text-sm italic text-gray-400">No FAQ available yet.</p>
-            </div>
-        @endforelse
-        <x-pagination :paginator="$faqs"/>
+        </div>
     </div>
 
     {{-- Add FAQ Modal --}}

@@ -18,9 +18,15 @@ class FaqController extends Controller
         $status = $request->get('status', 'published');
 
         if ($status === 'trash') {
-            $faqs = Faq::onlyTrashed()->latest()->paginate(10);
+            $faqs = Faq::onlyTrashed()
+                ->latest()
+                ->paginate(10)
+                ->withQueryString();
         } else {
-            $faqs = Faq::where('status', $status)->latest()->paginate(10);
+            $faqs = Faq::where('status', $status)
+                ->latest()
+                ->paginate(10)
+                ->withQueryString();
         }
 
         return view('faq', compact('faqs', 'allFaqs', 'tabs', 'status'));

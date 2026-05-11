@@ -27,77 +27,83 @@
     </div>
 
     {{-- Card Grid --}}
-    <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        @forelse($partners as $item)
-            <div class="group rounded-xl border bg-white p-4 shadow-sm transition hover:shadow-md">
+    <div class="mt-6 flex min-h-[calc(100vh-230px)] flex-col">
+        <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @forelse($partners as $item)
+                <div class="group rounded-xl border bg-white p-4 shadow-sm transition hover:shadow-md">
 
-                <div class="relative overflow-hidden rounded-lg">
-                    <img src="{{ asset('storage/' . $item->image) }}"
-                        class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="{{ asset('storage/' . $item->image) }}"
+                            class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105">
 
-                    {{-- Edit & Delete hanya muncul kalau bukan Trash --}}
-                    @if (request('status') !== 'trash')
-                        <div class="absolute right-3 top-3 flex gap-2 opacity-0 transition group-hover:opacity-100">
+                        {{-- Edit & Delete hanya muncul kalau bukan Trash --}}
+                        @if (request('status') !== 'trash')
+                            <div class="absolute right-3 top-3 flex gap-2 opacity-0 transition group-hover:opacity-100">
 
-                            <button type="button" onclick='openEditModal(@json($item))'
-                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-blue-600 shadow hover:bg-blue-600 hover:text-white">
-                                <i class="fa-solid fa-pen text-xs"></i>
-                            </button>
+                                <button type="button" onclick='openEditModal(@json($item))'
+                                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-blue-600 shadow hover:bg-blue-600 hover:text-white">
+                                    <i class="fa-solid fa-pen text-xs"></i>
+                                </button>
 
-                            <button type="button"
-                                onclick="openDeleteModal('{{ route('media-partner.destroy', $item->id) }}', 'Are you sure want to delete this media partner?')"
-                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-red-500 shadow hover:bg-red-500 hover:text-white">
-                                <i class="fa-solid fa-trash text-xs"></i>
-                            </button>
+                                <button type="button"
+                                    onclick="openDeleteModal('{{ route('media-partner.destroy', $item->id) }}', 'Are you sure want to delete this media partner?')"
+                                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-red-500 shadow hover:bg-red-500 hover:text-white">
+                                    <i class="fa-solid fa-trash text-xs"></i>
+                                </button>
 
-                        </div>
-                    @endif
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="mt-4">
+                        <h3 class="font-semibold text-gray-900">{{ $item->name }}</h3>
+
+                        @if ($item->link)
+                            <a href="{{ $item->link }}" target="_blank"
+                                class="mt-1 inline-block text-xs text-blue-600 underline">
+                                Visit Link
+                            </a>
+                        @endif
+
+                        <p class="mt-2 text-xs text-gray-500">
+                            {{ $item->start_date ?? '-' }} - {{ $item->end_date ?? '-' }}
+                        </p>
+
+                        {{-- Tombol khusus saat Trash --}}
+                        @if (request('status') === 'trash')
+                            <form action="{{ route('media-partner.restore', $item->id) }}" method="POST"
+                                class="mt-4 w-full">
+                                @csrf
+                                <button type="submit"
+                                    class="block w-full rounded-lg border border-blue-900 py-2.5 text-center font-medium text-acmi-blueprimer transition hover:bg-acmi-blueprimer hover:text-white">
+                                    Restore
+                                </button>
+                            </form>
+
+                            <form action="{{ route('media-partner.forceDelete', $item->id) }}" method="POST"
+                                class="mt-2 w-full">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="button"
+                                    onclick="openDeleteModal('{{ route('media-partner.forceDelete', $item->id) }}', 'HAPUS PERMANEN? DATA INI TIDAK BISA DIKEMBALIKAN!')"
+                                    class="block w-full rounded-lg border border-red-600 py-2.5 text-center font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
+                                    Permanently Delete
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
-
-                <div class="mt-4">
-                    <h3 class="font-semibold text-gray-900">{{ $item->name }}</h3>
-
-                    @if ($item->link)
-                        <a href="{{ $item->link }}" target="_blank"
-                            class="mt-1 inline-block text-xs text-blue-600 underline">
-                            Visit Link
-                        </a>
-                    @endif
-
-                    <p class="mt-2 text-xs text-gray-500">
-                        {{ $item->start_date ?? '-' }} - {{ $item->end_date ?? '-' }}
-                    </p>
-
-                    {{-- Tombol khusus saat Trash --}}
-                    @if (request('status') === 'trash')
-                        <form action="{{ route('media-partner.restore', $item->id) }}" method="POST" class="mt-4 w-full">
-                            @csrf
-                            <button type="submit"
-                                class="block w-full rounded-lg border border-blue-900 py-2.5 text-center font-medium text-acmi-blueprimer transition hover:bg-acmi-blueprimer hover:text-white">
-                                Restore
-                            </button>
-                        </form>
-
-                        <form action="{{ route('media-partner.forceDelete', $item->id) }}" method="POST"
-                            class="mt-2 w-full">
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="button"
-                                onclick="openDeleteModal('{{ route('media-partner.forceDelete', $item->id) }}', 'HAPUS PERMANEN? DATA INI TIDAK BISA DIKEMBALIKAN!')"
-                                class="block w-full rounded-lg border border-red-600 py-2.5 text-center font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
-                                Permanently Delete
-                            </button>
-                        </form>
-                    @endif
+            @empty
+                <div
+                    class="col-span-full flex min-h-[520px] items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white">
+                    <p class="text-sm italic text-gray-400">No partner yet.</p>
                 </div>
-            </div>
-        @empty
-            <div
-                class="col-span-full flex min-h-[520px] items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white">
-                <p class="text-sm italic text-gray-400">No partner yet.</p>
-            </div>
-        @endforelse
+            @endforelse
+        </div>
+        <div class="mt-auto">
+            <x-pagination :paginator="$partners" />
+        </div>
     </div>
 
     {{-- Add Partner Modal --}}
@@ -216,8 +222,6 @@
             </form>
         </div>
     </div>
-
-    <x-pagination :paginator="$partners" />
 
     {{-- Form global untuk delete modal --}}
     <form id="delete-item-form" action="" method="POST" class="hidden">

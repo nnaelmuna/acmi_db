@@ -15,9 +15,15 @@ class MediaPartnerController extends Controller
         $status = $request->get('status', 'published');
 
         if ($status === 'trash') {
-            $partners = MediaPartner::onlyTrashed()->latest()->paginate(9);
+            $partners = MediaPartner::onlyTrashed()
+                ->latest()
+                ->paginate(9)
+                ->withQueryString();
         } else {
-            $partners = MediaPartner::where('status', $status)->latest()->paginate(9);
+            $partners = MediaPartner::where('status', $status)
+                ->latest()
+                ->paginate(9)
+                ->withQueryString();
         }
 
         $tabs = TabFilterService::getTabs(MediaPartner::class);

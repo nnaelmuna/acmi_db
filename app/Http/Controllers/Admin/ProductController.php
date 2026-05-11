@@ -18,7 +18,6 @@ class ProductController extends Controller
         $status = $request->get('status', 'published');
         $categoryFilter = $request->get('category');
 
-        // ← PERBAIKAN 1: pisahkan query trash dan non-trash
         if ($status === 'trash') {
             $query = Product::onlyTrashed();
         } else {
@@ -29,7 +28,7 @@ class ProductController extends Controller
             $query->whereJsonContains('category', $categoryFilter);
         }
 
-        $products = $query->latest()->get();
+        $products = $query->latest()->paginate(9)->withQueryString();
 
         $statusCounts = [
             'published' => Product::where('status', 'published')->count(),
@@ -49,7 +48,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $request->validate([
             'title'          => 'required',
             'company_name'   => 'required',
