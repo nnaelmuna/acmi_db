@@ -5,23 +5,53 @@
 
 @section('content')
 
-@if (session('success'))
-    <div id="successAlert"
-        class="mb-6 rounded-xl bg-green-100 px-5 py-4 text-sm font-semibold text-green-700 shadow-sm">
-        {{ session('success') }}
-    </div>
+    @if ($errors->any())
+        <div id="errorAlert"
+            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600 shadow-sm">
 
-    <script>
-        setTimeout(() => {
-            const alert = document.getElementById('successAlert');
+            <div class="mb-2 flex items-center gap-2 font-semibold">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                Validation Error
+            </div>
 
-            if (alert) {
-                alert.remove();
-            }
-        }, 3000);
-    </script>
-@endif
+            <ul class="list-disc space-y-1 pl-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
 
+        <script>
+            setTimeout(() => {
+                const alert = document.getElementById('errorAlert');
+
+                if (alert) {
+                    alert.style.transition = '0.7s';
+                    alert.style.opacity = '0';
+
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }
+            }, 4000);
+        </script>
+    @endif
+
+    @if (session('success'))
+        <div id="successAlert" class="mb-6 rounded-xl bg-green-100 px-5 py-4 text-sm font-semibold text-green-700 shadow-sm">
+            {{ session('success') }}
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const alert = document.getElementById('successAlert');
+
+                if (alert) {
+                    alert.remove();
+                }
+            }, 3000);
+        </script>
+    @endif
 
     <form id="postForm" action="{{ route('post.store') }}" enctype="multipart/form-data" method="POST"
         class="grid grid-cols-1 gap-8 pb-20 xl:grid-cols-12">
@@ -30,32 +60,63 @@
         {{-- Left Section --}}
         <div class="space-y-6 xl:col-span-7">
 
-            {{-- Title --}}
-            <div>
-                <label class="mb-2 block text-sm font-semibold text-gray-800">Add Title</label>
-                <input type="text" name="title" placeholder="Enter title here..."
-                    class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
+            <p class="text-small pl-3 text-gray-800">
+                Fill in either English or Indonesian content / Isi salah satu konten: Bahasa Inggris atau Bahasa Indonesia
+            </p>
+
+            {{-- English Content --}}
+            <div class="rounded-2xl border border-gray-200 bg-white p-5">
+                <h3 class="mb-5 text-sm font-bold text-acmi-blueprimer">English Content</h3>
+
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Title</label>
+                    <input type="text" name="title_en" placeholder="Enter English title..."
+                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
+                </div>
+
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Description</label>
+                    <textarea rows="2" name="description_en" placeholder="Write English short summary..."
+                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"></textarea>
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Content</label>
+                    <div class="overflow-hidden rounded-2xl border border-gray-300 bg-white">
+                        <textarea id="acmi-editor-en" name="content_en" rows="12" placeholder="Write English content here..."
+                            class="w-full resize-none p-4 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none"></textarea>
+                    </div>
+                </div>
             </div>
 
-            {{-- Description --}}
-            <div>
-                <label class="mb-2 block text-sm font-semibold text-gray-800">Add Description</label>
-                <textarea rows="2" name="description" placeholder="Write a short summary..."
-                    class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"></textarea>
+            {{-- Konten Bahasa Indonesia --}}
+            <div class="rounded-2xl border border-gray-200 bg-white p-5">
+                <h3 class="mb-5 text-sm font-bold text-acmi-blueprimer">Konten Bahasa Indonesia</h3>
+
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Judul</label>
+                    <input type="text" name="title_id" placeholder="Masukkan judul bahasa Indonesia..."
+                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
+                </div>
+
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Deskripsi</label>
+                    <textarea rows="2" name="description_id" placeholder="Tulis deskripsi singkat dalam bahasa Indonesia..."
+                        class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"></textarea>
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-gray-800">Isi Konten</label>
+                    <div class="overflow-hidden rounded-2xl border border-gray-300 bg-white">
+                        <textarea id="acmi-editor-id" name="content_id" rows="12"
+                            placeholder="Tulis isi konten bahasa Indonesia di sini..."
+                            class="w-full resize-none p-4 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none"></textarea>
+                    </div>
+                </div>
             </div>
 
             {{-- Hidden status --}}
             <input type="hidden" name="status" id="postStatus" value="published">
-
-            {{-- Content Editor --}}
-            <div>
-                <label class="mb-2 block text-sm font-semibold text-gray-800">Field</label>
-
-                <div class="overflow-hidden rounded-2xl border border-gray-300 bg-white">
-                    <textarea id="acmi-editor" name="content" rows="15" placeholder="Write your content here..."
-                        class="w-full resize-none p-4 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none"></textarea>
-                </div>
-            </div>
         </div>
 
         {{-- Right Section --}}
@@ -87,35 +148,27 @@
             <div>
                 <h3 class="mb-3 text-sm font-bold text-black">Upload Image</h3>
 
-                {{-- Drop Zone --}}
                 <div id="dropZone" onclick="document.getElementById('imageInput').click()"
-                    class="group relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:bg-gray-50 overflow-hidden">
-                    {{-- Preview Image (hidden by default) --}}
-                    <img id="imagePreview" src="" alt="Preview"
-                        class="hidden absolute inset-0 h-full w-full object-cover rounded-2xl">
+                    class="group relative flex h-[280px] w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:bg-gray-50">
 
-                    {{-- Remove Button (hidden by default) --}}
+                    <img id="imagePreview" src="" alt="Preview"
+                        class="absolute inset-0 hidden h-full w-full rounded-2xl object-cover">
+
                     <button id="removeImageBtn" type="button" onclick="removeImage(event)"
-                        class="hidden absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md hover:bg-red-600 transition">
+                        class="absolute right-3 top-3 z-10 hidden h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition hover:bg-red-600">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
 
-                    {{-- Placeholder (visible by default) --}}
                     <div id="uploadPlaceholder" class="flex flex-col items-center justify-center">
                         <div
-                            class="mb-3 flex h-16 w-16 items-center justify-center rounded-xl bg-gray-100 transition group-hover:bg-gray-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none"
-                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6.75a1.5 1.5 0 0 0-1.5-1.5H3.75a1.5 1.5 0 0 0-1.5 1.5v12.905a1.5 1.5 0 0 0 1.5 1.5Z" />
-                            </svg>
+                            class="mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 transition group-hover:bg-gray-200">
+                            <i class="fa-regular fa-image text-2xl text-gray-400"></i>
                         </div>
                         <p class="text-sm font-medium text-gray-500">Click to upload image</p>
                         <p class="mt-1 text-xs text-gray-400">PNG, JPG, WEBP up to 2MB</p>
                     </div>
                 </div>
 
-                {{-- Hidden Input --}}
                 <input type="file" id="imageInput" name="image" accept="image/png, image/jpeg, image/webp"
                     class="hidden">
             </div>
@@ -124,59 +177,51 @@
         {{-- Bottom Action Buttons --}}
         <div class="xl:col-span-12">
             <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-end">
-                <button type="button"
-                    onclick="window.location='{{ route('post')}}'"
+                <button type="button" onclick="window.location='{{ route('post') }}'"
                     class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
                     Cancel
                 </button>
+
                 <x-form-status-buttons />
             </div>
         </div>
     </form>
 
-    @if ($errors->any())
-        <div class="rounded-xl bg-red-50 p-4 text-sm text-red-600">
-            <ul class="list-disc pl-4 space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    {{-- Modal pop-up Category --}}
-    {{-- Kita panggil bingkainya, kasih judul dan fungsi close-nya --}}
+    {{-- Category Modal --}}
     <x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
 
-        {{-- SEMUA KODE DI BAWAH INI OTOMATIS MASUK KE DALAM {{ $slot }} --}}
-
-        {{-- Daftar Kategori yang Ada --}}
         <div class="mb-5">
             <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Existing Categories</p>
-            <div id="categoryList" class="max-h-52 overflow-y-auto space-y-2 pr-1">
+
+            <div id="categoryList" class="max-h-52 space-y-2 overflow-y-auto pr-1">
                 @foreach ($categories as $category)
                     <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5"
                         id="category-item-{{ $category->id }}">
 
-                        {{-- Normal State --}}
                         <div class="flex items-center justify-between normal-state-{{ $category->id }}">
                             <span class="text-sm text-gray-700">{{ $category->name }}</span>
+
                             <button type="button" onclick="askDeleteCategory({{ $category->id }})"
-                                class="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition">
+                                class="ml-3 flex-shrink-0 text-gray-400 transition hover:text-red-500">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </div>
 
-                        {{-- Confirm State (hidden by default) --}}
                         <div class="hidden items-center justify-between gap-3 confirm-state-{{ $category->id }}">
-                            <span class="text-sm font-medium text-red-500 whitespace-nowrap">Delete
-                                "{{ $category->name }}"?</span>
-                            <div class="flex gap-2 flex-shrink-0">
+                            <span class="whitespace-nowrap text-sm font-medium text-red-500">
+                                Delete "{{ $category->name }}"?
+                            </span>
+
+                            <div class="flex flex-shrink-0 gap-2">
                                 <button type="button" onclick="cancelDeleteCategory({{ $category->id }})"
-                                    class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 transition">Cancel</button>
+                                    class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
+                                    Cancel
+                                </button>
+
                                 <button type="button" onclick="confirmDeleteCategory({{ $category->id }})"
-                                    class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">Yes,
-                                    Delete</button>
+                                    class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-red-600">
+                                    Yes, Delete
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -184,34 +229,37 @@
             </div>
         </div>
 
-        {{-- Divider --}}
         <div class="mb-5 border-t border-gray-200"></div>
 
-        {{-- Form Tambah Kategori Baru --}}
         <div>
             <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Add New Category</p>
+
             <form action="{{ route('categories.store') }}" method="POST" id="formAddCategory">
                 @csrf
+
                 <div class="flex gap-2">
                     <input type="text" name="name" id="newCategoryInput" placeholder="e.g. Technology"
                         class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"
                         required>
+
                     <button type="submit"
-                        class="rounded-lg bg-acmi-blueprimer px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue whitespace-nowrap">+
-                        Add</button>
+                        class="whitespace-nowrap rounded-lg bg-acmi-blueprimer px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue">
+                        + Add
+                    </button>
                 </div>
             </form>
         </div>
 
     </x-modal-popup-category>
+
 @endsection
 
 @push('scripts')
     <script>
         tinymce.init({
-            selector: '#acmi-editor',
+            selector: '#acmi-editor-en, #acmi-editor-id',
             license_key: 'gpl',
-            height: 500,
+            height: 400,
             menubar: false,
             plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
             toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat | help',
@@ -289,16 +337,17 @@
                 .then(data => {
                     if (data.success) {
                         document.getElementById(`category-item-${id}`)?.remove();
-                        document.querySelector(`input[name="categories[]"][value="${id}"]`)?.closest('label')?.remove();
+                        document.querySelector(`input[name="categories[]"][value="${id}"]`)?.closest('label')
+                            ?.remove();
 
-                        showToast('Category berhasil dihapus!');
+                        showToast('Category deleted successfully.');
                     } else {
-                        alert('Gagal menghapus kategori.');
+                        alert('Failed to delete category.');
                     }
                 })
                 .catch(error => {
-                    console.error("Ada error:", error);
-                    alert('Gagal menghapus kategori.');
+                    console.error("Error:", error);
+                    alert('Failed to delete category.');
                 });
         }
 
@@ -366,16 +415,6 @@
             removeImageBtn.classList.add('hidden');
             removeImageBtn.classList.remove('flex');
             imageInput.value = '';
-        }
-
-        function saveDraft() {
-            document.getElementById('postStatus').value = 'draft';
-
-            if (typeof tinymce !== 'undefined' && tinymce.get('acmi-editor')) {
-                tinymce.get('acmi-editor').save();
-            }
-
-            document.getElementById('postForm').submit();
         }
 
         document.getElementById('postForm').addEventListener('submit', function() {
@@ -459,14 +498,14 @@
                     input.value = '';
 
                     closeCategoryModal();
-                    showToast('Category berhasil ditambahkan!');
+                    showToast('Category added successfully.');
                 } else {
-                    alert('Gagal menambahkan category');
+                    alert('Failed to add category.');
                 }
 
             } catch (error) {
                 console.error(error);
-                alert('Gagal menambahkan category');
+                alert('Failed to add category.');
             }
         });
     </script>

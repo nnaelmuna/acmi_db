@@ -19,7 +19,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Kalau user BELUM login
+// Kalau user blm login
 Route::middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/signin', 'showLoginForm')->name('login');
@@ -27,13 +27,13 @@ Route::middleware('guest')->group(function () {
     });
 });
 
-// Kalau user SUDAH login
+// Kalau user udah login
 Route::middleware('auth')->group(function () {
 
-    // --- DASHBOARD ---
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // --- POST ---
+    // Post
     Route::controller(PostController::class)->group(function () {
         Route::get('/post', 'index')->name('post');
         Route::get('/post/create', 'create')->name('post.create');
@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/post/{post}/edit', 'edit')->name('post.edit');
         Route::put('/post/{post}', 'update')->name('post.update');
         Route::delete('/post/{post}', 'destroy')->name('post.destroy');
-        // Tambahkan route baru untuk Trash actions
+        // Trash Action
         Route::post('/posts/{id}/restore', [PostController::class, 'restore'])
             ->name('posts.restore');
 
@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
             ->name('posts.forceDelete');
     });
 
-    // POST CATEGORY
+    // Post Category
     Route::controller(CategoryController::class)->group(function () {
         Route::post('/post-categories', 'store')->name('categories.store');
         Route::delete('/post-categories/{category}', 'destroy')->name('categories.destroy');
@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/post-categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::delete('/post-categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-    // --- FAQ ---
+    // FAQ
     Route::controller(FaqController::class)->group(function () {
         Route::get('/faq', 'index')->name('faq');
         Route::post('/faq', 'store')->name('faq.store');
@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
     });
 
-    // --- PRODUCT ROUTES ---
+    // Product
     Route::controller(ProductController::class)->group(function () {
         Route::get('/product', 'index')->name('product.index');
         Route::get('/product/create', 'create')->name('product.create');
@@ -129,6 +129,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
     });
 
-    // --- LOGOUT ---
+    // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

@@ -22,20 +22,39 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status', 'published');
-        // Query berbeda untuk tab Trash vs tab lainnya
+        $category = $request->get('category');
+        $search = $request->get('search');
+
+        $query = Post::query();
+
         if ($status === 'trash') {
-            $posts = Post::onlyTrashed()->latest()->get();
+            $query->onlyTrashed();
         } else {
-            $posts = Post::where('status', $status)->latest()->get();
+            $query->where('status', $status);
         }
 
-        // Satu baris ini menggantikan array $counts yang panjang
+        if ($category) {
+            $query->whereHas('categories', function ($q) use ($category) {
+                $q->where('name', $category);
+            });
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%');
+            });
+        }
+
+        $posts = $query->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         $tabs = TabFilterService::getTabs(Post::class);
-        $categories = Category::all();
+        $categories = Category::latest()->get();
 
-        return view('post', compact('posts', 'tabs', 'status', 'categories'));
+        return view('post', compact('posts', 'tabs', 'categories'));
     }
-
     // Menampilkan form buat post baru
     public function create()
     {
@@ -52,7 +71,7 @@ class PostController extends Controller
             $request->file('image')
         );
 
-        return redirect()->route('post')->with('success', 'Post berhasil dipublikasikan!');
+        return redirect()->route('post')->with('success', 'Post created successfully');
     }
 
     public function edit(Post $post)
@@ -66,7 +85,7 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('post')->with('success', 'Post berhasil dihapus.');
+        return redirect()->route('post')->with('success', 'Post moved to trash successfully');
     }
 
     public function bulkDestroy(Request $request)
@@ -85,7 +104,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $this->postService->update($request->validated(), $request->file('image'), $post);
-        return redirect()->route('post')->with('success', 'Post berhasil diperbarui!');
+        return redirect()->route('post')->with('success', 'Post updated successfully');
     }
 
     public function restore($id)
@@ -94,16 +113,17 @@ class PostController extends Controller
         $post = Post::withTrashed()->findOrFail($id);
         $post->restore();
 
-        return redirect()->route('posts.index', ['status' => 'trash'])
-            ->with('success', "Post \"{$post->title}\" berhasil dipulihkan.");
+        return redirect()->route('post', ['status' => 'trash'])
+            ->with('success', "Post \"{$post->title}\" restored successfully");
     }
 
     public function forceDelete($id)
     {
-        $post = Post::withTrashed()->findOrFail($id);
+        $post = Post::onlyTrashed()->findOrFail($id);
+
         $post->forceDelete();
 
-        return redirect()->route('posts.index', ['status' => 'trash'])
-            ->with('success', "Post \"{$post->title}\" berhasil dihapus permanen.");
+        return redirect()->route('post', ['status' => 'trash'])
+            ->with('success', "Post permanently deleted successfully");
     }
 }

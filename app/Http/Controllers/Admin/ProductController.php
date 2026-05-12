@@ -71,7 +71,7 @@ class ProductController extends Controller
 
         Product::create($data);
 
-        return redirect()->route('product.index')->with('success', 'Produk berhasil dibuat!');
+        return redirect()->route('product.index')->with('success', 'Produk created successfully!');
     }
 
     public function show($id)
@@ -131,7 +131,7 @@ class ProductController extends Controller
             'phone'        => $request->phone,
         ]);
 
-        return redirect()->route('product.index')->with('success', 'Produk berhasil diupdate!');
+        return redirect()->route('product.index')->with('success', 'Produk updated successfully!');
     }
 
     // ← PERBAIKAN 3: destroy hanya soft delete, TIDAK hapus file
@@ -141,7 +141,7 @@ class ProductController extends Controller
         $product->delete(); // soft delete → pindah ke trash
 
         return redirect()->route('product.index', ['status' => 'trash'])
-            ->with('success', 'Produk dipindahkan ke trash!');
+            ->with('success', 'Product moved to trash successfully');
     }
 
     // ← TAMBAHAN: Restore dari trash
@@ -151,7 +151,7 @@ class ProductController extends Controller
         $product->restore();
 
         return redirect()->route('product.index', ['status' => 'published'])
-            ->with('success', 'Produk berhasil direstore!');
+            ->with('success', 'Product restored successfully');
     }
 
     // ← TAMBAHAN: Hapus permanen + hapus file
@@ -168,6 +168,6 @@ class ProductController extends Controller
         $product->forceDelete();
 
         return redirect()->route('product.index', ['status' => 'trash'])
-            ->with('success', 'Produk berhasil dihapus permanen!');
+            ->with('success', 'Product permanently deleted successfully');
     }
 }

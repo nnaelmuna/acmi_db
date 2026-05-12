@@ -8,27 +8,83 @@ class UpdatePostRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Sudah dihandle middleware auth
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'content'     => 'nullable|string',
-            'categories'  => 'nullable|array',
-            'image'       => 'nullable|image|max:2048',
-            'status'      => 'nullable|in:draft,published',
+            'title_en' => 'nullable|string|max:255',
+            'description_en' => 'nullable|string',
+            'content_en' => 'nullable|string',
+
+            'title_id' => 'nullable|string|max:255',
+            'description_id' => 'nullable|string',
+            'content_id' => 'nullable|string',
+
+            'categories' => 'nullable|array',
+            'image' => 'nullable|image|max:2048',
+            'status' => 'nullable|in:draft,published,archived',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
+            $hasEnglish =
+                request()->filled('title_en') ||
+                request()->filled('description_en') ||
+                request()->filled('content_en');
+
+            $hasIndonesian =
+                request()->filled('title_id') ||
+                request()->filled('description_id') ||
+                request()->filled('content_id');
+
+            // Tidak isi apa-apa
+            if (!$hasEnglish && !$hasIndonesian) {
+                $validator->errors()->add(
+                    'content',
+                    'Please fill in either English or Indonesian content.'
+                );
+            }
+
+            // Isi dua bahasa sekaligus
+            if ($hasEnglish && $hasIndonesian) {
+                $validator->errors()->add(
+                    'content',
+                    'Please choose only one language: English or Indonesian.'
+                );
+            }
+
+            // English wajib lengkap
+            if ($hasEnglish) {
+
+                if (
+                    !request()->filled('title_en') ||
+                    !request()->filled('description_en') ||
+                    !request()->filled('content_en')
+                );
+            }
+
+            // Indonesia wajib lengkap
+            if ($hasIndonesian) {
+
+                if (
+                    !request()->filled('title_id') ||
+                    !request()->filled('description_id') ||
+                    !request()->filled('content_id')
+                );
+            }
+        });
     }
 
     public function messages(): array
     {
         return [
-            'title.required' => 'Judul post wajib diisi.',
-            'image.max'      => 'Ukuran gambar maksimal 2MB.',
-            'status.in'      => 'Status tidak valid.',
+            'image.max' => 'Image size maximum is 2MB.',
+            'status.in' => 'Invalid status selected.',
         ];
     }
 }
