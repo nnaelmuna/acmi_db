@@ -266,19 +266,19 @@
                     <h4 class="text-blue-700 font-bold text-sm mb-4">Informasi Pribadi</h4>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase">Nama Lengkap</label>
+                            <label class="text-[10px] font-bold text-gray-600 uppercase">Nama Lengkap</label>
                             <p id="view_name" class="text-sm text-gray-800 font-semibold bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100">-</p>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase">Email Address</label>
+                            <label class="text-[10px] font-bold text-gray-600 uppercase">Email Address</label>
                             <p id="view_email" class="text-sm text-gray-800 font-semibold bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100">-</p>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase">Nomor Telepon</label>
+                            <label class="text-[10px] font-bold text-gray-600 uppercase">Nomor Telepon</label>
                             <p id="view_phone" class="text-sm text-gray-800 font-semibold bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100">-</p>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase">Linkedin Profile</label>
+                            <label class="text-[10px] font-bold text-gray-600 uppercase">Linkedin Profile</label>
                             <p id="view_linkedin" class="text-sm text-blue-600 font-semibold bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100 truncate">-</p>
                         </div>
                     </div>
@@ -308,7 +308,7 @@
             </div>
 
             <div class="p-6 bg-gray-50 flex justify-end border-t border-gray-100">
-                <button onclick="closeModal('viewModal')" class="px-8 py-2.5 rounded-xl bg-gray-800 text-white text-sm font-bold hover:bg-black transition-all">Close Detail</button>
+                <button onclick="closeModal('viewModal')" class="px-8 py-2.5 rounded-xl bg-acmi-blueprimer text-white text-sm font-bold hover:bg-[#0A1B89] transition-all">Close Detail</button>
             </div>
         </div>
     </div>

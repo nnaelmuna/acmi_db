@@ -69,6 +69,7 @@
                 <div class="flex items-center gap-4 flex-nowrap">
                     @yield('header_right')
                     
+                    
                     <div class="relative shrink-0">
                         {{-- BUTTON --}}
                         <button onclick="toggleDropdown(event)" class="flex items-center gap-3">

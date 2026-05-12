@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use App\Models\ActivityLog;
+
 
 class MemberController extends Controller
 {
@@ -56,13 +58,21 @@ class MemberController extends Controller
     public function update(Request $request, string $id)
     {
         $member = Member::findOrFail($id);
-        
+
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
         ]);
 
+        // Update data member
         $member->update($request->all());
+
+        // CATAT ACTIVITY (Pakai pengecekan user_id biar gak error kalau logout)
+        \App\Models\ActivityLog::create([
+            'activity_type' => 'Update Member',
+            'description'   => 'Updated member: ' . $request->name,
+            'user_id'       => auth()->id() ?? 1, // Jauh lebih ringkas & VS Code gak bakal protes
+        ]);
 
         return redirect()->back()->with('success', 'Member data updated successfully!');
     }
@@ -80,7 +90,7 @@ class MemberController extends Controller
     {
         // Cari data di sampah aja
         $member = Member::onlyTrashed()->findOrFail($id);
-        
+
         // Kembalikan datanya
         $member->restore();
 

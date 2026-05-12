@@ -14,6 +14,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CRM\InboundController;
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Api\PublicContentController;
+use App\Http\Controllers\Admin\HistoryController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
@@ -43,7 +44,13 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Post
+    // DASHBOARD HISTORY
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/history', [HistoryController::class, 'index'])->name('admin.history');
+        Route::get('/history-recap', [HistoryController::class, 'index'])->name('admin.history');
+    });
+
+    // --- POST ---
     Route::controller(PostController::class)->group(function () {
         Route::get('/post', 'index')->name('post');
         Route::get('/post/create', 'create')->name('post.create');
