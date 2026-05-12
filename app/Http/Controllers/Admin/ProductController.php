@@ -18,10 +18,12 @@ class ProductController extends Controller
         $status = $request->get('status', 'published');
         $categoryFilter = $request->get('category');
 
+        $query = Product::query();
+
         if ($status === 'trash') {
-            $query = Product::onlyTrashed();
+            $query->onlyTrashed();
         } else {
-            $query = Product::where('status', $status);
+            $query->where('status', $status);
         }
 
         if ($categoryFilter) {
@@ -43,19 +45,38 @@ class ProductController extends Controller
     public function create()
     {
         $categories = ProductCategory::all();
+
         return view('product-create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
-            'title'          => 'required',
-            'company_name'   => 'required',
-            'category'       => 'required|array',
-            'ceo_name'       => 'required',
-            'description'    => 'required',
-            'product_images' => 'required|array',
+            'title'            => 'required|string|max:255',
+            'company_name'     => 'required|string|max:255',
+            'category'         => 'required|array|min:1',
+            'ceo_name'         => 'required|string|max:255',
+            'description'      => 'required|string',
+
+            'features'         => 'required|array|min:1',
+            'features.*'       => 'required|string|max:255',
+
+            'website'          => 'required|url',
+            'email'            => 'required|email',
+            'phone'            => ['required', 'regex:/^[0-9+\-\s()]{8,20}$/'],
+
+            'product_images'   => 'required|array|min:1|max:3',
+            'product_images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'status'           => 'nullable|in:draft,published,archived',
+        ], [
+            'features.required' => 'Key Features must be filled.',
+            'features.min' => 'Please add at least one key feature.',
+            'website.required' => 'Website is required.',
+            'website.url' => 'Website must be a valid URL.',
+            'email.required' => 'Email is required.',
+            'phone.required' => 'Phone number is required.',
+            'phone.regex' => 'Phone number must be a valid phone number.',
         ]);
 
         $data = $request->except(['product_images']);
@@ -92,9 +113,26 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $request->validate([
-            'title'    => 'required',
-            'category' => 'required|array',
-            'email'    => 'nullable|email',
+            'title'        => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
+            'category'     => 'required|array|min:1',
+            'ceo_name'     => 'required|string|max:255',
+            'description'  => 'required|string',
+
+            'features'     => 'required|array|min:1',
+            'features.*'   => 'required|string|max:255',
+
+            'website'      => 'required|url',
+            'email'        => 'required|email',
+            'phone'        => ['required', 'regex:/^[0-9+\-\s()]{8,20}$/'],
+        ], [
+            'features.required' => 'Key Features must be filled.',
+            'features.min' => 'Please add at least one key feature.',
+            'website.required' => 'Website is required.',
+            'website.url' => 'Website must be a valid URL.',
+            'email.required' => 'Email is required.',
+            'phone.required' => 'Phone number is required.',
+            'phone.regex' => 'Phone number must be a valid phone number.',
         ]);
 
         $finalImages = $request->input('existing_images', []);
@@ -144,25 +182,29 @@ class ProductController extends Controller
             ->with('success', 'Product moved to trash successfully');
     }
 
-    // ← TAMBAHAN: Restore dari trash
     public function restore($id)
     {
-        $product = Product::onlyTrashed()->findOrFail($id);
+        $product = Product::withTrashed()->findOrFail($id);
         $product->restore();
 
-        return redirect()->route('product.index', ['status' => 'published'])
+        return redirect()->route('product.index', ['status' => 'trash'])
             ->with('success', 'Product restored successfully');
     }
 
-    // ← TAMBAHAN: Hapus permanen + hapus file
     public function forceDelete($id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
 
-        if ($product->images) {
-            foreach ($product->images as $path) {
-                Storage::disk('public')->delete($path);
+        if ($product->images && is_array($product->images)) {
+            foreach ($product->images as $image) {
+                if ($image && Storage::disk('public')->exists($image)) {
+                    Storage::disk('public')->delete($image);
+                }
             }
+        }
+
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
 
         $product->forceDelete();

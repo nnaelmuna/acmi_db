@@ -92,12 +92,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/product', 'index')->name('product.index');
         Route::get('/product/create', 'create')->name('product.create');
         Route::post('/product', 'store')->name('product.store');
+
         Route::get('/product/{id}/edit', 'edit')->name('product.edit');
         Route::put('/product/{id}', 'update')->name('product.update');
         Route::delete('/product/{id}', 'destroy')->name('product.destroy');
-        Route::get('/product/{id}', 'show')->name('product.show');
+
         Route::post('/product/{id}/restore', 'restore')->name('product.restore');
-        Route::delete('/product/{id}/force-delete', 'force-delete')->name('product.forceDelete');
+        Route::delete('/product/{id}/force-delete', 'forceDelete')->name('product.forceDelete');
+
+        // ini taruh paling bawah
+        Route::get('/product/{id}', 'show')->name('product.show');
     });
 
     Route::post('/product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');

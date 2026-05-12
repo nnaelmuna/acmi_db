@@ -19,6 +19,18 @@
 </style>
 
 @section('content')
+
+    @if ($errors->any())
+        <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-600">
+            <p class="mb-2 font-semibold">Validation Error</p>
+            <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @if (session('success'))
         <div id="successAlert" class="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500">
             {{ session('success') }}
@@ -144,10 +156,10 @@
                                 Restore
                             </button>
                         </form>
-                        <form action="{{ route('product.forceDelete', $item->id) }}" method="POST" class="w-full mt-2"
-                            id="forceDelete-{{ $item->id }}">
+                        <form action="{{ route('product.forceDelete', $item->id) }}" method="POST" class="w-full mt-2">
                             @csrf
                             @method('DELETE')
+
                             <button type="button"
                                 onclick="openDeleteModal('{{ route('product.forceDelete', $item->id) }}', 'Permanently Delete? This data cannot be recovered!')"
                                 class="block w-full text-center border border-red-600 text-red-600 py-2.5 rounded-lg font-medium transition hover:bg-red-600 hover:text-white hover:transition">
@@ -170,12 +182,16 @@
             @endforelse
         </div>
 
-        <div class="mt-auto"><x-pagination :paginator="$products"/>
+        <div class="mt-auto">
+            <x-pagination :paginator="$products" />
         </div>
 
     </div>
 
     <x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
+        <div id="categoryModalAlert"
+            class="mb-4 hidden rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-700">
+        </div>
 
         {{-- Daftar Kategori yang Ada --}}
         <div class="mb-5">
@@ -346,8 +362,8 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        // Hapus dari list di modal
                         document.getElementById(`category-item-${id}`)?.remove();
+                        showCategoryModalNotif('Category deleted successfully');
                     }
                 });
         }
@@ -406,5 +422,44 @@
                 document.getElementById('filterChevron').classList.remove('rotate-180');
             }
         });
+
+        // notif category
+        function showCategoryNotif(message) {
+            const oldAlert = document.getElementById('categorySuccessAlert');
+            if (oldAlert) oldAlert.remove();
+
+            const alert = document.createElement('div');
+            alert.id = 'categorySuccessAlert';
+            alert.className =
+                'mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500';
+            alert.innerText = message;
+
+            const content = document.querySelector('[class*="mb-7"]');
+            content.parentNode.insertBefore(alert, content);
+
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateY(-10px)';
+            }, 2500);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // popout notif category
+        function showCategoryModalNotif(message) {
+            const alert = document.getElementById('categoryModalAlert');
+
+            if (!alert) return;
+
+            alert.innerText = message;
+            alert.classList.remove('hidden');
+
+            setTimeout(() => {
+                alert.classList.add('hidden');
+                alert.innerText = '';
+            }, 2500);
+        }
     </script>
 @endpush
