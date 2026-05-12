@@ -17,6 +17,14 @@ class Post extends Model
         'content',
         'image',
         'status',
+
+        'title_en',
+        'description_en',
+        'content_en',
+
+        'title_id',
+        'description_id',
+        'content_id',
     ];
     public function categories()
     {

@@ -149,7 +149,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="button"
-                                onclick="openDeleteModal('{{ route('product.forceDelete', $item->id) }}', 'HAPUS PERMANEN? DATA INI TIDAK BISA DIKEMBALIKAN!')"
+                                onclick="openDeleteModal('{{ route('product.forceDelete', $item->id) }}', 'Permanently Delete? This data cannot be recovered!')"
                                 class="block w-full text-center border border-red-600 text-red-600 py-2.5 rounded-lg font-medium transition hover:bg-red-600 hover:text-white">
                                 Permanently Delete
                             </button>

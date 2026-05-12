@@ -11,17 +11,31 @@ class PostService
     public function store(array $data, ?object $image = null): Post
     {
         $imagePath = null;
+
         if ($image) {
             $imagePath = $image->store('posts', 'public');
         }
 
+        $title = $data['title_en'] ?? $data['title_id'] ?? 'Untitled Post';
+        $description = $data['description_en'] ?? $data['description_id'] ?? null;
+        $content = $data['content_en'] ?? $data['content_id'] ?? null;
+
         $post = Post::create([
-            'title'       => $data['title'],
-            'slug'        => Str::slug($data['title']) . '-' . time(),
-            'description' => $data['description'] ?? null,
-            'content'     => $data['content'] ?? null,
-            'image'       => $imagePath,
-            'status'      => $data['status'] ?? 'published',
+            'title' => $title,
+            'slug' => Str::slug($title) . '-' . time(),
+            'description' => $description,
+            'content' => $content,
+
+            'title_en' => $data['title_en'] ?? null,
+            'description_en' => $data['description_en'] ?? null,
+            'content_en' => $data['content_en'] ?? null,
+
+            'title_id' => $data['title_id'] ?? null,
+            'description_id' => $data['description_id'] ?? null,
+            'content_id' => $data['content_id'] ?? null,
+
+            'image' => $imagePath,
+            'status' => $data['status'] ?? 'published',
         ]);
 
         if (!empty($data['categories'])) {
@@ -33,28 +47,42 @@ class PostService
 
     public function update(array $data, ?object $image = null, Post $post): Post
     {
-        $imagePath = $post->image; // keep existing image
+        $imagePath = $post->image;
+
         if ($image) {
-            // Hapus gambar lama
             if ($post->image) {
                 Storage::disk('public')->delete($post->image);
             }
+
             $imagePath = $image->store('posts', 'public');
         }
-    
+
+        $title = $data['title_en'] ?? $data['title_id'] ?? $post->title;
+        $description = $data['description_en'] ?? $data['description_id'] ?? $post->description;
+        $content = $data['content_en'] ?? $data['content_id'] ?? $post->content;
+
         $post->update([
-            'title'       => $data['title'],
-            'slug'        => \Illuminate\Support\Str::slug($data['title']) . '-' . time(),
-            'description' => $data['description'] ?? null,
-            'content'     => $data['content'] ?? null,
-            'image'       => $imagePath,
-            'status'      => $data['status'] ?? $post->status,
+            'title' => $title,
+            'slug' => Str::slug($title) . '-' . time(),
+            'description' => $description,
+            'content' => $content,
+
+            'title_en' => $data['title_en'] ?? null,
+            'description_en' => $data['description_en'] ?? null,
+            'content_en' => $data['content_en'] ?? null,
+
+            'title_id' => $data['title_id'] ?? null,
+            'description_id' => $data['description_id'] ?? null,
+            'content_id' => $data['content_id'] ?? null,
+
+            'image' => $imagePath,
+            'status' => $data['status'] ?? $post->status,
         ]);
-    
+
         if (isset($data['categories'])) {
             $post->categories()->sync($data['categories']);
         }
-    
+
         return $post;
     }
 }

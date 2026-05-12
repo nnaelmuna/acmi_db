@@ -12,31 +12,33 @@ class InboundController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Inisialisasi Query (Default nampilin yang 'requested')
         $query = Inbound::query();
 
-        // Jika tidak ada filter status yang diklik, default nampilin requested
+        // 1. Default nampilin 'review' kalau baru buka halaman
         if (!$request->has('status')) {
-            $query->where('status', 'requested');
+            $query->where('status', 'review');
         }
 
-        // 2. Fitur Search
-        if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                ->orWhere('company_name', 'like', '%' . $request->search . '%');
-        }
-
-        // 3. Fitur Filter Status
+        // 2. Filter Status (Sekarang nyari 'review', bukan 'requested')
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
 
+        // 3. Fitur Search
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('company_name', 'like', '%' . $request->search . '%');
+            });
+        }
+
         $inbounds = $query->latest()->paginate(10);
 
+        // 4. Statistik (Pakai kunci 'review' biar pas sama Blade)
         $stats = [
-            'requested' => Inbound::where('status', 'requested')->count(),
-            'approved'  => Inbound::where('status', 'approved')->count(),
-            'rejected'  => Inbound::where('status', 'rejected')->count(),
+            'review'   => Inbound::where('status', 'review')->count(),
+            'approved' => Inbound::where('status', 'approved')->count(),
+            'rejected' => Inbound::where('status', 'rejected')->count(),
         ];
 
         return view('crm.inbound', compact('inbounds', 'stats'));
@@ -69,9 +71,9 @@ class InboundController extends Controller
                     [
                         'name'          => $inbound->name,
                         'phone'         => $inbound->phone,
-                        'company_name'  => $inbound->company_name,
-                        'industry'      => $inbound->industry,
-                        'position'      => $inbound->position,
+                        'company_name'  => $inbound->company_name ?? $inbound->company ?? '-',
+                        'industry'      => $inbound->industry ?? '-',
+                        'position'      => $inbound->position ?? '-',
                         'company_url'   => $inbound->company_url,
                         'status'        => 'active',
                     ]
@@ -102,8 +104,9 @@ class InboundController extends Controller
                     ['email' => $inbound->email],
                     [
                         'name'          => $inbound->name,
-                        'company_name'  => $inbound->company, // Inbound pakainya 'company'
-                        'industry'      => $inbound->industry,
+                        'company_name'  => $inbound->company_name ?? $inbound->company ?? '-',
+                        'industry'      => $inbound->industry ?? '-',
+                        'position'      => $inbound->position ?? '-',
                         'status'        => 'active',
                     ]
                 );
