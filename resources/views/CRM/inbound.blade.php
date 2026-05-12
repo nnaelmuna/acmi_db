@@ -28,8 +28,8 @@
 
             <div class="grid grid-cols-3 gap-0">
                 <div class="pr-4">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">Requested</p>
-                    <p class="text-2xl font-bold text-gray-900 mb-1">{{ $stats['requested'] ?? 0 }}</p>
+                    <p class="text-xs text-gray-500 font-semibold mb-1">Review</p>
+                    <p class="text-2xl font-bold text-gray-900 mb-1">{{ $stats['review'] ?? 0 }}</p>
                     <p class="text-[10px] text-gray-400"><span class="text-blue-600 font-bold">+ 0</span> vs yesterday</p>
                 </div>
 
@@ -55,8 +55,8 @@
                     <select onchange="window.location.href=this.value"
                         class="appearance-none bg-white border border-gray-200 rounded-xl pl-4 pr-10 py-2 text-sm outline-none shadow-sm cursor-pointer hover:border-gray-300 transition">
                         <option value="{{ route('inbound.index') }}">Filter Status</option>
-                        <option value="{{ route('inbound.index', ['status' => 'requested']) }}"
-                            {{ request('status') == 'requested' ? 'selected' : '' }}>Requested</option>
+                        <option value="{{ route('inbound.index', ['status' => 'review']) }}"
+                            {{ request('status') == 'review' ? 'selected' : '' }}>Review</option>
                         <option value="{{ route('inbound.index', ['status' => 'approved']) }}"
                             {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
                         <option value="{{ route('inbound.index', ['status' => 'rejected']) }}"
@@ -73,7 +73,7 @@
             </button>
         </div>
 
-        <div class="bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
             <table class="w-full text-left border-collapse">
                 <thead class="bg-[#DAE6FF] border-b border-gray-400 text-[10.5px] font-bold text-black">
                     <tr>
@@ -137,38 +137,36 @@
                                     <span class="text-gray-300">-</span>
                                 @endif
                             </td>
-                            <td class="p-4 text-center" onclick="event.stopPropagation()">
-                                <div class="relative inline-block text-left group">
-                                    <button
-                                        class="inline-flex items-center justify-between w-28 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase border transition-all 
-                                        {{ $item->status == 'approved' ? 'bg-green-100 text-green-700 border-green-200' : '' }}
-                                        {{ $item->status == 'rejected' ? 'bg-red-100 text-red-700 border-red-200' : '' }}
-                                        {{ $item->status == 'requested' || $item->status == 'review' ? 'bg-blue-100 text-blue-700 border-blue-200' : '' }}">
-                                        <span>{{ $item->status == 'requested' || $item->status == 'review' ? 'Review' : ucfirst($item->status) }}</span>
-                                        <i class="fas fa-chevron-down text-[8px] ml-1"></i>
-                                    </button>
+                           <td class="p-4 text-center" onclick="event.stopPropagation()">
+    <div class="relative inline-block text-left group">
+        <button type="button" 
+            class="inline-flex items-center justify-between w-28 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase border transition-all 
+            {{ $item->status == 'approved' ? 'bg-green-100 text-green-700 border-green-200' : '' }}
+            {{ $item->status == 'rejected' ? 'bg-red-100 text-red-700 border-red-200' : '' }}
+            {{ $item->status == 'review' || $item->status == 'review' ? 'bg-blue-100 text-blue-700 border-blue-200' : '' }}">
+            
+            <span>{{ $item->status == 'review' ? 'Review' : ucfirst($item->status) }}</span>
+            <i class="fas fa-chevron-down text-[8px] ml-1"></i>
+        </button>
 
-                                    <div
-                                        class="absolute right-0 mt-1 w-32 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100]">
-                                        <div class="p-1.5 flex flex-col gap-1">
-                                            <button type="button"
-                                                onclick="updateStatus({{ $item->id }}, 'approved')"
-                                                class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition text-left">
-                                                <i class="fas fa-check-circle mr-2 text-green-500"></i> Approved
-                                            </button>
-                                            <button type="button"
-                                                onclick="updateStatus({{ $item->id }}, 'rejected')"
-                                                class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700 rounded-lg transition text-left">
-                                                <i class="fas fa-times-circle mr-2 text-red-500"></i> Rejected
-                                            </button>
-                                            <button type="button" onclick="updateStatus({{ $item->id }}, 'review')"
-                                                class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition text-left">
-                                                <i class="fas fa-sync-alt mr-2 text-blue-500"></i> Review
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
+      <div class="absolute right-0 mt-1 w-36 bg-white border border-gray-100 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] overflow-visible">
+    <div class="p-2 flex flex-col gap-1">
+        <button type="button" onclick="updateStatus({{ $item->id }}, 'review')" 
+            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-blue-600 hover:bg-blue-50 rounded-xl transition">
+            <i class="fas fa-sync-alt mr-2"></i> Review
+        </button>
+        <button type="button" onclick="updateStatus({{ $item->id }}, 'approved')" 
+            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-green-600 hover:bg-green-50 rounded-xl transition border-t border-gray-50 pt-2">
+            <i class="fas fa-check-circle mr-2"></i> Approved
+        </button>
+        <button type="button" onclick="updateStatus({{ $item->id }}, 'rejected')" 
+            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded-xl transition border-t border-gray-50 pt-2">
+            <i class="fas fa-times-circle mr-2"></i> Rejected
+        </button>
+    </div>
+</div>
+    </div>
+</td>
                         </tr>
                     @empty
                         <tr>
@@ -273,43 +271,48 @@
             checkboxes.forEach(cb => cb.checked = this.checked);
         }
 
-        function updateStatus(id, status) {
-            let statusText = status === 'approved' ? 'Approve' : (status === 'rejected' ? 'Reject' : 'Review');
-            let confirmButtonColor = status === 'approved' ? '#10B981' : (status === 'rejected' ? '#EF4444' : '#3B82F6');
+     function updateStatus(id, status) {
+    let actionText = status === 'approved' ? 'approve' : (status === 'rejected' ? 'reject' : 'set to review');
+    let btnColor = status === 'rejected' ? '#E15B5B' : '#0014A8'; // Merah buat reject, Biru buat lainnya
 
-            Swal.fire({
-                title: 'Konfirmasi Status',
-                text: `Yakin mau mengubah status menjadi ${statusText}?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: confirmButtonColor,
-                cancelButtonColor: '#6B7280',
-                confirmButtonText: 'Ya, Ubah!',
-                cancelButtonText: 'Batal',
-                borderRadius: '15px'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/crm/inbound/${id}/status`, {
-                        method: "PATCH",
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            status: status
-                        })
-                    }).then(() => {
-                        Swal.fire({
-                            title: 'Berhasil!',
-                            text: 'Status sudah diperbarui.',
-                            icon: 'success',
-                            timer: 1500,
-                            showConfirmButton: false
-                        }).then(() => window.location.reload());
-                    });
-                }
+    Swal.fire({
+        title: `<span style="font-size: 18px; font-weight: 700;">Are you sure want to ${actionText} this item?</span>`,
+        showCancelButton: true,
+        confirmButtonText: status.charAt(0).toUpperCase() + status.slice(1),
+        cancelButtonText: 'Cancel',
+        reverseButtons: true,
+        confirmButtonColor: btnColor,
+        cancelButtonColor: '#F3F4F6',
+        customClass: {
+            popup: 'rounded-[32px] p-6',
+            confirmButton: 'rounded-full px-8 py-2.5 text-sm font-bold ml-2',
+            cancelButton: 'rounded-full px-8 py-2.5 text-sm font-bold text-gray-500'
+        },
+        buttonsStyling: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/crm/inbound/${id}/status`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ status: status })
+            }).then(() => {
+                // Notifikasi sukses kecil aja biar gak ganggu
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated!',
+                    showConfirmButton: false,
+                    timer: 800
+                }).then(() => window.location.reload());
             });
         }
+    });
+}
+
+// Tambahkan CSS dikit buat ngerapiin tombol SweetAlert (opsional di dalam <style>)
+// .swal2-cancel { color: #6B7280 !important; background-color: #F3F4F6 !important; }
 
         function approveAllSelected() {
             let selectedIds = [];
