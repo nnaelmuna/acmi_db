@@ -13,6 +13,16 @@ use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CRM\InboundController;
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Api\PublicContentController;
+
+Route::prefix('public')->group(function () {
+    Route::get('/articles', [PublicContentController::class, 'getArticles']);
+    Route::get('/articles/{slug}', [PublicContentController::class, 'getArticleDetail']);
+    Route::get('/faqs', [PublicContentController::class, 'getFaqs']);
+    Route::get('/services', [PublicContentController::class, 'getServices']);
+    Route::get('/gallery', [PublicContentController::class, 'getGallery']); 
+    Route::get('/partners', [PublicContentController::class, 'getPartners']);
+});
 
 // Redirect ke login
 Route::get('/', function () {

@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'landing' => [
+        'webhook_url'    => env('LANDING_PAGE_URL') . '/webhook/cms',
+        'webhook_secret' => env('LANDING_WEBHOOK_SECRET'),
+    ],
+
 ];
