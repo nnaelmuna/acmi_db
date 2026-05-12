@@ -23,7 +23,7 @@ class UpdatePostRequest extends FormRequest
             'content_id' => 'nullable|string',
 
             'categories' => 'nullable|array',
-            'image' => 'nullable|image|max:2048',
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'status' => 'nullable|in:draft,published,archived',
         ];
     }
@@ -42,7 +42,6 @@ class UpdatePostRequest extends FormRequest
                 request()->filled('description_id') ||
                 request()->filled('content_id');
 
-            // Tidak isi apa-apa
             if (!$hasEnglish && !$hasIndonesian) {
                 $validator->errors()->add(
                     'content',
@@ -50,7 +49,6 @@ class UpdatePostRequest extends FormRequest
                 );
             }
 
-            // Isi dua bahasa sekaligus
             if ($hasEnglish && $hasIndonesian) {
                 $validator->errors()->add(
                     'content',
@@ -58,24 +56,30 @@ class UpdatePostRequest extends FormRequest
                 );
             }
 
-            // English wajib lengkap
             if ($hasEnglish) {
-
                 if (
                     !request()->filled('title_en') ||
                     !request()->filled('description_en') ||
                     !request()->filled('content_en')
-                );
+                ) {
+                    $validator->errors()->add(
+                        'content_en',
+                        'Please complete all English content fields.'
+                    );
+                }
             }
 
-            // Indonesia wajib lengkap
             if ($hasIndonesian) {
-
                 if (
                     !request()->filled('title_id') ||
                     !request()->filled('description_id') ||
                     !request()->filled('content_id')
-                );
+                ) {
+                    $validator->errors()->add(
+                        'content_id',
+                        'Please complete all Indonesian content fields.'
+                    );
+                }
             }
         });
     }
@@ -84,6 +88,8 @@ class UpdatePostRequest extends FormRequest
     {
         return [
             'image.max' => 'Image size maximum is 2MB.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'Image format must be JPG, JPEG, PNG, or WEBP.',
             'status.in' => 'Invalid status selected.',
         ];
     }

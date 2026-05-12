@@ -135,15 +135,18 @@
                 <div id="dropZone" onclick="document.getElementById('imageInput').click()"
                     class="group relative flex h-[280px] w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:bg-gray-50">
 
-                    <img id="imagePreview" src="" alt="Preview"
-                        class="absolute inset-0 hidden h-full w-full rounded-2xl object-cover">
+                    <img id="imagePreview"
+                        src="{{ $post->image ? asset('storage/' . $post->image) : '' }}"
+                        alt="Preview"
+                        class="absolute inset-0 {{ $post->image ? '' : 'hidden' }} h-full w-full rounded-2xl object-cover">
 
                     <button id="removeImageBtn" type="button" onclick="removeImage(event)"
-                        class="absolute right-3 top-3 z-10 hidden h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition hover:bg-red-600">
+                        class="absolute right-3 top-3 z-10 {{ $post->image ? 'flex' : 'hidden' }} h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition hover:bg-red-600">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
 
-                    <div id="uploadPlaceholder" class="flex flex-col items-center justify-center">
+                    <div id="uploadPlaceholder"
+                        class="{{ $post->image ? 'hidden' : 'flex' }} flex-col items-center justify-center">
                         <div
                             class="mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 transition group-hover:bg-gray-200">
                             <i class="fa-regular fa-image text-2xl text-gray-400"></i>

@@ -36,27 +36,56 @@
         <div class="flex min-h-[calc(100vh-230px)] w-full flex-col">
             <div class="space-y-4">
                 @forelse($faqs as $faq)
-                    <div class="overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
+                    <div onclick="toggleFaq(this)"
+                        class="cursor-pointer overflow-hidden rounded-xl bg-acmi-softblue shadow-sm">
                         <div class="flex items-center justify-between gap-4 px-5 py-4">
                             <p class="flex-1 text-sm font-medium leading-6 text-gray-900 md:text-[15px]">
                                 {{ $faq->question }}
                             </p>
 
-                            <div class="flex shrink-0 items-center gap-3">
-                                <button type="button" data-id="{{ $faq->id }}" data-question="{{ e($faq->question) }}"
-                                    data-answer="{{ e($faq->answer) }}" data-status="{{ $faq->status ?? 'published' }}"
-                                    onclick="openEditModalFromButton(this)"
-                                    class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-blueaccent text-white transition hover:bg-acmi-blueprimer">
-                                    <i class="fa-solid fa-pen text-sm"></i>
-                                </button>
+                            <div class="flex shrink-0 items-center gap-2">
+
+                                @if (request('status') === 'trash')
+                                    {{-- Restore --}}
+                                    <form action="{{ route('faq.restore', $faq->id) }}" method="POST">
+                                        @csrf
+
+                                        <button type="submit"
+                                            class="flex h-9 items-center justify-center rounded-md border border-acmi-blueprimer px-4 text-xs font-medium text-acmi-blueprimer transition hover:bg-acmi-blueprimer hover:text-white">
+                                            Restore
+                                        </button>
+                                    </form>
+
+                                    {{-- Force Delete --}}
+                                    <form action="{{ route('faq.forceDelete', $faq->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="button"
+                                            onclick="openDeleteModal('{{ route('faq.forceDelete', $faq->id) }}', 'Permanently Delete? This data cannot be recovered!')"
+                                            class="flex h-9 items-center justify-center rounded-md border border-red-600 px-4 text-xs font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
+                                            Delete
+                                        </button>
+                                    </form>
+                                @else
+                                    {{-- Edit --}}
+                                    <button type="button" data-id="{{ $faq->id }}"
+                                        data-question="{{ e($faq->question) }}" data-answer="{{ e($faq->answer) }}"
+                                        data-status="{{ $faq->status ?? 'published' }}"
+                                        onclick="openEditModalFromButton(this)"
+                                        class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-blueaccent text-white transition hover:bg-acmi-blueprimer">
+                                        <i class="fa-solid fa-pen text-sm"></i>
+                                    </button>
+
+                                    {{-- Trash --}}
+                                    <button type="button"
+                                        onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FAQ?')"
+                                        class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-yellowaccent text-white transition hover:opacity-90">
+                                        <i class="fa-solid fa-trash text-sm"></i>
+                                    </button>
+                                @endif
 
                                 <button type="button"
-                                    onclick="openDeleteModal('{{ route('faq.destroy', $faq->id) }}', 'Are you sure want to delete this FAQ?')"
-                                    class="flex h-9 w-9 items-center justify-center rounded-md bg-acmi-yellowaccent text-white transition hover:opacity-90">
-                                    <i class="fa-solid fa-trash text-sm"></i>
-                                </button>
-
-                                <button type="button" onclick="toggleFaq(this)"
                                     class="flex h-8 w-8 items-center justify-center text-gray-800 transition">
                                     <i
                                         class="faq-arrow fa-solid fa-chevron-down text-sm transition-transform duration-300"></i>

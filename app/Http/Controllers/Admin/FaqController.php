@@ -75,4 +75,23 @@ class FaqController extends Controller
 
         return redirect()->route('faq')->with('success', 'FAQ deleted successfully.');
     }
+
+    public function restore($id)
+    {
+        $faq = FAQ::withTrashed()->findOrFail($id);
+
+        $faq->restore();
+
+        return redirect()->back()->with('success', 'FAQ restored successfully');
+    }
+
+    public function forceDelete($id)
+    {
+        $faq = FAQ::onlyTrashed()->findOrFail($id);
+
+        $faq->forceDelete();
+
+        return redirect()->route('faq', ['status' => 'trash'])
+            ->with('success', 'FAQ permanently deleted successfully');
+    }
 }

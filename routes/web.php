@@ -21,7 +21,7 @@ Route::prefix('public')->group(function () {
     Route::get('/articles/{slug}', [PublicContentController::class, 'getArticleDetail']);
     Route::get('/faqs', [PublicContentController::class, 'getFaqs']);
     Route::get('/services', [PublicContentController::class, 'getServices']);
-    Route::get('/gallery', [PublicContentController::class, 'getGallery']); 
+    Route::get('/gallery', [PublicContentController::class, 'getGallery']);
     Route::get('/partners', [PublicContentController::class, 'getPartners']);
 });
 
@@ -83,6 +83,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/faq', 'store')->name('faq.store');
         Route::put('/faq/{id}', 'update')->name('faq.update');
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
+        Route::post('/faq/{id}/restore', [FaqController::class, 'restore'])->name('faq.restore');
+        Route::delete('/faq/{id}/force-delete', [FaqController::class, 'forceDelete'])->name('faq.forceDelete');
     });
 
     // Product
