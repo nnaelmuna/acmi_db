@@ -120,7 +120,7 @@
                                 <i class="fa-solid fa-pen-to-square text-xs"></i>
                             </a>
                             <button type="button"
-                                onclick="openDeleteModal('{{ route('product.destroy', $item->id) }}', 'Are you sure want to delete this item?')"
+                                onclick="openDeleteModal('{{ route('product.destroy', $item->id) }}', 'Are you sure want to delete this product?')"
                                 class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition">
                                 <i class="fa-solid fa-trash text-xs"></i>
                             </button>

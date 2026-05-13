@@ -8,6 +8,7 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Services\TabFilterService;
 
 class ProductController extends Controller
 {
@@ -39,7 +40,14 @@ class ProductController extends Controller
             'trash'     => Product::onlyTrashed()->count(),
         ];
 
-        return view('product', compact('products', 'categories', 'statusCounts'));
+        $tabs = TabFilterService::getTabs(Product::class);
+
+        return view('product', compact(
+            'products',
+            'categories',
+            'statusCounts',
+            'tabs'
+        ));
     }
 
     public function create()

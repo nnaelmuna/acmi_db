@@ -4,17 +4,23 @@
 @section('page_title', 'Media')
 
 @section('content')
-    @if (session('success'))
-        <div id="successAlert"
-            class="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500 ease-in-out">
-            {{ session('success') }}
+
+    @if ($errors->any())
+        <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-600">
+            <p class="mb-2 font-semibold">Validation Error</p>
+            <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
-    @php
-        $defaultCategories = $categories->where('is_default', 1);
-        $customCategories = $categories->where('is_default', 0);
-    @endphp
+    @if (session('success'))
+        <div id="successAlert" class="mb-4 rounded-xl bg-green-100 p-4 text-sm text-green-700 transition-all duration-500">
+            {{ session('success') }}
+        </div>
+    @endif
 
     <style>
         #catSlider::-webkit-scrollbar {
@@ -30,27 +36,25 @@
     {{-- Top Action Section --}}
     <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-        {{-- BAGIAN KIRI: Status Tabs --}}
+        {{-- Status Tabs --}}
         <div class="flex flex-wrap items-center gap-2">
             <x-filters-tab :tabs="$tabs" />
         </div>
 
-        {{-- BAGIAN KANAN: Add Category, Filter Dropdown, Add Media --}}
+        {{-- Filter, Add Category, Add Media --}}
         <div class="flex flex-wrap items-center gap-3 xl:justify-end">
 
-            {{-- Tombol Tambah Kategori --}}
+            {{-- Filter Category Dropdown --}}
+            <x-filters-dropdown-category :categories="$categories" routeName="media" valueField="id" />
+
+            {{-- Add Category --}}
             <button type="button" onclick="openCategoryModal()"
-                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-400 shadow-sm transition hover:text-acmi-blueprimer">
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-400 shadow-sm transition hover:text-acmi-blueprimer">
                 <i class="fa-solid fa-plus text-sm"></i>
             </button>
 
-            {{-- Filter Dropdown Component --}}
-            <div class="relative">
-                <x-filters-dropdown-category :categories="$categories" routeName="media" />
-            </div>
-
-            {{-- Tombol Add Media --}}
-            <button onclick="openMediaModal()"
+            {{-- Add Media --}}
+            <button type="button" onclick="openMediaModal()"
                 class="inline-flex h-11 items-center gap-3 rounded-xl bg-acmi-blueprimer px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-acmi-darkblue">
                 <span>Add Media</span>
                 <i class="fa-solid fa-plus"></i>
@@ -60,70 +64,97 @@
 
     {{-- Media Grid --}}
     <div class="flex min-h-[calc(100vh-230px)] flex-col">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-7">
+        <div class="mt-7 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+
             @forelse($media as $item)
                 <div
-                    class="group relative bg-white rounded-xl shadow-sm p-4 border border-gray-200 transition hover:shadow-md">
+                    class="group relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
 
-                    <div
-                        class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
-                        <button type="button"
-                            onclick="openEditMediaModal('{{ $item->id }}', '{{ $item->title }}', '{{ $item->media_category_id }}', '{{ $item->image ? asset('storage/' . $item->image) : '' }}')"
-                            class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition">
-                            <i class="fa-solid fa-pen-to-square text-xs"></i>
-                        </button>
+                    {{-- Edit & Delete hanya muncul jika bukan trash --}}
+                    @if (request('status') !== 'trash')
+                        <div
+                            class="absolute right-6 top-6 z-30 flex gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
 
-                        <form action="{{ route('media.destroy', $item->id) }}" method="POST"
-                            onsubmit="return confirm('Delete this media?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="w-8 h-8 bg-white shadow-md rounded-lg flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition">
+                            <button type="button"
+                                onclick="openEditMediaModal({
+                                    id: '{{ $item->id }}',
+                                    title: @js($item->title),
+                                    categoryId: '{{ $item->media_category_id }}',
+                                    status: '{{ $item->status ?? 'published' }}',
+                                    imageUrl: '{{ $item->image ? asset('storage/' . $item->image) : '' }}',
+                                    updateUrl: '{{ route('media.update', $item->id) }}'
+                                })"
+                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-blue-600 shadow-md transition hover:bg-blue-600 hover:text-white">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            </button>
+
+                            <button type="button"
+                                onclick="openDeleteModal('{{ route('media.destroy', $item->id) }}', 'Are you sure want to delete this media?')"
+                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-red-500 shadow-md transition hover:bg-red-500 hover:text-white">
                                 <i class="fa-solid fa-trash text-xs"></i>
                             </button>
-                        </form>
-                    </div>
+                        </div>
+                    @endif
 
+                    {{-- Image --}}
                     <div class="relative overflow-hidden rounded-lg">
                         @if ($item->image)
                             <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title }}"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105">
+                                class="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105">
                         @else
-                            <div class="flex w-full h-48 items-center justify-center bg-gray-100 text-sm text-gray-400">
+                            <div class="flex h-48 w-full items-center justify-center bg-gray-100 text-sm text-gray-400">
                                 No Image
                             </div>
                         @endif
 
                         <span
-                            class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-md text-[10px] font-bold uppercase text-[#4155C6]">
+                            class="absolute left-2 top-2 rounded-md bg-white/90 px-2 py-1 text-[10px] font-bold uppercase text-[#4155C6] backdrop-blur-sm">
                             {{ $item->category->name ?? '-' }}
                         </span>
                     </div>
 
+                    {{-- Content --}}
                     <div class="mt-4">
-                        <h3 class="font-bold text-lg text-gray-900 leading-tight">
+                        <h3 class="text-lg font-bold leading-tight text-gray-900">
                             {{ $item->title }}
                         </h3>
 
                         <div
-                            class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-gray-800 text-xs italic">
+                            class="mt-3 flex items-center justify-between border-t border-gray-100 pt-3 text-xs italic text-gray-800">
                             Category: {{ $item->category->name ?? '-' }}
                         </div>
                     </div>
 
-                    @if ($item->image)
+                    {{-- Bottom Button --}}
+                    @if (request('status') === 'trash')
+                        <form action="{{ route('media.restore', $item->id) }}" method="POST" class="mt-4 w-full">
+                            @csrf
+
+                            <button type="submit"
+                                class="block w-full rounded-lg border border-blue-900 py-2.5 text-center font-medium text-acmi-blueprimer transition hover:bg-acmi-blueprimer hover:text-white">
+                                Restore
+                            </button>
+                        </form>
+
                         <button type="button"
-                            onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', '{{ $item->title }}')"
-                            class="block w-full text-center mt-4 bg-[#4155C6] text-white py-2.5 rounded-lg font-medium transition hover:bg-[#3444a1]">
-                            Preview
+                            onclick="openDeleteModal('{{ route('media.forceDelete', $item->id) }}', 'Permanently Delete? This data cannot be recovered!')"
+                            class="mt-2 block w-full rounded-lg border border-red-600 py-2.5 text-center font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
+                            Permanently Delete
                         </button>
                     @else
-                        <button type="button" disabled
-                            class="block w-full text-center mt-4 bg-gray-300 text-white py-2.5 rounded-lg font-medium cursor-not-allowed">
-                            No Preview
-                        </button>
+                        @if ($item->image)
+                            <button type="button"
+                                onclick="openPreviewModal('{{ asset('storage/' . $item->image) }}', @js($item->title))"
+                                class="mt-4 block w-full rounded-lg bg-acmi-blueprimer py-2.5 text-center font-medium text-white transition hover:bg-acmi-darkblue">
+                                Preview
+                            </button>
+                        @else
+                            <button type="button" disabled
+                                class="mt-4 block w-full cursor-not-allowed rounded-lg bg-gray-300 py-2.5 text-center font-medium text-white">
+                                No Preview
+                            </button>
+                        @endif
                     @endif
-
                 </div>
             @empty
                 <div
@@ -136,38 +167,47 @@
         <div class="mt-auto">
             <x-pagination :paginator="$media" />
         </div>
-
     </div>
 
     {{-- Category Modal --}}
     <x-modal-popup-category id="categoryModal" title="Manage Categories" closeAction="closeCategoryModal()">
-        {{-- Daftar Kategori yang Ada --}}
+        <div id="categoryModalAlert"
+            class="mb-4 hidden rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-700">
+        </div>
+
         <div class="mb-5">
             <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Existing Categories</p>
-            <div id="categoryList" class="max-h-52 overflow-y-auto space-y-2 pr-1">
+
+            <div id="categoryList" class="max-h-52 space-y-2 overflow-y-auto pr-1">
                 @foreach ($categories as $category)
                     <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5"
                         id="category-item-{{ $category->id }}">
 
-                        {{-- Normal State --}}
                         <div class="flex items-center justify-between normal-state-{{ $category->id }}">
                             <span class="text-sm text-gray-700">{{ $category->name }}</span>
+
                             <button type="button" onclick="askDeleteCategory({{ $category->id }})"
-                                class="ml-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition">
+                                class="ml-3 flex-shrink-0 text-gray-400 transition hover:text-red-500">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </div>
 
-                        {{-- Confirm State --}}
                         <div class="hidden items-center justify-between gap-3 confirm-state-{{ $category->id }}">
-                            <span class="text-sm font-medium text-red-500 whitespace-nowrap">Delete
-                                "{{ $category->name }}"?</span>
-                            <div class="flex gap-2 flex-shrink-0">
+                            <span class="whitespace-nowrap text-sm font-medium text-red-500">
+                                Delete "{{ $category->name }}"?
+                            </span>
+
+                            <div class="flex flex-shrink-0 gap-2">
                                 <button type="button" onclick="cancelDeleteCategory({{ $category->id }})"
-                                    class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 transition">Cancel</button>
-                                <button type="button" onclick="confirmDeleteCategory({{ $category->id }})"
-                                    class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white hover:bg-red-600 transition">Yes,
-                                    Delete</button>
+                                    class="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
+                                    Cancel
+                                </button>
+
+                                <button type="button"
+                                    onclick="confirmDeleteCategory('{{ route('media.categories.destroy', $category->id) }}', {{ $category->id }})"
+                                    class="rounded-lg bg-red-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-red-600">
+                                    Yes, Delete
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -175,23 +215,23 @@
             </div>
         </div>
 
-        {{-- Divider --}}
         <div class="mb-5 border-t border-gray-200"></div>
 
-        {{-- Form Tambah Kategori Baru --}}
         <div>
             <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">Add New Category</p>
-            {{-- Sesuaikan route ini dengan route kategori media di web.php kamu --}}
-            <form action="{{ route('media.categories.store') ?? url('/media-categories') }}" method="POST"
-                id="formAddCategory">
+
+            <form action="{{ route('media.categories.store') }}" method="POST" id="formAddCategory">
                 @csrf
+
                 <div class="flex gap-2">
                     <input type="text" name="name" id="newCategoryInput" placeholder="e.g. Campaign"
                         class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20"
                         required>
+
                     <button type="submit"
-                        class="rounded-lg bg-acmi-blueprimer px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue whitespace-nowrap">+
-                        Add</button>
+                        class="whitespace-nowrap rounded-lg bg-acmi-blueprimer px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-acmi-darkblue">
+                        + Add
+                    </button>
                 </div>
             </form>
         </div>
@@ -199,7 +239,9 @@
 
     {{-- Add Media Modal --}}
     <div id="mediaModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-        <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
+        <div id="mediaModalBox"
+            class="w-full max-w-lg scale-95 rounded-2xl bg-white p-6 opacity-0 shadow-2xl transition-all duration-300">
+
             <div class="mb-5 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-800">Add Media</h2>
 
@@ -208,12 +250,12 @@
                 </button>
             </div>
 
-            <form action="{{ url('/media') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('media.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-4">
                     <label class="mb-2 block text-sm font-medium text-gray-700">Title</label>
-                    <input type="text" name="title" required
+                    <input type="text" name="title" required value="{{ old('title') }}"
                         class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
@@ -222,8 +264,12 @@
                     <select name="media_category_id" required
                         class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                         <option value="">Select Category</option>
+
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}"
+                                {{ old('media_category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -242,11 +288,15 @@
     {{-- Edit Media Modal --}}
     <div id="editMediaModal"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-        <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
+        <div id="editMediaModalBox"
+            class="w-full max-w-lg scale-95 rounded-2xl bg-white p-6 opacity-0 shadow-2xl transition-all duration-300">
+
             <div class="mb-5 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-800">Edit Media</h2>
-                <button type="button" onclick="closeEditMediaModal()" class="text-white/80 hover:text-white">
-                    <i class="fa-solid fa-xmark text-gray-600"></i>
+
+                <button type="button" onclick="closeEditMediaModal()"
+                    class="text-gray-500 transition hover:text-gray-800">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
@@ -255,35 +305,32 @@
                 @method('PUT')
 
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm text-gray-800">Title</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Title</label>
                     <input type="text" id="editTitle" name="title" required
-                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
+                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
                 <div class="mb-4">
-                    <label class="mb-2 block text-sm text-gray-800">Category</label>
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Category</label>
                     <select id="editCategory" name="media_category_id" required
-                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none">
+                        class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
+
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="mb-5">
-                    {{-- Current Image --}}
-                    <div class="mb-4">
-                        <label class="mb-2 block text-sm text-gray-700">Current Image</label>
-                        <img id="editImagePreview" src=""
-                            class="hidden h-40 w-full rounded-xl object-cover border border-gray-200">
-                    </div>
+                <div class="mb-4">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Current Image</label>
+                    <img id="editImagePreview" src=""
+                        class="hidden h-40 w-full rounded-xl border border-gray-200 object-cover">
+                </div>
 
-                    {{-- Change Image --}}
-                    <div class="mb-5">
-                        <label class="mb-2 block text-sm text-gray-700">Change Image</label>
-                        <input type="file" name="image"
-                            class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                    </div>
+                <div class="mb-5">
+                    <label class="mb-2 block text-sm font-medium text-gray-700">Change Image</label>
+                    <input type="file" name="image"
+                        class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </div>
 
                 <x-form-status-select id="edit_status" name="status" />
@@ -304,6 +351,7 @@
         <div class="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-2xl">
             <div class="mb-4 flex items-center justify-between">
                 <h2 id="previewTitle" class="text-lg font-semibold text-gray-900">Preview</h2>
+
                 <button type="button" onclick="closePreviewModal()"
                     class="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
                     <i class="fa-solid fa-xmark"></i>
@@ -316,49 +364,13 @@
         </div>
     </div>
 
+
+
+@endsection
+
+@push('scripts')
     <script>
-        const slider = document.getElementById('catSlider');
-        const leftArrow = document.getElementById('leftArrow');
-        const rightArrow = document.getElementById('rightArrow');
         const successAlert = document.getElementById('successAlert');
-
-        function updateArrows() {
-            if (!slider || !leftArrow || !rightArrow) return;
-
-            const scrollLeft = slider.scrollLeft;
-            const maxScroll = slider.scrollWidth - slider.clientWidth;
-
-            if (scrollLeft <= 5) {
-                leftArrow.classList.add('hidden');
-                leftArrow.classList.remove('flex');
-            } else {
-                leftArrow.classList.remove('hidden');
-                leftArrow.classList.add('flex');
-            }
-
-            if (scrollLeft >= maxScroll - 5) {
-                rightArrow.classList.add('hidden');
-                rightArrow.classList.remove('flex');
-            } else {
-                rightArrow.classList.remove('hidden');
-                rightArrow.classList.add('flex');
-            }
-        }
-
-        function scrollCat(direction) {
-            const amount = 200;
-
-            slider.scrollBy({
-                left: direction === 'left' ? -amount : amount,
-                behavior: 'smooth'
-            });
-        }
-
-        if (slider) {
-            slider.addEventListener('scroll', updateArrows);
-            window.addEventListener('load', updateArrows);
-            window.addEventListener('resize', updateArrows);
-        }
 
         if (successAlert) {
             setTimeout(() => {
@@ -371,75 +383,186 @@
             }, 3000);
         }
 
+        function animateModalOpen(modalId, boxId) {
+            const modal = document.getElementById(modalId);
+            const box = document.getElementById(boxId);
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            requestAnimationFrame(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            });
+        }
+
+        function animateModalClose(modalId, boxId) {
+            const modal = document.getElementById(modalId);
+            const box = document.getElementById(boxId);
+
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+
         function openCategoryModal() {
-            document.getElementById('categoryModal').classList.remove('hidden');
-            document.getElementById('categoryModal').classList.add('flex');
+            const modal = document.getElementById('categoryModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closeCategoryModal() {
-            document.getElementById('categoryModal').classList.add('hidden');
-            document.getElementById('categoryModal').classList.remove('flex');
+            const modal = document.getElementById('categoryModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         function openMediaModal() {
-            document.getElementById('mediaModal').classList.remove('hidden');
-            document.getElementById('mediaModal').classList.add('flex');
+            animateModalOpen('mediaModal', 'mediaModalBox');
         }
 
         function closeMediaModal() {
-            document.getElementById('mediaModal').classList.add('hidden');
-            document.getElementById('mediaModal').classList.remove('flex');
+            animateModalClose('mediaModal', 'mediaModalBox');
         }
 
-        function openEditMediaModal(id, title, categoryId, imageUrl) {
-            document.getElementById('editMediaForm').action = `/media/${id}`;
-            document.getElementById('editTitle').value = title;
-            document.getElementById('editCategory').value = categoryId;
-
+        function openEditMediaModal(data) {
+            const form = document.getElementById('editMediaForm');
+            const title = document.getElementById('editTitle');
+            const category = document.getElementById('editCategory');
+            const status = document.getElementById('edit_status');
             const preview = document.getElementById('editImagePreview');
 
-            if (imageUrl) {
-                preview.src = imageUrl;
+            form.action = data.updateUrl;
+            title.value = data.title;
+            category.value = data.categoryId;
+            status.value = data.status || 'published';
+
+            if (data.imageUrl) {
+                preview.src = data.imageUrl;
                 preview.classList.remove('hidden');
             } else {
                 preview.src = '';
                 preview.classList.add('hidden');
             }
 
-            document.getElementById('editMediaModal').classList.remove('hidden');
-            document.getElementById('editMediaModal').classList.add('flex');
+            animateModalOpen('editMediaModal', 'editMediaModalBox');
         }
 
         function closeEditMediaModal() {
-            document.getElementById('editMediaModal').classList.add('hidden');
-            document.getElementById('editMediaModal').classList.remove('flex');
+            animateModalClose('editMediaModal', 'editMediaModalBox');
         }
 
         function openPreviewModal(imageUrl, title) {
             document.getElementById('previewImage').src = imageUrl;
             document.getElementById('previewTitle').innerText = title;
 
-            document.getElementById('previewModal').classList.remove('hidden');
-            document.getElementById('previewModal').classList.add('flex');
+            const modal = document.getElementById('previewModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function closePreviewModal() {
-            document.getElementById('previewModal').classList.add('hidden');
-            document.getElementById('previewModal').classList.remove('flex');
+            const modal = document.getElementById('previewModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+
             document.getElementById('previewImage').src = '';
+        }
+
+        function openDeleteModal(url, message) {
+            const form = document.getElementById('deleteForm');
+            const text = document.getElementById('deleteModalMessage');
+
+            form.action = url;
+            text.innerText = message;
+
+            animateModalOpen('deleteModal', 'deleteModalBox');
+        }
+
+        function closeDeleteModal() {
+            animateModalClose('deleteModal', 'deleteModalBox');
         }
 
         function askDeleteCategory(id) {
             document.querySelector(`.normal-state-${id}`).classList.add('hidden');
-            document.querySelector(`.confirm-state-${id}`).classList.remove('hidden');
-            document.querySelector(`.confirm-state-${id}`).classList.add('flex');
+
+            const confirmState = document.querySelector(`.confirm-state-${id}`);
+            confirmState.classList.remove('hidden');
+            confirmState.classList.add('flex');
         }
 
         function cancelDeleteCategory(id) {
-            document.querySelector(`.confirm-state-${id}`).classList.add('hidden');
-            document.querySelector(`.confirm-state-${id}`).classList.remove('flex');
+            const confirmState = document.querySelector(`.confirm-state-${id}`);
+            confirmState.classList.add('hidden');
+            confirmState.classList.remove('flex');
+
             document.querySelector(`.normal-state-${id}`).classList.remove('hidden');
             document.querySelector(`.normal-state-${id}`).classList.add('flex');
         }
+
+        function confirmDeleteCategory(url, id) {
+            fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`category-item-${id}`)?.remove();
+                        showCategoryModalNotif('Category deleted successfully');
+                    }
+                });
+        }
+
+        function showCategoryModalNotif(message) {
+            const alert = document.getElementById('categoryModalAlert');
+
+            if (!alert) return;
+
+            alert.innerText = message;
+            alert.classList.remove('hidden');
+
+            setTimeout(() => {
+                alert.classList.add('hidden');
+                alert.innerText = '';
+            }, 2500);
+        }
+
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            const chevron = document.getElementById('filterChevron');
+
+            dropdown.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
+        }
+
+        document.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('filterDropdownWrapper');
+
+            if (wrapper && !wrapper.contains(e.target)) {
+                document.getElementById('filterDropdown')?.classList.add('hidden');
+                document.getElementById('filterChevron')?.classList.remove('rotate-180');
+            }
+        });
+
+        window.addEventListener('click', function(e) {
+            const mediaModal = document.getElementById('mediaModal');
+            const editMediaModal = document.getElementById('editMediaModal');
+            const previewModal = document.getElementById('previewModal');
+            const deleteModal = document.getElementById('deleteModal');
+
+            if (e.target === mediaModal) closeMediaModal();
+            if (e.target === editMediaModal) closeEditMediaModal();
+            if (e.target === previewModal) closePreviewModal();
+            if (e.target === deleteModal) closeDeleteModal();
+        });
     </script>
-@endsection
+@endpush

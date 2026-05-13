@@ -80,6 +80,13 @@ class MediaCategoryController extends Controller
         $category = MediaCategory::findOrFail($id);
         $category->delete();
 
-        return redirect('/media')->with('success', 'Category deleted successfully.');
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Category deleted successfully',
+            ]);
+        }
+
+        return redirect()->route('media')->with('success', 'Category deleted successfully.');
     }
 }

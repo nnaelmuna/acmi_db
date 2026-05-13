@@ -17,13 +17,11 @@
     <div class="flex items-center justify-between">
         <x-filters-tab :tabs="$tabs" />
 
-        @if (request('status') !== 'trash')
-            <button type="button" onclick="openAddModal()"
-                class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
-                <span>Add Partner</span>
-                <i class="fa-solid fa-plus"></i>
-            </button>
-        @endif
+        <button type="button" onclick="openAddModal()"
+            class="inline-flex items-center gap-3 rounded-lg bg-acmi-blueprimer px-5 py-3 text-sm font-medium text-white shadow-sm transition">
+            <span>Add Partner</span>
+            <i class="fa-solid fa-plus"></i>
+        </button>
     </div>
 
     {{-- Card Grid --}}
@@ -40,7 +38,11 @@
                         @if (request('status') !== 'trash')
                             <div class="absolute right-3 top-3 flex gap-2 opacity-0 transition group-hover:opacity-100">
 
-                                <button type="button" onclick='openEditModal(@json($item))'
+                                <button type="button"
+                                    onclick='openEditModal({
+                                    ...@json($item),
+                                    image_url: "{{ $item->image ? asset('storage/' . $item->image) : '' }}"
+                                    })'
                                     class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-blue-600 shadow hover:bg-blue-600 hover:text-white">
                                     <i class="fa-solid fa-pen text-xs"></i>
                                 </button>
@@ -74,23 +76,18 @@
                             <form action="{{ route('media-partner.restore', $item->id) }}" method="POST"
                                 class="mt-4 w-full">
                                 @csrf
+
                                 <button type="submit"
                                     class="block w-full rounded-lg border border-blue-900 py-2.5 text-center font-medium text-acmi-blueprimer transition hover:bg-acmi-blueprimer hover:text-white">
                                     Restore
                                 </button>
                             </form>
 
-                            <form action="{{ route('media-partner.forceDelete', $item->id) }}" method="POST"
-                                class="mt-2 w-full">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="button"
-                                    onclick="openDeleteModal('{{ route('media-partner.forceDelete', $item->id) }}', 'HAPUS PERMANEN? DATA INI TIDAK BISA DIKEMBALIKAN!')"
-                                    class="block w-full rounded-lg border border-red-600 py-2.5 text-center font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
-                                    Permanently Delete
-                                </button>
-                            </form>
+                            <button type="button"
+                                onclick="openDeleteModal('{{ route('media-partner.forceDelete', $item->id) }}', 'Permanently Delete? This data cannot be recovered!')"
+                                class="mt-2 block w-full rounded-lg border border-red-600 py-2.5 text-center font-medium text-red-600 transition hover:bg-red-600 hover:text-white">
+                                Permanently Delete
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -183,6 +180,12 @@
                     <label class="mb-2 block text-xs font-semibold text-gray-600">Partner Name</label>
                     <input id="edit_name" type="text" name="name" required
                         class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-xs font-semibold text-gray-600">Current Image</label>
+                    <img id="edit_preview_image" src=""
+                        class="hidden h-40 w-full rounded-xl border border-gray-200 object-cover">
                 </div>
 
                 <div>
@@ -292,6 +295,15 @@
             document.getElementById('edit_end').value = data.end_date ?? '';
             document.getElementById('edit_status').value = data.status ?? 'published';
 
+            const preview = document.getElementById('edit_preview_image');
+
+            if (data.image_url) {
+                preview.src = data.image_url;
+                preview.classList.remove('hidden');
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
             animateModalOpen('editModal', 'editBox');
         }
 

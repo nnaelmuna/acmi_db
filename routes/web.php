@@ -119,6 +119,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
         Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
         Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
+        Route::post('/media/{id}/restore', [MediaItemController::class, 'restore'])->name('media.restore');
+        Route::delete('/media/{id}/force-delete', [MediaItemController::class, 'forceDelete'])->name('media.forceDelete');
     });
 
     // Media Partner
