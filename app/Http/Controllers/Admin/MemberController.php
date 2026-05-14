@@ -7,51 +7,58 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
 
-
 class MemberController extends Controller
 {
     public function index(Request $request)
     {
-        $status = $request->get('status', 'published'); // Default published
-        $industry = $request->get('industry'); // Ini buat dropdown
+        $status = $request->get('status', 'published');
+        $industry = $request->get('industry');
         $search = $request->get('search');
 
-        // LOGIK NYA: Kalau statusnya trash, pake onlyTrashed()
         if ($status === 'trash') {
             $query = Member::onlyTrashed();
         } else {
             $query = Member::query()->where('status', $status);
         }
 
-        // Filter Search
         if ($search) {
-            $query->where('name', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('company_name', 'like', "%{$search}%")
+                    ->orWhere('industry', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%")
+                    ->orWhere('company_url', 'like', "%{$search}%");
+            });
         }
 
-        // Filter Industry (Category) dari Dropdown
         if ($industry && $industry !== 'Semua') {
             $query->where('industry', $industry);
         }
 
-        $members = $query->latest()->paginate(10);
+        $members = $query->latest()->paginate(10)->withQueryString();
 
-        // Siapkan data untuk Komponen Filter Tabs (Hitung semua status)
         $tabs = [
             ['label' => 'Published', 'count' => Member::where('status', 'published')->count()],
             ['label' => 'Draft', 'count' => Member::where('status', 'draft')->count()],
-            ['label' => 'Archive', 'count' => Member::where('status', 'archive')->count()],
-            ['label' => 'Trash', 'count' => Member::onlyTrashed()->count()], // Tambah hitungan sampah
+            ['label' => 'Archived', 'count' => Member::where('status', 'archived')->count()],
+            ['label' => 'Trash', 'count' => Member::onlyTrashed()->count()],
         ];
 
-        // Ambil list industry buat dropdown (dari data yang gak di-delete)
-        $categories = Member::select('industry as name')->distinct()->get();
+        $categories = Member::select('industry as name')
+            ->whereNotNull('industry')
+            ->where('industry', '!=', '')
+            ->distinct()
+            ->get();
 
         return view('crm.members', compact('members', 'tabs', 'categories'));
     }
 
     public function show(string $id)
     {
-        $member = Member::findOrFail($id);
+        $member = Member::withTrashed()->findOrFail($id);
+
         return response()->json($member);
     }
 
@@ -59,44 +66,60 @@ class MemberController extends Controller
     {
         $member = Member::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'linkedin' => ['nullable', 'string', 'max:255'],
+            'company_name' => ['nullable', 'string', 'max:255'],
+            'industry' => ['nullable', 'string', 'max:255'],
+            'position' => ['nullable', 'string', 'max:255'],
+            'company_url' => ['nullable', 'string', 'max:255'],
+            'status' => ['required', 'in:published,draft,archived'],
         ]);
 
-        // Update data member
-        $member->update($request->all());
+        $member->update($validated);
 
-        // CATAT ACTIVITY (Pakai pengecekan user_id biar gak error kalau logout)
-        \App\Models\ActivityLog::create([
+        ActivityLog::create([
             'activity_type' => 'Update Member',
-            'description'   => 'Updated member: ' . $request->name,
-            'user_id'       => auth()->id() ?? 1, // Jauh lebih ringkas & VS Code gak bakal protes
+            'description' => 'Updated member: ' . $validated['name'],
+            // 'user_id' => auth()->id() ?? 1,
         ]);
 
-        return redirect()->back()->with('success', 'Member data updated successfully!');
+        return redirect()
+            ->route('members.index', ['status' => $validated['status']])
+            ->with('success', 'Member data updated successfully!');
     }
 
     public function destroy(string $id)
     {
         $member = Member::findOrFail($id);
-        $member->delete(); // Ini otomatis jadi Soft Delete kalau di Model udah ada trait SoftDeletes
+        $member->delete();
 
-        return redirect()->back()->with('success', 'Member moved to trash!');
+        return redirect()
+            ->route('members.index', ['status' => 'trash'])
+            ->with('success', 'Member moved to trash successfully!');
     }
 
-    // FUNGSI BARU: Buat balikin data dari Trash
     public function restore(string $id)
     {
-        // Cari data di sampah aja
         $member = Member::onlyTrashed()->findOrFail($id);
-
-        // Kembalikan datanya
         $member->restore();
 
-        // Optional: Kalau mau otomatis balik ke status published pas di-restore
         $member->update(['status' => 'published']);
 
-        return redirect()->back()->with('success', 'Member restored successfully!');
+        return redirect()
+            ->route('members.index', ['status' => 'published'])
+            ->with('success', 'Member restored successfully!');
+    }
+
+    public function forceDelete(string $id)
+    {
+        $member = Member::onlyTrashed()->findOrFail($id);
+        $member->forceDelete();
+
+        return redirect()
+            ->route('members.index', ['status' => 'trash'])
+            ->with('success', 'Member permanently deleted successfully!');
     }
 }

@@ -23,7 +23,7 @@ class Member extends Model
         'position',
         'company_url',
         'linkedin_url',
-        'status', // 'active', 'inactive', dll
+        'status',
     ];
 
     // Jika kamu punya kolom yang harus bertipe date

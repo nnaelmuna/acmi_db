@@ -152,7 +152,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/members/{id}', [MemberController::class, 'show'])->name('members.show');
         Route::put('/members/{id}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
-        Route::patch('/crm/members/{id}/restore', [MemberController::class, 'restore'])->name('members.restore');
+         Route::post('/{id}/restore', [MemberController::class, 'restore'])->name('restore');
+    Route::delete('/{id}/force-delete', [MemberController::class, 'forceDelete'])->name('forceDelete');
     });
 
     // Logout
