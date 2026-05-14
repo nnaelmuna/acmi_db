@@ -89,8 +89,8 @@
         </div>
 
         <div class="flex min-h-[calc(100vh-230px)] flex-col">
-            <div class="bg-white rounded-xl border border-acmi-bordercolor shadow-sm overflow-visible">
-                <table class="w-full text-left border-collapse">
+            <div class="overflow-x-auto rounded-xl border border-acmi-bordercolor bg-white shadow-sm">
+                <table class="min-w-[1200px] w-full text-left border-collapse">
                     <thead class="bg-acmi-softblue text-[10px] border-b border-acmi-bordercolor font-bold text-black">
                         <tr>
                             <th class="p-4 border-r border-acmi-bordercolor">

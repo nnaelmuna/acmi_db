@@ -89,8 +89,8 @@
             </button>
         </div>
 
-        <div class="bg-white rounded-lg border border-acmi-bordercolor shadow-sm">
-            <table class="w-full text-left border-collapse">
+        <div class="overflow-x-auto rounded-lg border border-acmi-bordercolor bg-white shadow-sm">
+            <table class="min-w-[1200px] w-full text-left border-collapse">
                 <thead class="bg-acmi-softblue border-b border-acmi-bordercolor text-[10.5px] font-bold text-black">
                     <tr>
                         <th class="p-4 w-10 text-center border-r border-acmi-bordercolor">
