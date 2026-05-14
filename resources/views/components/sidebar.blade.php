@@ -11,15 +11,13 @@
             <a href="{{ route('dashboard') }}"
                 class="flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer transition-all duration-300 {{ request()->routeIs('dashboard') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-table-columns"></i>
-                <span
-                    class="text-md font-medium text-white {{ request()->routeIs('dashboard')}}">Dashboard</span>
+                <span class="text-md font-medium text-white {{ request()->routeIs('dashboard') }}">Dashboard</span>
             </a>
 
             <a href="{{ route('post') }}"
                 class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('post') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-rectangle-list"></i>
-                <span
-                    class="text-md font-medium text-white {{ request()->routeIs('post')}}">Post</span>
+                <span class="text-md font-medium text-white {{ request()->routeIs('post') }}">Post</span>
             </a>
 
             <a href="{{ route('faq') }}"
@@ -61,11 +59,18 @@
                         class="pl-[52px] py-2 text-[14px] {{ request()->routeIs('inbound.*') ? 'text-[#958DFF] font-semibold' : 'text-white' }} hover:text-[#958DFF] transition-colors duration-200">
                         <i class="fas fa-user-plus mr-3"></i>Inbound
                     </a>
-                
+
                     {{-- Update bagian Members (sesuaikan nama route kamu kalau sudah ada) --}}
                     <a href="{{ route('members.index') }}"
                         class="pl-[52px] py-2 text-[14px] text-white hover:text-[#958DFF] transition-colors duration-200">
                         <i class="fas fa-user mr-3"></i>Members
+                    </a>
+
+                    <a href="{{ route('subscription') }}"
+                        class="pl-[52px] py-2 text-[14px]
+                        {{ request()->routeIs('subscription-screen.*') ? 'text-acmi-softblue font-semibold' : 'text-white' }}
+                        hover:text-acmi-softblue transition-colors duration-200">
+                        <i class="fas fa-credit-card mr-3"></i>Subscription
                     </a>
                 </div>
             </div>
@@ -80,7 +85,7 @@
         </nav>
     </div>
 
-    <a href="#"
+    <a href="{{ route('settings.index') }}"
         class="flex items-center gap-4 px-4 py-3 rounded-[14px] cursor-pointer transition-all duration-300 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100 mt-10">
         <i class="fas fa-gear"></i>
         <span class="text-[15px] font-medium text-white">Settings Config</span>

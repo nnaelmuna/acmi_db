@@ -15,6 +15,8 @@ use App\Http\Controllers\CRM\InboundController;
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Api\PublicContentController;
 use App\Http\Controllers\Admin\HistoryController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SubscriptionController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
@@ -152,9 +154,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/members/{id}', [MemberController::class, 'show'])->name('members.show');
         Route::put('/members/{id}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
-         Route::post('/{id}/restore', [MemberController::class, 'restore'])->name('restore');
-    Route::delete('/{id}/force-delete', [MemberController::class, 'forceDelete'])->name('forceDelete');
+        Route::post('/{id}/restore', [MemberController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force-delete', [MemberController::class, 'forceDelete'])->name('forceDelete');
     });
+
+    Route::get('/subscription', [SubscriptionController::class, 'index'])
+        ->name('subscription');;
+
+    // Settings Config
+    Route::get('/settings-config', [SettingsController::class, 'index'])->name('settings.index');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
