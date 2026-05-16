@@ -77,6 +77,7 @@ class ProductController extends Controller
             'product_images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
 
             'status'           => 'nullable|in:draft,published,archived',
+            'address'          => 'nullable|string|max:255',
         ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
@@ -133,6 +134,7 @@ class ProductController extends Controller
             'website'      => 'required|url',
             'email'        => 'required|email',
             'phone'        => ['required', 'regex:/^[0-9+\-\s()]{8,20}$/'],
+            'address'      => 'nullable|string|max:255',
         ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
@@ -175,16 +177,16 @@ class ProductController extends Controller
             'website'      => $request->website,
             'email'        => $request->email,
             'phone'        => $request->phone,
+            'address'      => $request->address, // Sekarang datanya aman dan ga bakalan mental lagi!
         ]);
 
         return redirect()->route('product.index')->with('success', 'Produk updated successfully!');
     }
 
-    // ← PERBAIKAN 3: destroy hanya soft delete, TIDAK hapus file
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        $product->delete(); // soft delete → pindah ke trash
+        $product->delete();
 
         return redirect()->route('product.index', ['status' => 'trash'])
             ->with('success', 'Product moved to trash successfully');

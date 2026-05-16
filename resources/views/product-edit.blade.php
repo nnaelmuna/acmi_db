@@ -4,37 +4,7 @@
 @section('page_title', 'Edit Product')
 
 @section('content')
-    @if ($errors->any())
-        <div id="errorAlert"
-            class="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600 shadow-sm">
 
-            <div class="mb-2 flex items-center gap-2 font-semibold">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                Validation Error
-            </div>
-
-            <ul class="list-disc space-y-1 pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-
-        <script>
-            setTimeout(() => {
-                const alert = document.getElementById('errorAlert');
-
-                if (alert) {
-                    alert.style.transition = '0.7s';
-                    alert.style.opacity = '0';
-
-                    setTimeout(() => {
-                        alert.remove();
-                    }, 300);
-                }
-            }, 4000);
-        </script>
-    @endif
 
     <div class="max-w-6xl mx-auto pb-10">
         <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data"
@@ -247,6 +217,24 @@
                                 </div>
 
                                 @error('phone')
+                                    <p class="text-red-500 text-[10px] mt-1" style="margin-left: 3.25rem;">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+                            {{-- address untuk edit --}}
+                            <div class="relative mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 flex items-center justify-center">
+                                        <i class="fa-solid fa-location-dot text-gray-800"></i>
+                                    </div>
+                                    <input type="text" name="address"
+                                        value="{{ old('address', $product->address ?? '') }}"
+                                        placeholder="Sekretariat ACMI Jakarta, Indonesia"
+                                        class="w-full rounded-md border {{ $errors->has('address') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none text-sm">
+                                </div>
+                                @error('address')
                                     <p class="text-red-500 text-[10px] mt-1" style="margin-left: 3.25rem;">
                                         {{ $message }}
                                     </p>
