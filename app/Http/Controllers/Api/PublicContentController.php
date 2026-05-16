@@ -52,7 +52,9 @@ class PublicContentController extends Controller
 
     public function getFaqs()
     {
-        $faqs = Faq::latest()->get();
+        $faqs = Faq::where('status', 'published')
+            ->latest()
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -63,7 +65,9 @@ class PublicContentController extends Controller
 
     public function getServices()
     {
-        $services = Product::latest()->get();
+        $services = Product::where('status', 'published')
+                ->latest()
+                ->get();
 
         return response()->json([
             'success' => true,
@@ -74,7 +78,9 @@ class PublicContentController extends Controller
 
     public function getGallery()
     {
-        $galleries = MediaItem::latest()->get();
+        $galleries = MediaItem::where('status', 'publised')
+                ->latest()
+                ->get();
 
         return response()->json([
             'success' => true,
@@ -85,7 +91,9 @@ class PublicContentController extends Controller
 
     public function getPartners()
     {
-        $partners = MediaPartner::latest()->get();
+        $partners = MediaPartner::where('status', 'published')
+                ->latest()
+                ->get();
 
         return response()->json([
             'success' => true,

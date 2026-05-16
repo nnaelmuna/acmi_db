@@ -16,6 +16,7 @@ class ServiceResource extends JsonResource
     {
         return [
             'id'           => $this->id,
+            'slug'         => $this->slug,
             'title'        => $this->title,
             'category'     => $this->category,
             'company_name' => $this->company_name,
@@ -24,11 +25,21 @@ class ServiceResource extends JsonResource
             'features'     => $this->features,
             'website'      => $this->website,
             'image' => $this->image
-                    ? (str_starts_with($this->image, 'http') 
-                        ? $this->image
-                        : asset('storage/' . $this->image))  // path relatif
-                    : null,
+                ? (str_starts_with(trim($this->image, '"'), 'http')
+                    ? trim($this->image, '"')
+                    : asset('storage/' . trim($this->image, '"')))
+                : null,
             'images'       => $this->images,
+            'gallery'      => collect(
+                is_array($this->images)
+                    ? $this->images
+                    : json_decode($this->images, true) ?? []
+            )->map(
+                fn($img) =>
+                str_starts_with(trim($img, '"'), 'http')
+                    ? trim($img, '"')
+                    : asset('storage/' . trim($img, '"'))
+            )->values()->toArray(),
         ];
     }
 }
