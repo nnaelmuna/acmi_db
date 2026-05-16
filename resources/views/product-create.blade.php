@@ -5,16 +5,7 @@
 @section('page_title', isset($product) ? 'Edit Product' : 'New Product')
 
 @section('content')
-    @if ($errors->any())
-        <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-600">
-            <p class="mb-2 font-semibold">Validation Error</p>
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+   
 
     <div class="max-w-6xl mx-auto pb-10">
         {{-- Form dinamis: ke Update atau ke Store --}}
@@ -225,6 +216,24 @@
                                         {{ $message }}</p>
                                 @enderror
                             </div>
+                            {{-- address --}}
+                            <div class="relative">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 flex items-center justify-center">
+                                        <i class="fa-solid fa-location-dot text-gray-800"></i>
+                                    </div>
+                                    <input type="text" name="address"
+                                        value="{{ old('address', $product->address ?? '') }}"
+                                        placeholder="Sekretariat ACMI Jakarta, Indonesia"
+                                        class="w-full rounded-md border {{ $errors->has('address') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
+                                </div>
+                                @error('address')
+                                    <p class="text-red-500 text-[10px] mt-1" style="margin-left: 3.25rem;">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
                         </div>
                     </div>
                 </div>

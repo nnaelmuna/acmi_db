@@ -19,6 +19,7 @@
             <p><b>Website:</b> {{ $product->website }}</p>
             <p><b>Email:</b> {{ $product->email }}</p>
             <p><b>Phone:</b> {{ $product->phone }}</p>
+            <p><b>Address:</b> {{ $product->address ?? '-' }}</p>
         </div>
 
         <div class="mt-6">

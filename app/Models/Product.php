@@ -22,7 +22,8 @@ class Product extends Model
         'website', 
         'email', 
         'phone', 
-        'status'
+        'status',
+        'address'
     ];
 
     protected $casts = [
