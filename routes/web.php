@@ -46,27 +46,28 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // DASHBOARD HISTORY
+    // Dashboard History
     Route::middleware(['auth'])->group(function () {
         Route::get('/history', [HistoryController::class, 'index'])->name('admin.history');
         Route::get('/history-recap', [HistoryController::class, 'index'])->name('admin.history');
     });
 
-    // --- POST ---
+    // Post
     Route::controller(PostController::class)->group(function () {
         Route::get('/post', 'index')->name('post');
         Route::get('/post/create', 'create')->name('post.create');
-        Route::post('/post/bulk-destroy', 'bulkDestory')->name('post.bulkDestroy');
         Route::post('/post', 'store')->name('post.store');
+
+        Route::delete('/post/bulk-destroy', 'bulkDestroy')->name('post.bulkDestroy');
+        Route::delete('/posts/bulk-force-delete', 'bulkForceDelete')->name('posts.bulkForceDelete');
+
         Route::get('/post/{post}/edit', 'edit')->name('post.edit');
         Route::put('/post/{post}', 'update')->name('post.update');
         Route::delete('/post/{post}', 'destroy')->name('post.destroy');
-        // Trash Action
-        Route::post('/posts/{id}/restore', [PostController::class, 'restore'])
-            ->name('posts.restore');
 
-        Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])
-            ->name('posts.forceDelete');
+        Route::post('/posts/{id}/restore', 'restore')->name('posts.restore');
+        Route::delete('/posts/{id}/force-delete', 'forceDelete')->name('posts.forceDelete');
+        
     });
 
     // Post Category

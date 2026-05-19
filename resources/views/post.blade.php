@@ -83,7 +83,7 @@
                                 <button type="button" onclick="bulkDelete()"
                                     class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition">
                                     <i class="fa-solid fa-trash text-xs"></i>
-                                    Delete Selected
+                                    {{ request('status') === 'trash' ? 'Delete Permanently' : 'Delete Selected' }}
                                 </button>
                             </div>
                         </div>
@@ -100,9 +100,16 @@
                                 <input type="checkbox" name="selected_posts[]" value="{{ $post->id }}"
                                     class="post-checkbox h-4 w-4 rounded border-gray-300 cursor-pointer">
                                 <p class="text-sm font-medium text-gray-900">
-                                    <a href="{{ route('post.edit', $post) }}" class="hover:text-acmi-blueprimer transition">
-                                        {{ $post->title }}
-                                    </a>
+                                    @if (request('status') === 'trash')
+                                        <span class="cursor-default text-gray-500">
+                                            {{ $post->title }}
+                                        </span>
+                                    @else
+                                        <a href="{{ route('post.edit', $post) }}"
+                                            class="hover:text-acmi-blueprimer transition">
+                                            {{ $post->title }}
+                                        </a>
+                                    @endif
                                 </p>
                             </div>
 
@@ -174,10 +181,36 @@
         </div>
     </div>
 
-    <form id="delete-item-form" action="" method="POST" style="display:none;">
+    <form id="bulk-delete-form"
+        action="{{ request('status') === 'trash' ? route('posts.bulkForceDelete') : route('post.bulkDestroy') }}"
+        method="POST" style="display:none;">
         @csrf
         @method('DELETE')
+        <input type="hidden" name="ids" id="bulk_delete_ids">
     </form>
+
+    <div id="bulkDeleteModal"
+        class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div id="bulkDeleteBox"
+            class="w-full max-w-md scale-95 rounded-2xl bg-white p-8 text-center opacity-0 shadow-xl transition-all duration-300">
+
+            <h2 id="bulkDeleteMessage" class="mb-8 text-lg font-semibold text-black">
+                Are you sure want to move selected post(s) to trash?
+            </h2>
+
+            <div class="flex justify-center gap-4">
+                <button type="button" onclick="closeBulkDeleteModal()"
+                    class="flex-1 rounded-xl bg-gray-100 px-6 py-3 font-semibold text-gray-700 transition hover:bg-gray-200">
+                    Cancel
+                </button>
+
+                <button type="button" onclick="document.getElementById('bulk-delete-form').submit()"
+                    class="flex-1 rounded-xl bg-red-500 px-6 py-3 font-semibold text-white shadow-lg shadow-red-200 transition hover:bg-red-600">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -226,32 +259,43 @@
             document.getElementById('bulkActionMenu').classList.toggle('hidden');
         }
 
-        // Bulk delete
+        // Bulk Delete
         function bulkDelete() {
             const checked = document.querySelectorAll('.post-checkbox:checked');
-            if (checked.length === 0) return;
 
-            if (!confirm(`Are you sure want to delete ${checked.length} post(s)?`)) return;
+            if (checked.length === 0) return;
 
             const ids = Array.from(checked).map(cb => cb.value);
 
-            fetch('{{ route('post.bulkDestroy') }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ids
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
+            document.getElementById('bulk_delete_ids').value = JSON.stringify(ids);
+            document.getElementById('bulkDeleteMessage').innerText =
+                '{{ request('status') === 'trash'
+                    ? 'Permanently delete selected post(s)? This data cannot be recovered!'
+                    : 'Are you sure want to move selected post(s) to trash?' }}';
+
+            const modal = document.getElementById('bulkDeleteModal');
+            const box = document.getElementById('bulkDeleteBox');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeBulkDeleteModal() {
+            const modal = document.getElementById('bulkDeleteModal');
+            const box = document.getElementById('bulkDeleteBox');
+
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
         }
 
         // Toggle action menu per row
