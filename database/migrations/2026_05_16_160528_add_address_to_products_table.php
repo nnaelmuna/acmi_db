@@ -6,20 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-public function up()
-{
-    Schema::table('products', function (Blueprint $table) {
-        // Diganti jadi after ceo_name atau after phone
-        $table->string('address')->nullable()->after('ceo_name'); 
-    });
-}
+    public function up()
+    {
+        Schema::table('products', function (Blueprint $table) {
+            // Diganti jadi after ceo_name atau after phone
+            $table->string('address')->nullable()->after('ceo_name');
+        });
+    }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {

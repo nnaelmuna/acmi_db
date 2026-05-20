@@ -14,7 +14,7 @@
 
             <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
 
-                {{-- Row 1: Basic Info (Category, Title, Company) --}}
+                {{-- (Category, Title, Company) --}}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">Product Category</label>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                {{-- Row 2: Images & CEO --}}
+                {{-- Images & CEO --}}
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 relative">
                     <input type="file" id="mainImageInput" name="product_images[]" class="hidden" accept="image/*"
                         multiple onchange="handleImageUpload(this)">
@@ -113,7 +113,7 @@
                     </div>
                 </div>
 
-                {{-- Row 3: Description --}}
+                {{-- Description --}}
                 <div class="mb-8">
                     <label class="block text-sm font-bold text-gray-800 mb-2">Product Description</label>
                     <textarea name="description" rows="4"
@@ -123,7 +123,7 @@
                     @enderror
                 </div>
 
-                {{-- Row 4: Features & Contact --}}
+                {{-- Features & Contact --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     {{-- Key Features --}}
                     <div class="space-y-4">
@@ -225,8 +225,7 @@
                             {{-- address untuk edit --}}
                             <div class="relative mb-4">
                                 <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 flex items-center justify-center">
+                                    <div class="w-10 h-10 flex items-center justify-center">
                                         <i class="fa-solid fa-location-dot text-gray-800"></i>
                                     </div>
                                     <input type="text" name="address"
@@ -258,7 +257,7 @@
     </div>
 
     <script>
-        // --- DATA INITIALIZATION ---
+        // data inisialisasi
         let uploadedFiles = [];
         let existingFiles = {!! json_encode($product->images ?? []) !!};
         let selectedCategories = @json(old('category', $product->category ?? []));
@@ -268,7 +267,7 @@
             renderCategoryTags();
         });
 
-        // --- 1. IMAGE LOGIC ---
+        // Image  Logic
         function handleImageUpload(input) {
             if (input.files) {
                 Array.from(input.files).forEach(file => {
@@ -332,7 +331,7 @@
             renderPreviews();
         }
 
-        // --- 2. CATEGORY LOGIC ---
+        // Category Logic
         const categorySelect = document.getElementById('category-select');
 
         if (categorySelect) {
@@ -382,7 +381,7 @@
             renderCategoryTags();
         }
 
-        // --- 3. FEATURE LOGIC ---
+        // Feature Logic
         function addFeatureToList() {
             const input = document.getElementById('feature-input');
 
@@ -403,7 +402,7 @@
             }
         }
 
-        // --- 4. SUBMIT LOGIC ---
+        // Submit Logic
         document.getElementById('productForm').onsubmit = function() {
             const dt = new DataTransfer();
 
@@ -412,7 +411,7 @@
             document.getElementById('mainImageInput').files = dt.files;
         };
 
-        // --- 5. REAL-TIME ERROR REMOVAL ---
+        // Real Time Error
         document.querySelectorAll('input, textarea, select').forEach(el => {
             el.addEventListener('input', function() {
                 const p = this.closest('.relative') || this.parentElement;

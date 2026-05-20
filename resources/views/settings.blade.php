@@ -7,8 +7,7 @@
     <div class="flex min-h-[70vh] items-center justify-center">
         <div class="text-center">
 
-            <div
-                class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-acmi-softblue shadow-sm">
+            <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-acmi-softblue shadow-sm">
                 <i class="fas fa-gear text-3xl text-acmi-blueprimer"></i>
             </div>
 

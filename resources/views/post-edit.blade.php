@@ -119,7 +119,7 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     @foreach ($categories as $category)
                         <label class="group flex cursor-pointer items-center gap-3 text-xs text-gray-700">
-                            <input type="checkbox" name="categories[]" value="{{ $category->id }}" {{-- ✅ Centang kategori yang sudah dipilih --}}
+                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
                                 {{ $post->categories->contains($category->id) ? 'checked' : '' }}
                                 class="h-4 w-4 rounded border-gray-300 accent-acmi-blueprimer">
                             <span>{{ $category->name }}</span>
@@ -135,9 +135,7 @@
                 <div id="dropZone" onclick="document.getElementById('imageInput').click()"
                     class="group relative flex h-[280px] w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:bg-gray-50">
 
-                    <img id="imagePreview"
-                        src="{{ $post->image ? asset('storage/' . $post->image) : '' }}"
-                        alt="Preview"
+                    <img id="imagePreview" src="{{ $post->image ? asset('storage/' . $post->image) : '' }}" alt="Preview"
                         class="absolute inset-0 {{ $post->image ? '' : 'hidden' }} h-full w-full rounded-2xl object-cover">
 
                     <button id="removeImageBtn" type="button" onclick="removeImage(event)"

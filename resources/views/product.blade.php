@@ -4,12 +4,10 @@
 @section('page_title', 'Product')
 
 <style>
-    /* Menyembunyikan scrollbar untuk Chrome, Safari, dan Opera */
     #catSlider::-webkit-scrollbar {
         display: none;
     }
 
-    /* Menyembunyikan scrollbar untuk Firefox */
     #catSlider {
         -ms-overflow-style: none;
         /* IE and Edge */
@@ -39,7 +37,7 @@
 
     <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-        {{-- BAGIAN KIRI: Status Tabs --}}
+        {{-- Status Tabs --}}
         <div class="flex flex-wrap items-center gap-2">
 
             {{-- Status Tabs --}}
@@ -111,7 +109,7 @@
                 <div
                     class="group relative bg-white rounded-xl shadow-sm p-4 border border-gray-200 transition hover:shadow-md">
 
-                    {{-- Edit & Delete (hanya non-trash) --}}
+                    {{-- Edit & Delete --}}
                     @if (request('status') !== 'trash')
                         <div
                             class="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30">
@@ -210,7 +208,7 @@
                             </button>
                         </div>
 
-                        {{-- Confirm State (hidden by default) --}}
+                        {{-- Confirm State --}}
                         <div class="hidden items-center justify-between gap-3 confirm-state-{{ $category->id }}">
                             <span class="text-sm font-medium text-red-500 whitespace-nowrap">Delete
                                 "{{ $category->name }}"?</span>
@@ -302,7 +300,6 @@
             });
         }
 
-        // Jalankan saat scroll dan saat halaman pertama kali dibuka
         if (slider) {
             slider.addEventListener('scroll', updateArrows);
             window.addEventListener('load', updateArrows);
@@ -333,7 +330,7 @@
             }, 200);
         }
 
-        // Fungsi delete category via AJAX
+        // fungsi delete category via AJAX
         function askDeleteCategory(id) {
             document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.add('hidden'));
             document.querySelectorAll(`.confirm-state-${id}`).forEach(el => {
@@ -372,7 +369,6 @@
         function openDetailModal(data) {
             document.getElementById('detail_title').innerText = data.title ?? '-';
             document.getElementById('detail_company').innerText = data.company_name ?? '-';
-            // Kalau data.category itu array, gabungin pake join
             document.getElementById('detail_category').innerText = Array.isArray(data.category) ?
                 data.category.join(', ') :
                 (data.category ?? '-');
@@ -414,7 +410,7 @@
             chevron.classList.toggle('rotate-180');
         }
 
-        // Tutup dropdown kalau klik luar
+        // tutup dropdown kalau klik luar
         document.addEventListener('click', function(e) {
             const wrapper = document.getElementById('filterDropdownWrapper');
             if (wrapper && !wrapper.contains(e.target)) {

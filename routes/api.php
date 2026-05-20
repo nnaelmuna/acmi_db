@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PublicContentController;
 use App\Http\Controllers\Api\InstagramController;
 
-// Endpoint Publik untuk Landing Page ACMI (Tanpa Token Sanctum)
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
     Route::get('/articles/{slug}', [PublicContentController::class, 'getArticleDetail']);

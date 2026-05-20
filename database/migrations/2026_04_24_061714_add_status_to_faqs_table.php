@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::table('faqs', function (Blueprint $table) {
             $table->enum('status', ['draft', 'published'])
-                  ->default('published')
-                  ->after('answer');
+                ->default('published')
+                ->after('answer');
         });
     }
 

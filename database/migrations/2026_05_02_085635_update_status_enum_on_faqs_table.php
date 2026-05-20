@@ -15,7 +15,7 @@ return new class extends Migration
         DB::table('faqs')
             ->where('status', 'archived')
             ->update(['status' => 'draft']);
-    
+
         DB::statement("ALTER TABLE faqs MODIFY status ENUM('draft','published') DEFAULT 'published'");
     }
 };

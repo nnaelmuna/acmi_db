@@ -6,20 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::table('inbounds', function (Blueprint $table) {
-        // Kasih default 'pending' biar data baru otomatis masuk kategori requested
-        $table->string('status')->default('pending'); 
-    });
-}
+    {
+        Schema::table('inbounds', function (Blueprint $table) {
+            // Kasih default 'pending' biar data baru otomatis masuk kategori requested
+            $table->string('status')->default('pending');
+        });
+    }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('inbounds', function (Blueprint $table) {

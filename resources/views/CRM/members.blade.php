@@ -14,7 +14,7 @@
             <i
                 class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-acmi-blueprimer transition"></i>
 
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members..."
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search members"
                 class="w-full rounded-full border border-acmi-bordercolor bg-white py-2.5 pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 shadow-sm outline-none transition focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
         </form>
     </div>

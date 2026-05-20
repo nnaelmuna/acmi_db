@@ -11,11 +11,8 @@ use function Symfony\Component\Clock\now;
 
 class SuperAdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
-    { 
+    {
         User::updateOrCreate(
             ['email' => 'superadmin@gmail.com'],
             [

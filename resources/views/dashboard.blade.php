@@ -3,7 +3,8 @@
 @section('title', 'Dashboard CMS - ACMI')
 @section('page_title', 'Dashboard')
 @section('header_right')
-    <a href="{{ route('admin.history') }}" class="flex items-center gap-2 px-3 py-2 bg-acmi-blueprimer hover:bg-[#0A1B89] text-white rounded-lg transition-all text-sm font-medium shrink-0">
+    <a href="{{ route('admin.history') }}"
+        class="flex items-center gap-2 px-3 py-2 bg-acmi-blueprimer hover:bg-[#0A1B89] text-white rounded-lg transition-all text-sm font-medium shrink-0">
         <i class="fas fa-history"></i>
         <span class="hidden md:inline">History</span>
     </a>
@@ -60,7 +61,7 @@
 
             </div>
 
-            {{-- Bottom panels --}}
+            {{-- Bottom Panels --}}
             <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
 
                 {{-- Recent Activity --}}
@@ -96,7 +97,7 @@
                                     </p>
                                 </div>
 
-                                {{-- Indikator Status (Dot) --}}
+                                {{-- Indikator Status --}}
                                 <span
                                     class="mt-2 h-2 w-2 rounded-full {{ $loop->first ? 'bg-green-400 animate-pulse' : 'bg-gray-200' }}"></span>
                             </div>
