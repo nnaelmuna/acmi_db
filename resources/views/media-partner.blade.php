@@ -34,7 +34,7 @@
                         <img src="{{ asset('storage/' . $item->image) }}"
                             class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105">
 
-                        {{-- Edit & Delete hanya muncul kalau bukan Trash --}}
+                        {{-- Edit & Delete --}}
                         @if (request('status') !== 'trash')
                             <div class="absolute right-3 top-3 flex gap-2 opacity-0 transition group-hover:opacity-100">
 
@@ -71,7 +71,7 @@
                             {{ $item->start_date ?? '-' }} - {{ $item->end_date ?? '-' }}
                         </p>
 
-                        {{-- Tombol khusus saat Trash --}}
+                        {{-- Tombol saat Trash --}}
                         @if (request('status') === 'trash')
                             <form action="{{ route('media-partner.restore', $item->id) }}" method="POST"
                                 class="mt-4 w-full">
@@ -226,7 +226,7 @@
         </div>
     </div>
 
-    {{-- Form global untuk delete modal --}}
+    {{-- Form Delete Modal --}}
     <form id="delete-item-form" action="" method="POST" class="hidden">
         @csrf
         @method('DELETE')

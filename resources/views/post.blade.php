@@ -37,7 +37,7 @@
             {{-- Tabs --}}
             <x-filters-tab :tabs="$tabs" />
 
-            {{-- Kanan: Filter + New Post --}}
+            {{-- Filter + New Post --}}
             <div class="flex items-center gap-2 justify-start xl:justify-end">
 
                 {{-- Filter Dropdown --}}
@@ -70,7 +70,7 @@
                         <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Date</span>
                     </div>
 
-                    {{-- Titik 3 di header untuk bulk action --}}
+                    {{-- Titik 3  --}}
                     <div class="col-span-1 flex justify-center">
                         <div class="relative" id="bulkActionWrapper">
                             <button type="button" id="bulkActionBtn" onclick="toggleBulkMenu()"
@@ -241,7 +241,7 @@
             });
         });
 
-        // Tampilkan/sembunyikan bulk action button di header
+        // Tampilkan/sembunyikan bulk action
         function updateBulkButton() {
             const checked = document.querySelectorAll('.post-checkbox:checked');
             const btn = document.getElementById('bulkActionBtn');
@@ -330,7 +330,7 @@
             });
         }
 
-        // notif bbrpa detik
+        // notif beberapa detik
         const successAlert = document.getElementById('successAlert');
 
         if (successAlert) {

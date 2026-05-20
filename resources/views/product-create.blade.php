@@ -5,10 +5,10 @@
 @section('page_title', isset($product) ? 'Edit Product' : 'New Product')
 
 @section('content')
-   
+
 
     <div class="max-w-6xl mx-auto pb-10">
-        {{-- Form dinamis: ke Update atau ke Store --}}
+        {{-- Update atau ke Store --}}
         <form action="{{ isset($product) ? route('product.update', $product->id) : route('product.store') }}" method="POST"
             enctype="multipart/form-data" id="productForm">
             @csrf
@@ -17,7 +17,7 @@
             @endif
 
             <div>
-                {{-- Top Row: Basic Info --}}
+                {{-- Info --}}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">Product Category</label>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
 
-                {{-- Second Row: Images & CEO --}}
+                {{-- Images & CEO --}}
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 relative">
                     <input type="file" id="mainImageInput" name="product_images[]" class="hidden" accept="image/*"
                         multiple onchange="handleImageUpload(this)">
@@ -121,7 +121,7 @@
                         class="w-full rounded-sm border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-200' }} p-4 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none shadow-sm text-sm leading-relaxed">{{ old('description', $product->description ?? '') }}</textarea>
                 </div>
 
-                {{-- Bottom Section: Features & Contact --}}
+                {{-- Features & Contact --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
                     {{-- Key Features --}}
@@ -216,7 +216,7 @@
                                         {{ $message }}</p>
                                 @enderror
                             </div>
-                            {{-- address --}}
+                            {{-- Address --}}
                             <div class="relative">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 flex items-center justify-center">
@@ -251,7 +251,7 @@
     </div>
 
     <script>
-        // --- 1. FITUR LOGIC (Key Features) ---
+        // Fitur Logic
         function addFeatureToList() {
             const input = document.getElementById('feature-input');
             const container = document.getElementById('feature-container');
@@ -271,8 +271,8 @@
             }
         }
 
-        // --- IMAGE LOGIC (Versi Nabung Gambar) ---
-        let uploadedFiles = []; // Ini tabungan gambar kita
+        // --- Image logic ---
+        let uploadedFiles = [];
 
         function handleImageUpload(input) {
             if (input.files && input.files.length > 0) {

@@ -33,7 +33,6 @@
         }
     </style>
 
-    {{-- Top Action Section --}}
     <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
         {{-- Status Tabs --}}
@@ -70,7 +69,7 @@
                 <div
                     class="group relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
 
-                    {{-- Edit & Delete hanya muncul jika bukan trash --}}
+                    {{-- Edit & Delete  --}}
                     @if (request('status') !== 'trash')
                         <div
                             class="absolute right-6 top-6 z-30 flex gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
