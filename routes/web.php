@@ -18,14 +18,14 @@ use App\Http\Controllers\Admin\HistoryController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubscriptionController;
 
-Route::prefix('public')->group(function () {
-    Route::get('/articles', [PublicContentController::class, 'getArticles']);
-    Route::get('/articles/{slug}', [PublicContentController::class, 'getArticleDetail']);
-    Route::get('/faqs', [PublicContentController::class, 'getFaqs']);
-    Route::get('/services', [PublicContentController::class, 'getServices']);
-    Route::get('/gallery', [PublicContentController::class, 'getGallery']);
-    Route::get('/partners', [PublicContentController::class, 'getPartners']);
-    Route::get('/categories', [PublicContentController::class, 'getCategories']);
+Route::prefix('public')->controller(PublicContentController::class)->group(function () {
+    Route::get('/articles', 'getArticles')->name('public.articles');
+    Route::get('/articles/{slug}', 'getArticleDetail')->name('public.articles.detail');
+    Route::get('/faqs', 'getFaqs')->name('public.faqs');
+    Route::get('/services', 'getServices')->name('public.services');
+    Route::get('/gallery', 'getGallery')->name('public.gallery');
+    Route::get('/partners', 'getPartners')->name('public.partners');
+    Route::get('/categories', 'getCategories')->name('public.categories');
 });
 
 // Redirect ke login
@@ -33,7 +33,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Kalau user blm login
+// Kalau user belum login
 Route::middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/signin', 'showLoginForm')->name('login');
@@ -48,9 +48,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Dashboard History
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/history', [HistoryController::class, 'index'])->name('admin.history');
-        Route::get('/history-recap', [HistoryController::class, 'index'])->name('admin.history');
+    Route::middleware(['auth'])->controller(HistoryController::class)->group(function () {
+
+        Route::get('/history', 'index')->name('admin.history');
+
+        Route::get('/history-recap', 'index')->name('admin.history.recap');
     });
 
     // Post
@@ -68,7 +70,6 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/posts/{id}/restore', 'restore')->name('posts.restore');
         Route::delete('/posts/{id}/force-delete', 'forceDelete')->name('posts.forceDelete');
-        
     });
 
     // Post Category
@@ -78,8 +79,10 @@ Route::middleware('auth')->group(function () {
     });
 
     // Category Post
-    Route::post('/post-categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::delete('/post-categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::controller(CategoryController::class)->group(function () {
+        Route::post('/post-categories', 'store')->name('categories.store');
+        Route::delete('/post-categories/{category}', 'destroy')->name('categories.destroy');
+    });
 
     // FAQ
     Route::controller(FaqController::class)->group(function () {
@@ -87,8 +90,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/faq', 'store')->name('faq.store');
         Route::put('/faq/{id}', 'update')->name('faq.update');
         Route::delete('/faq/{id}', 'destroy')->name('faq.destroy');
-        Route::post('/faq/{id}/restore', [FaqController::class, 'restore'])->name('faq.restore');
-        Route::delete('/faq/{id}/force-delete', [FaqController::class, 'forceDelete'])->name('faq.forceDelete');
+        Route::post('/faq/{id}/restore', 'restore')->name('faq.restore');
+        Route::delete('/faq/{id}/force-delete', 'forceDelete')->name('faq.forceDelete');
     });
 
     // Product
@@ -104,27 +107,31 @@ Route::middleware('auth')->group(function () {
         Route::post('/product/{id}/restore', 'restore')->name('product.restore');
         Route::delete('/product/{id}/force-delete', 'forceDelete')->name('product.forceDelete');
 
-        // ini taruh paling bawah
         Route::get('/product/{id}', 'show')->name('product.show');
     });
 
-    Route::post('/product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');
-    Route::delete('/product-categories/{id}', [ProductCategoryController::class, 'destroy'])->name('product.categories.destroy');
+    // Product Category
+    Route::controller(ProductCategoryController::class)->group(function () {
+        Route::post('/product-categories', 'store')->name('product.categories.store');
+        Route::delete('/product-categories/{id}', 'destroy')->name('product.categories.destroy');
+    });
 
     // Media Category
-    Route::get('/categories', [MediaCategoryController::class, 'index'])->name('media.categories');
-    Route::post('/categories', [MediaCategoryController::class, 'store'])->name('media.categories.store');
-    Route::put('/categories/{id}', [MediaCategoryController::class, 'update'])->name('media.categories.update');
-    Route::delete('/categories/{id}', [MediaCategoryController::class, 'destroy'])->name('media.categories.destroy');
+    Route::controller(MediaCategoryController::class)->group(function () {
+        Route::get('/categories', 'index')->name('media.categories');
+        Route::post('/categories', 'store')->name('media.categories.store');
+        Route::put('/categories/{id}', 'update')->name('media.categories.update');
+        Route::delete('/categories/{id}', 'destroy')->name('media.categories.destroy');
+    });
 
     // Media Item
-    Route::prefix('media')->group(function () {
-        Route::get('/', [MediaItemController::class, 'index'])->name('media');
-        Route::post('/', [MediaItemController::class, 'store'])->name('media.store');
-        Route::put('/{id}', [MediaItemController::class, 'update'])->name('media.update');
-        Route::delete('/{id}', [MediaItemController::class, 'destroy'])->name('media.destroy');
-        Route::post('/media/{id}/restore', [MediaItemController::class, 'restore'])->name('media.restore');
-        Route::delete('/media/{id}/force-delete', [MediaItemController::class, 'forceDelete'])->name('media.forceDelete');
+    Route::prefix('media')->controller(MediaItemController::class)->group(function () {
+        Route::get('/', 'index')->name('media');
+        Route::post('/', 'store')->name('media.store');
+        Route::put('/{id}', 'update')->name('media.update');
+        Route::delete('/{id}', 'destroy')->name('media.destroy');
+        Route::post('/{id}/restore', 'restore')->name('media.restore');
+        Route::delete('/{id}/force-delete', 'forceDelete')->name('media.forceDelete');
     });
 
     // Media Partner
@@ -138,30 +145,28 @@ Route::middleware('auth')->group(function () {
     });
 
     // Inbound
-    Route::prefix('crm')->group(function () {
-        Route::get('/inbound', [InboundController::class, 'index'])->name('inbound.index');
-        Route::get('/inbound/{id}', [InboundController::class, 'show'])->name('inbound.show');
-        Route::patch('/inbound/{id}/status', [InboundController::class, 'updateStatus'])->name('inbound.status');
-        Route::post('/inbound/bulk-approve', [InboundController::class, 'bulkApprove'])->name('inbound.bulkApprove');
-        Route::post('/inbound/{id}/approve', [InboundController::class, 'approve'])->name('inbound.approve');
+    Route::prefix('crm')->controller(InboundController::class)->group(function () {
+        Route::get('/inbound', 'index')->name('inbound.index');
+        Route::get('/inbound/{id}', 'show')->name('inbound.show');
+        Route::patch('/inbound/{id}/status', 'updateStatus')->name('inbound.status');
+        Route::post('/inbound/bulk-approve', 'bulkApprove')->name('inbound.bulkApprove');
+        Route::post('/inbound/{id}/approve', 'approve')->name('inbound.approve');
     });
 
     Route::get('/cek-session', function () {
-        return config('session.lifetime'); // harusnya return 480
+        return config('session.lifetime');
     });
 
     // Members
-    Route::prefix('crm')->group(function () {
-        Route::get('/members', [MemberController::class, 'index'])->name('members.index');
-        Route::get('/members/{id}', [MemberController::class, 'show'])->name('members.show');
-        Route::put('/members/{id}', [MemberController::class, 'update'])->name('members.update');
-        Route::delete('/members/{id}', [MemberController::class, 'destroy'])->name('members.destroy');
-        Route::post('/{id}/restore', [MemberController::class, 'restore'])->name('restore');
-        Route::delete('/{id}/force-delete', [MemberController::class, 'forceDelete'])->name('forceDelete');
+    Route::prefix('crm')->controller(InboundController::class)->group(function () {
+        Route::get('/inbound', 'index')->name('inbound.index');
+        Route::get('/inbound/{id}', 'show')->name('inbound.show');
+        Route::patch('/inbound/{id}/status', 'updateStatus')->name('inbound.status');
+        Route::post('/inbound/bulk-approve', 'bulkApprove')->name('inbound.bulkApprove');
+        Route::post('/inbound/{id}/approve', 'approve')->name('inbound.approve');
     });
 
-    Route::get('/subscription', [SubscriptionController::class, 'index'])
-        ->name('subscription');;
+    Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');;
 
     // Settings Config
     Route::get('/settings-config', [SettingsController::class, 'index'])->name('settings.index');
