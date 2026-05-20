@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::table('media_partners', function (Blueprint $table) {
             if (!Schema::hasColumn('media_partners', 'status')) {
                 $table->string('status', ['published', 'draft', 'archived'])
-                ->default('published')
-                ->after('link');
+                    ->default('published')
+                    ->after('link');
             }
         });
     }

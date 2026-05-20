@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('company_name');
             $table->string('ceo_name');
             $table->text('description');
-            $table->json('features')->nullable(); // Pastikan ini cuma satu
+            $table->json('features')->nullable();
             $table->string('website')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
