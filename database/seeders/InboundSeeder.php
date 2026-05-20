@@ -17,7 +17,7 @@ class InboundSeeder extends Seeder
             'message' => 'Halo, mau tanya harga.',
             'status' => 'requested',
         ]);
-    
+
         \App\Models\Inbound::create([
             'name' => 'Siti Aminah',
             'email' => 'siti@web.com',
@@ -26,7 +26,7 @@ class InboundSeeder extends Seeder
             'message' => 'Kerjasama catering kantor.',
             'status' => 'approved',
         ]);
-    
+
         \App\Models\Inbound::create([
             'name' => 'John Doe',
             'email' => 'john@corp.com',
@@ -36,6 +36,4 @@ class InboundSeeder extends Seeder
             'status' => 'review',
         ]);
     }
-
-
 }
