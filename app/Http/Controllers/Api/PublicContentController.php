@@ -8,6 +8,7 @@ use App\Http\Resources\GalleryResource;
 use App\Http\Resources\PartnerResource;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\ServiceResource;
+use App\Models\InstagramPost;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Faq;
@@ -123,5 +124,24 @@ class PublicContentController extends Controller
             'message' => 'Data Mitra Berhasil Diambil',
             'data'    => PartnerResource::collection($partners),
         ], 200);
+    }
+
+    public function getInstagramPosts()
+    {
+        $posts = InstagramPost::latest('posted_at')->take(6)->get();
+
+        $formattedPosts = $posts->map(function ($post) {
+            return [
+                'id'       => $post->id,
+                'caption'  => $post->caption,
+                'post_url' => $post->post_url,
+                'image'    => $post->local_image_path ? asset('storage/' . $post->local_image_path) : null,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $formattedPosts
+        ]);
     }
 }

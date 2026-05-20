@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\PublicContentController;
 use App\Http\Controllers\Admin\HistoryController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Api\ApifyWebhookController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
@@ -27,6 +28,9 @@ Route::prefix('public')->group(function () {
     Route::get('/partners', [PublicContentController::class, 'getPartners']);
     Route::get('/categories', [PublicContentController::class, 'getCategories']);
 });
+
+Route::post('/webhook/apify', [ApifyWebhookController::class, 'handle']);
+
 
 // Redirect ke login
 Route::get('/', function () {
