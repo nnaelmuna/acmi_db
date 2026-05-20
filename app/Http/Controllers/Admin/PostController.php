@@ -83,20 +83,36 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('post')->with('success', 'Post moved to trash successfully');
+        return redirect()->to(route('post') . '?status=trash')
+            ->with('success', 'Post moved to trash successfully.');
     }
 
     public function bulkDestroy(Request $request)
     {
-        $ids = $request->input('ids', []);
+        $ids = json_decode($request->ids, true);
 
         if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'No posts selected']);
+            return redirect()->back()->with('error', 'No posts selected.');
         }
 
-        Post::whereIn('id', $ids)->delete(); // soft delete karena model pakai SoftDeletes
+        Post::whereIn('id', $ids)->delete();
 
-        return response()->json(['success' => true]);
+        return redirect()->to(route('post') . '?status=trash')
+            ->with('success', 'Selected posts moved to trash successfully.');
+    }
+
+    public function bulkForceDelete(Request $request)
+    {
+        $ids = json_decode($request->ids, true);
+
+        if (empty($ids)) {
+            return redirect()->back()->with('success', 'No posts selected.');
+        }
+
+        Post::onlyTrashed()->whereIn('id', $ids)->forceDelete();
+
+        return redirect()->to(route('post') . '?status=trash')
+            ->with('success', 'Selected posts permanently deleted successfully.');
     }
 
     public function update(UpdatePostRequest $request, Post $post)
