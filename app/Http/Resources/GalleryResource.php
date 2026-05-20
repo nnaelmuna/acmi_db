@@ -15,13 +15,14 @@ class GalleryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'    => $this->id,
-            'title' => $this->title,
-            'image' => $this->image
-                    ? (str_starts_with($this->image, 'http') 
-                        ? $this->image
-                        : asset('storage/' . $this->image))  // path relatif
-                    : null,
+            'id'        => $this->id,
+            'title'     => $this->title,
+            'category'  => $this->category,
+            'image'     => $this->image
+                        ? (str_starts_with($this->image, 'http') 
+                            ? $this->image
+                            : asset('storage/' . $this->image))  // path relatif
+                        : null,
         ];
     }
 }

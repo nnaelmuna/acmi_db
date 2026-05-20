@@ -25,6 +25,7 @@ Route::prefix('public')->group(function () {
     Route::get('/services', [PublicContentController::class, 'getServices']);
     Route::get('/gallery', [PublicContentController::class, 'getGallery']);
     Route::get('/partners', [PublicContentController::class, 'getPartners']);
+    Route::get('/categories', [PublicContentController::class, 'getCategories']);
 });
 
 // Redirect ke login

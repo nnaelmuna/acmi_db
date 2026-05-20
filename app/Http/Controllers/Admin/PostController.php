@@ -18,7 +18,6 @@ class PostController extends Controller
         //
     }
 
-    // Menampilkan halaman Post beserta datanya
     public function index(Request $request)
     {
         $status = $request->get('status', 'published');
@@ -55,7 +54,7 @@ class PostController extends Controller
 
         return view('post', compact('posts', 'tabs', 'categories'));
     }
-    // Menampilkan form buat post baru
+
     public function create()
     {
         $categories = Category::all();
@@ -63,7 +62,6 @@ class PostController extends Controller
         return view('post-create', compact('categories'));
     }
 
-    // Menyimpan post baru
     public function store(StorePostRequest $request)
     {
         $this->postService->store(

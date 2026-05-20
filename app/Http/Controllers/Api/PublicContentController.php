@@ -14,15 +14,23 @@ use App\Models\Faq;
 use App\Models\Product;
 use App\Models\MediaItem;
 use App\Models\MediaPartner;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PublicContentController extends Controller
 {
-    public function getArticles()
+    public function getArticles(Request $request)
     {
-        $articles = Post::where('status', 'published')
-                -> orderBy('created_at', 'desc')
-                ->paginate(6);
+        $query = Post::where('status', 'published')
+            ->orderBy('created_at', 'desc');
+
+        if ($request->has('category')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        $articles = $query->paginate(6);
 
         return response()->json([
             'success' => true,
@@ -50,6 +58,17 @@ class PublicContentController extends Controller
         ], 200);
     }
 
+    public function getCategories()
+    {
+        $categories = Category::latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Kategori Berhasil Diambil',
+            'data'    => $categories,
+        ], 200);
+    }
+
     public function getFaqs()
     {
         $faqs = Faq::where('status', 'published')
@@ -66,8 +85,8 @@ class PublicContentController extends Controller
     public function getServices()
     {
         $services = Product::where('status', 'published')
-                ->latest()
-                ->get();
+            ->latest()
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -78,9 +97,13 @@ class PublicContentController extends Controller
 
     public function getGallery()
     {
-        $galleries = MediaItem::where('status', 'publised')
-                ->latest()
-                ->get();
+        $galleries = MediaItem::where('status', 'published')
+            ->latest()
+            ->get()
+            ->map(function ($item) {
+                $item->full_image_url = asset('storage/' . $item->file_path);
+                return $item;
+            });
 
         return response()->json([
             'success' => true,
@@ -92,8 +115,8 @@ class PublicContentController extends Controller
     public function getPartners()
     {
         $partners = MediaPartner::where('status', 'published')
-                ->latest()
-                ->get();
+            ->latest()
+            ->get();
 
         return response()->json([
             'success' => true,
