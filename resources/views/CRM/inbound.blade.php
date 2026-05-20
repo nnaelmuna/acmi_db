@@ -12,8 +12,7 @@
                 <form action="{{ route('inbound.index') }}" method="GET" class="relative group mr-48 pointer-events-auto">
                     <i
                         class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-sm group-focus-within:text-acmi-blueprimer transition-colors"></i>
-
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search inbound..."
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search inbound"
                         class="w-full rounded-full border border-acmi-bordercolor bg-white py-2.5 pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
                 </form>
             </div>
