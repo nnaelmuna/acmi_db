@@ -317,6 +317,32 @@
                         </div>
                     </div>
                 </div>
+                <div class="mt-4">
+                    <h3 class="text-acmi-blueprimer font-bold uppercase tracking-wide text-xs mb-3">Motivation & Referrals</h3>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="border border-gray-300 rounded-xl p-3 bg-white">
+                            <label class="block text-[10px] uppercase font-semibold text-gray-400">Number Of Employees</label>
+                            <div class="text-sm font-medium text-gray-800 mt-1">
+                                {{ $inbound->employee_size ?? '-' }}
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-300 rounded-xl p-3 bg-white">
+                            <label class="block text-[10px] uppercase font-semibold text-gray-400">Annual Revenue</label>
+                            <div class="text-sm font-medium text-gray-800 mt-1">
+                                {{ $inbound->annual_revenue ?? '-' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-300 rounded-xl p-3 bg-white min-h-[100px]">
+                        <label class="block text-[10px] uppercase font-semibold text-gray-400">Motivation</label>
+                        <div class="text-sm font-medium text-gray-800 mt-1 whitespace-pre-line">
+                            {{ $inbound->motivation_referral ?? '-' }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
