@@ -155,6 +155,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/inbound/{id}/status', 'updateStatus')->name('inbound.status');
         Route::post('/inbound/bulk-approve', 'bulkApprove')->name('inbound.bulkApprove');
         Route::post('/inbound/{id}/approve', 'approve')->name('inbound.approve');
+        Route::post('/inbound', 'store')->name('inbound.store');
     });
 
     Route::get('/cek-session', function () {

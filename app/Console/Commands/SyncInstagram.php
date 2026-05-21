@@ -46,12 +46,23 @@ class SyncInstagram extends Command
             if ($apifyImageUrl) {
                 try {
                     $this->info("Mendownload gambar untuk post: " . substr($item['caption'] ?? 'Tanpa Caption', 0, 30) . "...");
-                    $imageResponse = Http::timeout(15)->get($apifyImageUrl);
                     
+                    // KOREKSI BEST PRACTICE: Kita tambahkan Fake User-Agent & naikkan timeout ke 30 detik
+                    $imageResponse = Http::timeout(30)
+                        ->withHeaders([
+                            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                            'Accept'     => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+                        ])
+                        ->withoutVerifying() // Mengabaikan kendala SSL lokal Mac jika ada
+                        ->get($apifyImageUrl);
+                        
                     if ($imageResponse->successful()) {
                         $filename = 'instagram/' . Str::random(40) . '.jpg';
                         Storage::disk('public')->put($filename, $imageResponse->body());
                         $localImagePath = $filename;
+                        $this->info("-> BERHASIL didownload!"); // Indikator sukses
+                    } else {
+                        $this->error("-> Gagal! Status code: " . $imageResponse->status());
                     }
                 } catch (\Exception $e) {
                     $this->error('Gagal download gambar: ' . $e->getMessage());

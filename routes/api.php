@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PublicContentController;
 use App\Http\Controllers\Api\InstagramController;
+use App\Http\Controllers\Api\InboundApiController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
@@ -15,4 +16,5 @@ Route::prefix('public')->group(function () {
     Route::get('/categories', [PublicContentController::class, 'getCategories']);
     Route::get('/instagram', [PublicContentController::class, 'getInstagramPosts']);
     Route::get('/instagram', [InstagramController::class, 'index']);
+    Route::post('/inbound', [InboundApiController::class, 'store']);
 });
