@@ -164,7 +164,7 @@ Route::middleware('auth')->group(function () {
 
     // Members
     Route::prefix('crm')->controller(InboundController::class)->group(function () {
-        Route::get('/inbound', 'index')->name('inbound.index');
+        Route::get('/members', 'index')->name('members.index');
         Route::get('/inbound/{id}', 'show')->name('inbound.show');
         Route::patch('/inbound/{id}/status', 'updateStatus')->name('inbound.status');
         Route::post('/inbound/bulk-approve', 'bulkApprove')->name('inbound.bulkApprove');
