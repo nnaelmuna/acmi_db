@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             CategorySeeder::class,
             MediaCategorySeeder::class,
-            ProductCategorySeeder::class
+            ProductCategorySeeder::class,
+            InboundSeeder::class
         ]);
     }
 }
