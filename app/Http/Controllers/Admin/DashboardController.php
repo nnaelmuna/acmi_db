@@ -23,12 +23,12 @@ class DashboardController extends Controller
                         ->count();
     $totalViews = WebsiteView::count();
 
-    // 2. AMBIL DATA MEMBER TERBARU (Ini yang tadi hilang)
+    // 2. AMBIL DATA MEMBER TERBARU
     $latestMembers = Member::latest()
         ->take(5)
         ->get();
 
-    // 3. REAL-TIME MONTHLY RECAP (Untuk Grafik)
+    // 3. REAL-TIME MONTHLY RECAP (buat grafik y)
     $monthlyLabels = [];
     $monthlyData = [];
     for ($i = 5; $i >= 0; $i--) {
@@ -49,13 +49,13 @@ class DashboardController extends Controller
     $approvedCount  = MemberRequest::where('status', 'approved')->count();
     $rejectedCount  = MemberRequest::where('status', 'rejected')->count();
 
-    // Pastikan semua variabel di bawah ini masuk ke return view
+    // hrs udh masuk ke return view
     return view('dashboard', [
         'totalMember'      => $totalMember,
         'newMember'        => $newMember,
         'totalViews'       => $totalViews,
         'recentActivities' => $recentActivities,
-        'latestMembers'    => $latestMembers, // Sekarang variabel ini sudah ada isinya
+        'latestMembers'    => $latestMembers, 
         'requestedCount'   => $requestedCount,
         'approvedCount'    => $approvedCount,
         'rejectedCount'    => $rejectedCount,

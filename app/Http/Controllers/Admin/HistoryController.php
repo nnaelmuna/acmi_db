@@ -18,15 +18,15 @@ class HistoryController extends Controller
     for ($i = 0; $i < 6; $i++) {
         $date = now()->subMonths($i);
         
-        // Hitung total member SAMPAI bulan tersebut
+        // ngitung total member SAMPAI bulan tersebut
         $totalMember = \App\Models\Member::where('created_at', '<=', $date->endOfMonth())->count();
         
-        // Hitung member BARU hanya di bulan tersebut
+        // ngitung member BARU hanya di bulan tersebut
         $newMember = \App\Models\Member::whereMonth('created_at', $date->month)
                                        ->whereYear('created_at', $date->year)
                                        ->count();
         
-        // Hitung total views di bulan tersebut
+        // ngitung total views di bulan tersebut
         $views = \App\Models\WebsiteView::whereMonth('created_at', $date->month)
                                         ->whereYear('created_at', $date->year)
                                         ->count();
@@ -39,7 +39,6 @@ class HistoryController extends Controller
         ];
     }
 
-    // Pakai return view('history') kalau filenya langsung di folder views
     return view('history', compact('monthlyRecap'));
 }
 }
