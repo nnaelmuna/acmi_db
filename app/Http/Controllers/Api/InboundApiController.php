@@ -24,7 +24,11 @@ class InboundApiController extends Controller
             'company_name' => $request->company,
             'position'     => $request->position,
             'industry'     => $request->industry,
-            'company_url'  => $request->linkedin,
+            'company_url'  => $request->company_url,
+            'linkedin_url' => $request->linkedin,
+            'employee_size'       => $request->employees,
+            'annual_revenue'      => $request->revenue,
+            'motivation_referral' => $request->message,
             'message'      => $request->message,
             'status'       => 'review',
         ]);

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('linkedin_url')->nullable();
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
             
-            $table->softDeletes(); // Wajib ada karena modelmu pakai SoftDeletes
+            $table->softDeletes();
             $table->timestamps();
         });
     }

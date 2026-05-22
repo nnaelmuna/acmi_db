@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('inbounds', function (Blueprint $table) {
-            // Menambahkan kolom baru setelah kolom industry
+            $table->string('linkedin_url')->nullable()->after('company_url');
             $table->string('employee_size')->nullable()->after('industry'); 
             $table->string('annual_revenue')->nullable()->after('employee_size');
             $table->text('motivation_referral')->nullable()->after('annual_revenue');
@@ -20,7 +20,7 @@ return new class extends Migration
     {
         Schema::table('inbounds', function (Blueprint $table) {
             // Untuk rollback jika diperlukan
-            $table->dropColumn(['employee_size', 'annual_revenue', 'motivation_referral']);
+            $table->dropColumn(['linkedin_url', 'employee_size', 'annual_revenue', 'motivation_referral']);
         });
     }
 };

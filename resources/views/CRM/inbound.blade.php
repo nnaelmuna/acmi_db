@@ -67,7 +67,7 @@
             <div class="flex gap-4">
                 <div class="relative">
                     <select onchange="window.location.href=this.value"
-                        class="appearance-none bg-white border border-acmi-bordercolor rounded-xl pl-4 pr-10 py-2 text-sm outline-none shadow-sm cursor-pointer hover:border-acmi-blueprimer focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 transition">
+                        class="appearance-none bg-white border border-acmi-bordercolor rounded-lg pl-4 pr-10 py-2 text-sm outline-none shadow-sm cursor-pointer hover:border-acmi-blueprimer focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 transition">
                         <option value="{{ route('inbound.index') }}">Filter Status</option>
                         <option value="{{ route('inbound.index', ['status' => 'review']) }}"
                             {{ request('status') == 'review' ? 'selected' : '' }}>Review</option>
@@ -209,7 +209,7 @@
                                     </button>
 
                                     <div
-                                        class="absolute right-0 mt-1 w-36 bg-white border border-acmi-bordercolor rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] overflow-visible">
+                                        class="absolute right-0 mt-1 w-36 bg-white border border-acmi-bordercolor rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] overflow-visible">
                                         <div class="p-2 flex flex-col gap-1">
                                             <button type="button" onclick="updateStatus({{ $item->id }}, 'review')"
                                                 class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-acmi-blueprimer hover:bg-acmi-softblue rounded-xl transition">
