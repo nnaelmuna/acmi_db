@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MemberRequest;
 use App\Models\Member;
-use App\Models\Inbound; // <-- KITA PAKAI MODEL INBOUND DI SINI
 use App\Models\WebsiteView;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;

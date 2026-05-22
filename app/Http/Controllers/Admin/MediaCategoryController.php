@@ -88,7 +88,7 @@ class MediaCategoryController extends Controller
         return back()->with('success', 'Category updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $category = MediaCategory::findOrFail($id);
         $category->delete();
@@ -99,7 +99,7 @@ class MediaCategoryController extends Controller
             'description' => auth()->user()->name . ' deleted a media category',
         ]);
 
-        if (request()->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Category deleted successfully',
