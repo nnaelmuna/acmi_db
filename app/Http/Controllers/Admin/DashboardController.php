@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Member;
-use App\Models\MemberRequest;
+use App\Models\Inbound; // <-- KITA PAKAI MODEL INBOUND DI SINI
 use App\Models\WebsiteView;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
-use function Illuminate\Support\weeks;
 
 class DashboardController extends Controller
 {

@@ -269,63 +269,119 @@
                 </button>
             </div>
 
-            <div class="p-8 space-y-8 max-h-[70vh] overflow-y-auto">
-                <div>
-                    <h4 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-4">
-                        Personal Information
-                    </h4>
+            <div class="p-8 max-h-[70vh] overflow-y-auto bg-gray-50/50">
+                <div class="mb-6">
+                    <h3 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-3">
+                        Informasi Pribadi
+                    </h3>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Name</p>
-                            <p id="view_name" class="text-sm font-semibold text-gray-800">-</p>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Title</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_name">-</span>
+                            </div>
                         </div>
 
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Email</p>
-                            <p id="view_email" class="text-sm font-semibold text-gray-800 break-all">-</p>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_email">-</span>
+                            </div>
                         </div>
 
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Phone</p>
-                            <p id="view_phone" class="text-sm font-semibold text-gray-800">-</p>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Nomor Telepon</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_phone">-</span>
+                            </div>
                         </div>
 
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">LinkedIn</p>
-                            <p id="view_linkedin" class="text-sm font-semibold text-gray-800 break-all">-</p>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Linkedin Profile</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_linkedin">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-3">
+                        Informasi Perusahaan
+                    </h3>
+
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Perusahaan</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_company">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Jabatan</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_position">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Industri</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_industry">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Website Perusahaan</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_url">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Jumlah Karyawan</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_employee_size">{{ $inbound->employee_size ?? '-' }}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Annual Revenue</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_annual_revenue">{{ $inbound->annual_revenue ?? '-' }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-4">
-                        Company Information
-                    </h4>
+                    <h3 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-3">
+                        Motivasi & Referral
+                    </h3>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Company Name</p>
-                            <p id="view_company_name" class="text-sm font-semibold text-gray-800">-</p>
-                        </div>
-
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Industry</p>
-                            <p id="view_industry" class="text-sm font-semibold text-gray-800">-</p>
-                        </div>
-
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Position</p>
-                            <p id="view_position" class="text-sm font-semibold text-gray-800">-</p>
-                        </div>
-
-                        <div class="rounded-xl border border-acmi-bordercolor p-4">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Company URL</p>
-                            <p id="view_company_url" class="text-sm font-semibold text-gray-800 break-all">-</p>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Motivasi</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[100px] whitespace-pre-line items-start">
+                                <span id="d_motivation_referral">{{ $inbound->motivation_referral ?? '-' }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
     </div>
 
@@ -526,9 +582,9 @@
                 cancelButtonText: 'Cancel',
                 reverseButtons: true,
                 customClass: {
-                    popup: 'rounded-[32px] p-6',
-                    confirmButton: 'rounded-full px-8 py-2.5 text-sm font-bold ml-2',
-                    cancelButton: 'rounded-full px-8 py-2.5 text-sm font-bold text-gray-500'
+                    popup: 'rounded-[23px] p-6',
+                    confirmButton: 'rounded-xl px-8 py-2.5 text-sm font-bold ml-2',
+                    cancelButton: 'rounded-xl px-8 py-2.5 text-sm font-bold text-gray-500'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Member;
 
 class MemberSeeder extends Seeder
 {
@@ -12,14 +12,16 @@ class MemberSeeder extends Seeder
         $industries = ['Software', 'Energi', 'FnB', 'Manufaktur', 'Properti', 'Fintech'];
 
         for ($i = 1; $i <= 20; $i++) {
-            \App\Models\Member::create([
-                'name' => 'Member Ke-' . $i,
-                'email' => 'member' . $i . '@example.com',
-                'phone' => '0812345678' . $i,
+            Member::create([
+                'name'         => 'Member Ke-' . $i,
+                'email'        => 'member' . $i . '@example.com',
+                'phone'        => '0812345678' . str_pad($i, 2, '0', STR_PAD_LEFT),
                 'company_name' => 'PT Sukses Jaya ' . $i,
-                'industry' => $industries[array_rand($industries)],
-                'position' => 'Manager',
-                'status' => 'active'
+                'industry'     => $industries[array_rand($industries)],
+                'position'     => 'Manager',
+                'company_url'  => 'https://www.suksesjaya' . $i . '.com',
+                'linkedin_url' => 'https://linkedin.com/in/member-' . $i,
+                'status'       => 'active'
             ]);
         }
     }

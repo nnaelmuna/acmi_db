@@ -107,6 +107,7 @@ class InboundController extends Controller
                         'industry'      => $inbound->industry ?? '-',
                         'position'      => $inbound->position ?? '-',
                         'company_url'   => $inbound->company_url,
+                        'linkedin_url'  => $inbound->linkedin_url,
                         'status'        => 'active',
                     ]
                 );

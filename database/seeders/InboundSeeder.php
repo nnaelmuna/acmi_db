@@ -2,37 +2,27 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Inbound;
 
 class InboundSeeder extends Seeder
 {
     public function run(): void
     {
-        \App\Models\Inbound::create([
-            'name' => 'Budi Santoso',
-            'email' => 'budi@example.com',
-            'company' => 'PT Teknologi Jaya',
-            'industry' => 'Technology',
-            'message' => 'Halo, mau tanya harga.',
-            'status' => 'requested',
-        ]);
+        Inbound::truncate();
 
-        \App\Models\Inbound::create([
-            'name' => 'Siti Aminah',
-            'email' => 'siti@web.com',
-            'company' => 'Catering Sejahtera',
-            'industry' => 'Food & Beverage',
-            'message' => 'Kerjasama catering kantor.',
-            'status' => 'approved',
-        ]);
-
-        \App\Models\Inbound::create([
-            'name' => 'John Doe',
-            'email' => 'john@corp.com',
-            'company' => 'Global Corp',
-            'industry' => 'Manufacturing',
-            'message' => 'Inquiry for heavy machinery.',
+        Inbound::create([
+            'name' => 'Nisrina Design',
+            'email' => 'nisrina@test.com',
+            'phone' => '081234567890',
+            'company' => 'Creative Studio',
+            'position' => 'UI/UX Designer',
+            'industry' => 'UI/UX Design',
+            'company_url' => 'https://nisrina.design',
+            'employee_size' => '11 - 50 Karyawan',
+            'annual_revenue' => 'Rp 500 Juta - 1 Miliar',
+            'message' => 'Halo admin, saya tertarik join ecosystem.',
+            'motivation_referral' => 'Ingin bergabung karena tertarik dengan ekosistem CRM ACMI yang sangat modern.',
             'status' => 'review',
         ]);
     }
