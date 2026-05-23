@@ -62,7 +62,7 @@
             </div>
 
             {{-- Bottom Panels --}}
-            <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+            <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr] pb-10">
 
                 {{-- Recent Activity --}}
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 {{-- New Members --}}
-                <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5">
+                <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5 self-start">
                     <h4 class="mb-4 text-xl font-semibold text-acmi-darkblue">New Member</h4>
 
                     <div class="space-y-4">
