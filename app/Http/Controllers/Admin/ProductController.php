@@ -78,7 +78,7 @@ class ProductController extends Controller
             'product_images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
 
             'status'           => 'nullable|in:draft,published,archived',
-            'address'          => 'nullable|string|max:255',
+            'address'          => 'required|string|max:255',
         ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
@@ -87,6 +87,7 @@ class ProductController extends Controller
             'email.required' => 'Email is required.',
             'phone.required' => 'Phone number is required.',
             'phone.regex' => 'Phone number must be a valid phone number.',
+            'address.required' => 'Address is required.',
         ]);
 
         $data = $request->except(['product_images']);

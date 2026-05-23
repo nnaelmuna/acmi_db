@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MemberRequest;
 use App\Models\Member;
 use App\Models\WebsiteView;
 use App\Models\ActivityLog;
+use App\Models\Inbound;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -46,9 +46,9 @@ class DashboardController extends Controller
             ->get();
 
         // 5. MEMBER REQUESTS
-        $requestedCount = MemberRequest::where('status', 'review')->count();
-        $approvedCount  = MemberRequest::where('status', 'approved')->count();
-        $rejectedCount  = MemberRequest::where('status', 'rejected')->count();
+        $requestedCount = Inbound::where('status', 'review')->count();
+        $approvedCount  = Inbound::where('status', 'approved')->count();
+        $rejectedCount  = Inbound::where('status', 'rejected')->count();
 
         return view('dashboard', [
             'totalMember'      => $totalMember,
