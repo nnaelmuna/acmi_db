@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PublicContentController;
 use App\Http\Controllers\Api\InstagramController;
 use App\Http\Controllers\Api\InboundApiController;
+use App\Http\Controllers\Api\InboundController;
+use App\Http\Controllers\Api\MemberRequestController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
@@ -17,4 +19,5 @@ Route::prefix('public')->group(function () {
     Route::get('/instagram', [PublicContentController::class, 'getInstagramPosts']);
     Route::get('/instagram', [InstagramController::class, 'index']);
     Route::post('/inbound', [InboundApiController::class, 'store']);
+    Route::post('/public/member-request', [MemberRequestController::class, 'store']);
 });

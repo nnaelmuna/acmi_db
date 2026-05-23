@@ -23,6 +23,9 @@ class Member extends Model
         'position',
         'company_url',
         'linkedin_url',
+        'employee_size', 
+        'annual_revenue',
+        'message',
         'status',
     ];
 

@@ -373,7 +373,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 
@@ -382,17 +382,30 @@
             fetch(`/crm/inbound/${id}`)
                 .then(res => res.json())
                 .then(data => {
+                    // Informasi Pribadi
                     document.getElementById('d_name').innerText = data.name || '-';
                     document.getElementById('d_email').innerText = data.email || '-';
                     document.getElementById('d_phone').innerText = data.phone || '-';
                     document.getElementById('d_linkedin').innerText = data.linkedin_url || '-';
+
+                    // Informasi Bisnis
                     document.getElementById('d_company').innerText = data.company_name || '-';
                     document.getElementById('d_position').innerText = data.position || '-';
                     document.getElementById('d_industry').innerText = data.industry || '-';
                     document.getElementById('d_url').innerText = data.company_url || '-';
+                    document.getElementById('d_employee_size').innerText = data.employee_size || '-';
+                    document.getElementById('d_annual_revenue').innerText = data.annual_revenue || '-';
 
+                    // Motivasi
+                    document.getElementById('d_motivation_referral').innerText = data.motivation_referral || '-';
+
+                    // Tampilkan Modal
                     document.getElementById('detailModal').classList.remove('hidden');
                     document.getElementById('detailModal').classList.add('flex');
+                })
+                .catch(error => {
+                    console.error("Gagal mengambil data detail:", error);
+                    alert("Gagal memuat detail data. Cek koneksi atau log sistem.");
                 });
         }
 
@@ -436,14 +449,15 @@
                     });
 
                     fetch(`/crm/inbound/${id}/status`, {
-                        method: "PATCH",
+                        method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content'),
                         },
                         body: JSON.stringify({
                             status: status
-                        })
+                        }), 
                     }).then(() => {
                         Swal.fire({
                             icon: 'success',

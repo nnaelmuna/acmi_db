@@ -8,6 +8,7 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class InboundController extends Controller
 {
@@ -33,11 +34,22 @@ class InboundController extends Controller
 
         $inbounds = $query->latest()->paginate(10)->withQueryString();
 
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek   = Carbon::now()->endOfWeek();
+
         $stats = [
-            'review' => Inbound::where('status', 'review')->count(),
-            'approved' => Inbound::where('status', 'approved')->count(),
-            'rejected' => Inbound::where('status', 'rejected')->count(),
+            'review'   => Inbound::where('status', 'review')
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count(),
+            'approved' => Inbound::where('status', 'approved')
+                ->whereBetween('approved_at', [$startOfWeek, $endOfWeek])
+                ->count(),
+            'rejected' => Inbound::where('status', 'rejected')
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count(),
         ];
+
+        $query = Inbound::query()->where('status', $status);
 
         $diffs = [
             'review' => Inbound::where('status', 'review')->whereDate('created_at', Carbon::today())->count()
@@ -61,28 +73,44 @@ class InboundController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
+        Log::info('updateStatus called', ['id' => $id, 'status' => $request->status]);
+
         return DB::transaction(function () use ($request, $id) {
-            $inbound = Inbound::findOrFail($id);
+            $inbound  = Inbound::findOrFail($id);
             $newStatus = $request->status;
 
-            $inbound->update(['status' => $newStatus]);
+            // Update status + approved_at
+            $inbound->update([
+                'status'      => $newStatus,
+                'approved_at' => $newStatus === 'approved' ? now() : null,
+            ]);
 
             if ($newStatus === 'approved') {
-                Member::updateOrCreate(
-                    ['email' => $inbound->email],
-                    [
-                        'name'          => $inbound->name,
-                        'phone'         => $inbound->phone,
-                        'company_name'  => $inbound->company_name ?? $inbound->company ?? '-',
-                        'industry'      => $inbound->industry ?? '-',
-                        'position'      => $inbound->position ?? '-',
-                        'company_url'   => $inbound->company_url,
-                        'status'        => 'active',
-                    ]
-                );
+                Log::info('Creating member for: ' . $inbound->email);
+                try {
+                    Member::updateOrCreate(
+                        ['email' => $inbound->email],
+                        [
+                            'name'           => $inbound->name,
+                            'phone'          => $inbound->phone ?? null,
+                            'company_name'   => $inbound->company_name ?? $inbound->company ?? '-',
+                            'industry'       => $inbound->industry ?? null,
+                            'position'       => $inbound->position ?? null,
+                            'company_url'    => $inbound->company_url ?? null,
+                            'linkedin_url'   => $inbound->linkedin_url ?? null,
+                            'employee_size'  => $inbound->employee_size ?? null,
+                            'annual_revenue' => $inbound->annual_revenue ?? null,
+                            'message'        => $inbound->message ?? null,
+                            'status'         => 'active',
+                        ]
+                    );
+                    Log::info('Member created successfully');
+                } catch (\Exception $e) {
+                    Log::error('Member creation failed: ' . $e->getMessage());
+                }
             }
 
-            return response()->json(['success' => "Status has been changed to $newStatus"]);
+            return response()->json(['success' => "Status berhasil diubah ke $newStatus"]);
         });
     }
 
@@ -95,7 +123,10 @@ class InboundController extends Controller
             $selectedInbounds = Inbound::whereIn('id', $ids)->get();
 
             foreach ($selectedInbounds as $inbound) {
-                $inbound->update(['status' => 'approved']);
+                $inbound->update([
+                    'status'      => 'approved',
+                    'approved_at' => now(),
+                ]);
 
                 // Create member
                 Member::updateOrCreate(
@@ -108,6 +139,9 @@ class InboundController extends Controller
                         'position'      => $inbound->position ?? '-',
                         'company_url'   => $inbound->company_url,
                         'linkedin_url'  => $inbound->linkedin_url,
+                        'employee_size' => $inbound->employee_size ?? null,
+                        'annual_revenue' => $inbound->annual_revenue ?? null,
+                        'message'       => $inbound->message ?? null,
                         'status'        => 'active',
                     ]
                 );

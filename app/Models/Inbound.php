@@ -22,6 +22,7 @@ class Inbound extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     /**
