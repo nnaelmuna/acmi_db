@@ -62,55 +62,58 @@
             </div>
 
             {{-- Bottom Panels --}}
-            <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+            <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr] pb-10">
 
                 {{-- Recent Activity --}}
-                <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5">
-                    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <h4 class="text-xl font-semibold text-acmi-darkblue">Recent Activity</h4>
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="mb-5 flex items-center justify-between">
+                        <div>
+                            <h4 class="text-lg font-semibold text-acmi-darkblue">
+                                Recent Activity
+                            </h4>
+                            <p class="mt-1 text-xs text-gray-400">
+                                Latest actions from your account
+                            </p>
+                        </div>
 
                         <div
-                            class="inline-flex w-fit items-center gap-2 rounded-full bg-acmi-blueprimer px-3 py-1.5 text-xs font-medium text-white">
-                            <span>Activity Logs</span>
+                            class="inline-flex w-fit items-center gap-2 rounded-full bg-acmi-softblue px-3 py-1.5 text-xs font-semibold text-acmi-blueprimer">
+                            <span>Recent Activity</span>
                             <i class="fas fa-history text-[10px]"></i>
                         </div>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-2">
                         @forelse($recentActivities as $log)
-                            <div
-                                class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded-xl transition-all border-b border-gray-50 last:border-0">
-                                {{-- Icon Dinamis --}}
+                            <div class="flex items-start gap-3 rounded-xl px-3 py-3 transition hover:bg-acmi-softblue/40">
                                 <div
-                                    class="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full {{ str_contains(strtolower($log->description), 'member') ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600' }}">
-                                    <i
-                                        class="fas {{ str_contains(strtolower($log->description), 'member') ? 'fa-user-check' : 'fa-file-alt' }} text-sm"></i>
+                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-acmi-softblue text-acmi-blueprimer">
+                                    <i class="fas fa-clock-rotate-left text-sm"></i>
                                 </div>
 
                                 <div class="min-w-0 flex-1">
-                                    <p class="text-sm font-bold text-gray-800 leading-tight">
+                                    <p class="text-sm font-medium leading-snug text-gray-800">
                                         {{ $log->description ?? '-' }}
                                     </p>
-                                    <p class="mt-1 text-[10px] text-gray-400 flex items-center gap-1">
-                                        <i class="far fa-clock"></i>
-                                        {{ $log->created_at->diffForHumans() }}
-                                    </p>
-                                </div>
 
-                                {{-- Indikator Status --}}
-                                <span
-                                    class="mt-2 h-2 w-2 rounded-full {{ $loop->first ? 'bg-green-400 animate-pulse' : 'bg-gray-200' }}"></span>
+                                    <div class="mt-1 flex items-center gap-2 text-[11px] text-gray-400">
+                                        <span>{{ $log->user->name ?? 'Super Admin' }}</span>
+                                        <span>•</span>
+                                        <span>{{ optional($log->created_at)->diffForHumans() }}</span>
+                                    </div>
+                                </div>
                             </div>
                         @empty
-                            <div class="flex flex-col items-center justify-center py-10">
-                                <i class="fas fa-clipboard-list text-gray-200 text-4xl mb-2"></i>
+                            <div
+                                class="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 py-10">
+                                <i class="fas fa-clipboard-list mb-2 text-3xl text-gray-200"></i>
                                 <p class="text-sm text-gray-400">No activity yet</p>
                             </div>
                         @endforelse
                     </div>
                 </div>
                 {{-- New Members --}}
-                <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5">
+                <div class="rounded-2xl border border-acmi-blueprimer bg-white p-5 self-start">
                     <h4 class="mb-4 text-xl font-semibold text-acmi-darkblue">New Member</h4>
 
                     <div class="space-y-4">

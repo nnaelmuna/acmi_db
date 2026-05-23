@@ -6,8 +6,6 @@
     Welcome to sign in to your background <br> management system.
 @endsection
 
-@section('footer_text', 'Don’t have an account?')
-@section('footer_action', 'Sign Up')
 
 @section('content')
     <form method="POST" action="{{ route('login') }}" novalidate>

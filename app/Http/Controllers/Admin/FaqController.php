@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use App\Services\TabFilterService;
 
@@ -46,6 +47,12 @@ class FaqController extends Controller
             'status' => $validated['status'] ?? 'published',
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'faq',
+            'description' => auth()->user()->name . ' created a FAQ',
+        ]);
+
         return redirect()->route('faq')->with('success', 'FAQ created successfully.');
     }
 
@@ -65,13 +72,26 @@ class FaqController extends Controller
             'status' => $validated['status'] ?? $faq->status,
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'faq',
+            'description' => auth()->user()->name . ' updated a FAQ',
+        ]);
+
         return redirect()->route('faq')->with('success', 'FAQ updated successfully.');
     }
 
     public function destroy($id)
     {
         $faq = Faq::findOrFail($id);
+
         $faq->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'faq',
+            'description' => auth()->user()->name . ' moved a FAQ to trash',
+        ]);
 
         return redirect()->route('faq')->with('success', 'FAQ deleted successfully.');
     }
@@ -82,6 +102,12 @@ class FaqController extends Controller
 
         $faq->restore();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'faq',
+            'description' => auth()->user()->name . ' restored a FAQ',
+        ]);
+
         return redirect()->back()->with('success', 'FAQ restored successfully');
     }
 
@@ -90,6 +116,12 @@ class FaqController extends Controller
         $faq = FAQ::onlyTrashed()->findOrFail($id);
 
         $faq->forceDelete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'faq',
+            'description' => auth()->user()->name . ' permanently deleted a FAQ',
+        ]);
 
         return redirect()->route('faq', ['status' => 'trash'])
             ->with('success', 'FAQ permanently deleted successfully');

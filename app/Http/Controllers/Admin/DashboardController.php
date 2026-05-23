@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Member;
-use App\Models\Inbound; // <-- KITA PAKAI MODEL INBOUND DI SINI
 use App\Models\WebsiteView;
 use App\Models\ActivityLog;
+use App\Models\Inbound;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -17,8 +17,8 @@ class DashboardController extends Controller
         // 1. STATS RECAP
         $totalMember = Member::count();
         $newMember = Member::whereMonth('created_at', now()->month)
-                            ->whereYear('created_at', now()->year)
-                            ->count();
+            ->whereYear('created_at', now()->year)
+            ->count();
         $totalViews = WebsiteView::count();
 
         // 2. AMBIL DATA MEMBER TERBARU
@@ -26,34 +26,36 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // 3. REAL-TIME MONTHLY RECAP (buat grafik y)
+        // 3. REAL-TIME MONTHLY RECAP
         $monthlyLabels = [];
         $monthlyData = [];
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
             $monthlyLabels[] = $month->format('M');
             $monthlyData[] = Member::whereMonth('created_at', $month->month)
-                                   ->whereYear('created_at', $month->year)
-                                   ->count();
+                ->whereYear('created_at', $month->year)
+                ->count();
         }
 
         // 4. RECENT ACTIVITY
-        $recentActivities = ActivityLog::latest()
+        $userId = auth()->user()->id;
+
+        $recentActivities = ActivityLog::where('user_id', $userId)
+            ->latest()
             ->take(10)
             ->get();
 
-        // 5. MEMBER REQUESTS (Sudah diperbaiki menggunakan model Inbound)
+        // 5. MEMBER REQUESTS
         $requestedCount = Inbound::where('status', 'review')->count();
         $approvedCount  = Inbound::where('status', 'approved')->count();
         $rejectedCount  = Inbound::where('status', 'rejected')->count();
 
-        // Mengirimkan semua data ke return view dashboard
         return view('dashboard', [
             'totalMember'      => $totalMember,
             'newMember'        => $newMember,
             'totalViews'       => $totalViews,
             'recentActivities' => $recentActivities,
-            'latestMembers'    => $latestMembers, 
+            'latestMembers'    => $latestMembers,
             'requestedCount'   => $requestedCount,
             'approvedCount'    => $approvedCount,
             'rejectedCount'    => $rejectedCount,

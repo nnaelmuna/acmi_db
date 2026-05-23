@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MediaItem;
 use App\Models\MediaCategory;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Services\TabFilterService;
@@ -62,6 +63,12 @@ class MediaItemController extends Controller
             'status' => $request->status,
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' added new media',
+        ]);
+
         return redirect()
             ->route('media', ['status' => $request->status])
             ->with('success', 'Media added successfully');
@@ -93,6 +100,12 @@ class MediaItemController extends Controller
             'status' => $request->status,
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' updated media',
+        ]);
+
         return redirect()
             ->route('media', ['status' => $request->status])
             ->with('success', 'Media updated successfully');
@@ -103,6 +116,12 @@ class MediaItemController extends Controller
         $media = MediaItem::findOrFail($id);
         $media->delete();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' moved media to trash',
+        ]);
+
         return redirect()
             ->route('media', ['status' => 'trash'])
             ->with('success', 'Media moved to trash successfully');
@@ -112,6 +131,12 @@ class MediaItemController extends Controller
     {
         $media = MediaItem::onlyTrashed()->findOrFail($id);
         $media->restore();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' restored media',
+        ]);
 
         return redirect()
             ->route('media', ['status' => $media->status ?? 'published'])
@@ -127,6 +152,12 @@ class MediaItemController extends Controller
         }
 
         $media->forceDelete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' permanently deleted media',
+        ]);
 
         return redirect()
             ->route('media', ['status' => 'trash'])

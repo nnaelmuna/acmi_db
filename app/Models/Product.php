@@ -24,11 +24,12 @@ class Product extends Model
         'website',
         'email',
         'phone',
-        'status'
+        'status',
+        'address'
     ];
 
     protected $casts = [
-        'images'   => 'array', // <--- Harus sama dengan yang di atas
+        'images'   => 'array',
         'image' => 'array',
         'features' => 'array',
         'category' => 'array',

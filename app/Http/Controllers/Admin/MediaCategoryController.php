@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MediaCategory;
 use App\Models\MediaItem;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -48,6 +49,12 @@ class MediaCategoryController extends Controller
             'is_default' => 0,
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' created a media category',
+        ]);
+
         if ($request->expectsJson()) {
             return response()->json(['success' => true, 'category' => $category]);
         }
@@ -72,15 +79,27 @@ class MediaCategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' updated a media category',
+        ]);
+
         return back()->with('success', 'Category updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $category = MediaCategory::findOrFail($id);
         $category->delete();
 
-        if (request()->expectsJson()) {
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media',
+            'description' => auth()->user()->name . ' deleted a media category',
+        ]);
+
+        if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Category deleted successfully',

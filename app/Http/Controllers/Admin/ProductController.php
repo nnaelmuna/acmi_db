@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -62,7 +63,8 @@ class ProductController extends Controller
         $request->validate([
             'title'            => 'required|string|max:255',
             'company_name'     => 'required|string|max:255',
-            'category'         => 'required|array|min:1',
+            'category' => 'required|array|min:1|max:3',
+            'category.max' => 'Maximum 3 categories allowed.',
             'ceo_name'         => 'required|string|max:255',
             'description'      => 'required|string',
 
@@ -77,7 +79,7 @@ class ProductController extends Controller
             'product_images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
 
             'status'           => 'nullable|in:draft,published,archived',
-            'address'          => 'nullable|string|max:255',
+            'address'          => 'required|string|max:255',
         ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
@@ -86,6 +88,7 @@ class ProductController extends Controller
             'email.required' => 'Email is required.',
             'phone.required' => 'Phone number is required.',
             'phone.regex' => 'Phone number must be a valid phone number.',
+            'address.required' => 'Address is required.',
         ]);
 
         $data = $request->except(['product_images']);
@@ -100,6 +103,12 @@ class ProductController extends Controller
         }
 
         Product::create($data);
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'product',
+            'description' => auth()->user()->name . ' created a new product',
+        ]);
 
         return redirect()->route('product.index')->with('success', 'Produk created successfully!');
     }
@@ -124,7 +133,8 @@ class ProductController extends Controller
         $request->validate([
             'title'        => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
-            'category'     => 'required|array|min:1',
+            'category' => 'required|array|min:1|max:3',
+            'category.max' => 'Maximum 3 categories allowed.',
             'ceo_name'     => 'required|string|max:255',
             'description'  => 'required|string',
 
@@ -177,7 +187,13 @@ class ProductController extends Controller
             'website'      => $request->website,
             'email'        => $request->email,
             'phone'        => $request->phone,
-            'address'      => $request->address, // Sekarang datanya aman dan ga bakalan mental lagi!
+            'address'      => $request->address,
+        ]);
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'product',
+            'description' => auth()->user()->name . ' updated a product',
         ]);
 
         return redirect()->route('product.index')->with('success', 'Produk updated successfully!');
@@ -188,6 +204,12 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'product',
+            'description' => auth()->user()->name . ' moved a product to trash',
+        ]);
+
         return redirect()->route('product.index', ['status' => 'trash'])
             ->with('success', 'Product moved to trash successfully');
     }
@@ -196,6 +218,12 @@ class ProductController extends Controller
     {
         $product = Product::withTrashed()->findOrFail($id);
         $product->restore();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'product',
+            'description' => auth()->user()->name . ' restored a product',
+        ]);
 
         return redirect()->route('product.index', ['status' => 'trash'])
             ->with('success', 'Product restored successfully');
@@ -218,6 +246,12 @@ class ProductController extends Controller
         }
 
         $product->forceDelete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'product',
+            'description' => auth()->user()->name . ' permanently deleted a product',
+        ]);
 
         return redirect()->route('product.index', ['status' => 'trash'])
             ->with('success', 'Product permanently deleted successfully');

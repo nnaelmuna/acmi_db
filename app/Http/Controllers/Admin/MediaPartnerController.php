@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MediaPartner;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Services\TabFilterService;
@@ -53,6 +54,12 @@ class MediaPartnerController extends Controller
             'status' => $validated['status'],
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media_partner',
+            'description' => auth()->user()->name . ' added a media partner',
+        ]);
+
         return back()->with('success', 'Media partner added successfully.');
     }
 
@@ -86,6 +93,12 @@ class MediaPartnerController extends Controller
             'status' => $validated['status'],
         ]);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media_partner',
+            'description' => auth()->user()->name . ' updated a media partner',
+        ]);
+
         return back()->with('success', 'Media partner updated successfully.');
     }
 
@@ -93,8 +106,13 @@ class MediaPartnerController extends Controller
     {
         $partner = MediaPartner::findOrFail($id);
 
-        // Jangan hapus image di sini, karena ini hanya soft delete
         $partner->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media_partner',
+            'description' => auth()->user()->name . ' moved a media partner to trash',
+        ]);
 
         return redirect()
             ->route('media-partner', ['status' => 'trash'])
@@ -106,6 +124,12 @@ class MediaPartnerController extends Controller
         $partner = MediaPartner::onlyTrashed()->findOrFail($id);
 
         $partner->restore();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media_partner',
+            'description' => auth()->user()->name . ' restored a media partner',
+        ]);
 
         return redirect()
             ->route('media-partner', ['status' => 'published'])
@@ -121,6 +145,12 @@ class MediaPartnerController extends Controller
         }
 
         $partner->forceDelete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'activity_type' => 'media_partner',
+            'description' => auth()->user()->name . ' permanently deleted a media partner',
+        ]);
 
         return redirect()
             ->route('media-partner', ['status' => 'trash'])
