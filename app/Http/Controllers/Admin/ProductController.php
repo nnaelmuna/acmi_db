@@ -63,7 +63,8 @@ class ProductController extends Controller
         $request->validate([
             'title'            => 'required|string|max:255',
             'company_name'     => 'required|string|max:255',
-            'category'         => 'required|array|min:1',
+            'category' => 'required|array|min:1|max:3',
+            'category.max' => 'Maximum 3 categories allowed.',
             'ceo_name'         => 'required|string|max:255',
             'description'      => 'required|string',
 
@@ -132,7 +133,8 @@ class ProductController extends Controller
         $request->validate([
             'title'        => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
-            'category'     => 'required|array|min:1',
+            'category' => 'required|array|min:1|max:3',
+            'category.max' => 'Maximum 3 categories allowed.',
             'ceo_name'     => 'required|string|max:255',
             'description'  => 'required|string',
 

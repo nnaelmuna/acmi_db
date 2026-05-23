@@ -338,6 +338,26 @@
             categorySelect.addEventListener('change', function() {
                 const val = this.value;
 
+                if (selectedCategories.length >= 3) {
+
+                    const existingError = document.getElementById('category-error');
+
+                    if (!existingError) {
+                        const error = document.createElement('p');
+
+                        error.id = 'category-error';
+                        error.className = 'text-red-500 text-[10px] mt-1';
+                        error.innerText = 'Maximum 3 categories allowed.';
+
+                        document.getElementById('category-tags')
+                            .closest('div')
+                            .appendChild(error);
+                    }
+
+                    this.value = "";
+                    return;
+                }
+
                 if (val && !selectedCategories.includes(val)) {
                     selectedCategories.push(val);
                     renderCategoryTags();
