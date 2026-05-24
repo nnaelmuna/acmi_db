@@ -43,8 +43,20 @@
             }
         });
     </script>
-
 </head>
+
+<script>
+    // Auto refresh CSRF token setiap 30 menit
+    setInterval(() => {
+        fetch('/csrf-token-refresh')
+            .then(r => r.json())
+            .then(data => {
+                document.querySelector('meta[name="csrf-token"]')
+                    ?.setAttribute('content', data.token);
+            });
+    }, 30 * 60 * 1000);
+</script>
+
 
 <body class="font-poppins antialiased">
     <div class="flex min-h-screen"> 

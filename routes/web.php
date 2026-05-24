@@ -162,6 +162,10 @@ Route::middleware('auth')->group(function () {
         return config('session.lifetime');
     });
 
+    Route::get('/csrf-token-refresh', function () {
+        return response()->json(['token' => csrf_token()]);
+    })->middleware('web');
+
     // Members
     Route::prefix('crm')->controller(MemberController::class)->group(function () {
         Route::get('/members', 'index')->name('members.index');
