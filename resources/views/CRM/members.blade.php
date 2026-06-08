@@ -41,47 +41,22 @@
     <div class="max-w-7xl mx-auto pb-10">
         <div class="mb-7 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
-            <div class="inline-flex items-center gap-1 rounded-2xl border border-acmi-bordercolor bg-[#F6F6F6] p-1.5 w-fit">
-                <a href="{{ route('members.index', ['status' => 'published'] + request()->except('status')) }}"
-                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
-                    {{ request('status', 'published') === 'published' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                    <span>Published</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                        {{ $statusCounts['published'] ?? 0 }}
-                    </span>
-                </a>
-
-                <a href="{{ route('members.index', ['status' => 'draft'] + request()->except('status')) }}"
-                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
-                    {{ request('status') === 'draft' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                    <span>Draft</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                        {{ $statusCounts['draft'] ?? 0 }}
-                    </span>
-                </a>
-
-                <a href="{{ route('members.index', ['status' => 'archived'] + request()->except('status')) }}"
-                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
-                    {{ request('status') === 'archived' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                    <span>Archived</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-medium text-white">
-                        {{ $statusCounts['archived'] ?? 0 }}
-                    </span>
-                </a>
-
-                <a href="{{ route('members.index', ['status' => 'trash'] + request()->except('status')) }}"
-                    class="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition
-                    {{ request('status') === 'trash' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-black' }}">
-                    <span>Trash</span>
-                    <span
-                        class="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-                        {{ $statusCounts['trash'] ?? 0 }}
-                    </span>
-                </a>
-            </div>
+            <x-filters-tab-crm :tabs="[
+                [
+                    'label' => 'All Member',
+                    'value' => 'all',
+                    // Menggabungkan count yang bukan trash sebagai 'All'
+                    'count' =>
+                        ($statusCounts['published'] ?? 0) +
+                        ($statusCounts['draft'] ?? 0) +
+                        ($statusCounts['archived'] ?? 0),
+                ],
+                [
+                    'label' => 'Trash',
+                    'value' => 'trash',
+                    'count' => $statusCounts['trash'] ?? 0,
+                ],
+            ]" />
 
             <div class="flex items-center justify-end">
                 <x-filters-dropdown-category :categories="$categories" routeName="members.index" />
@@ -381,7 +356,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 

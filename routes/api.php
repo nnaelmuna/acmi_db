@@ -16,7 +16,7 @@ Route::prefix('public')->group(function () {
     Route::get('/gallery', [PublicContentController::class, 'getGallery']);
     Route::get('/partners', [PublicContentController::class, 'getPartners']);
     Route::get('/categories', [PublicContentController::class, 'getCategories']);
-    Route::get('/instagram', [PublicContentController::class, 'getInstagramPosts']);
+    Route::get('/public/instagram', [PublicContentController::class, 'getInstagramPosts']);
     Route::get('/instagram', [InstagramController::class, 'index']);
     Route::post('/inbound', [InboundApiController::class, 'store']);
     Route::post('/public/member-request', [MemberRequestController::class, 'store']);
