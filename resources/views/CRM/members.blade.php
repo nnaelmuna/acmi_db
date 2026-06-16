@@ -235,7 +235,7 @@
 
     <div id="viewModal" onclick="closeModal('viewModal')"
         class="hidden fixed inset-0 z-[100] bg-black/50 items-center justify-center p-4 backdrop-blur-sm">
-        <div onclick="event.stopPropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
+        <div onclick="event.stopPropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden m-4">
             <div class="flex items-center justify-between p-6 border-b border-acmi-bordercolor bg-acmi-softblue/20">
                 <h3 class="text-lg font-bold text-gray-800">Member Detail Information</h3>
                 <button onclick="closeModal('viewModal')"
@@ -255,7 +255,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Title</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_name">-</span>
+                                <span id="view_name">-</span>
                             </div>
                         </div>
 
@@ -263,7 +263,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Email</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="d_email">-</span>
+                                <span id="view_email">-</span>
                             </div>
                         </div>
 
@@ -271,7 +271,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Nomor Telepon</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_phone">-</span>
+                                <span id="view_phone">-</span>
                             </div>
                         </div>
 
@@ -279,7 +279,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Linkedin Profile</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="d_linkedin">-</span>
+                                <span id="view_linkedin">-</span>
                             </div>
                         </div>
                     </div>
@@ -295,7 +295,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Perusahaan</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_company">-</span>
+                                <span id="view_company_name">-</span>
                             </div>
                         </div>
 
@@ -303,7 +303,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Jabatan</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_position">-</span>
+                                <span id="view_position">-</span>
                             </div>
                         </div>
 
@@ -311,7 +311,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Industri</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_industry">-</span>
+                                <span id="view_industry">-</span>
                             </div>
                         </div>
 
@@ -319,7 +319,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Website Perusahaan</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="d_url">-</span>
+                                <span id="view_company_url">-</span>
                             </div>
                         </div>
 
@@ -327,7 +327,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Jumlah Karyawan</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_employee_size">{{ $inbound->employee_size ?? '-' }}</span>
+                                <span id="view_employee_size">-</span>
                             </div>
                         </div>
 
@@ -335,7 +335,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Annual Revenue</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_annual_revenue">{{ $inbound->annual_revenue ?? '-' }}</span>
+                                <span id="view_annual_revenue">-</span>
                             </div>
                         </div>
                     </div>
@@ -351,7 +351,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Motivasi</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[100px] whitespace-pre-line items-start">
-                                <span id="d_motivation_referral">{{ $inbound->motivation_referral ?? '-' }}</span>
+                                <span id="view_message">-</span>
                             </div>
                         </div>
                     </div>
@@ -505,11 +505,14 @@
                     document.getElementById('view_name').innerText = data.name || '-';
                     document.getElementById('view_email').innerText = data.email || '-';
                     document.getElementById('view_phone').innerText = data.phone || '-';
-                    document.getElementById('view_linkedin').innerText = data.linkedin || '-';
+                    document.getElementById('view_linkedin').innerText = data.linkedin_url || data.linkedin || '-';
                     document.getElementById('view_company_name').innerText = data.company_name || '-';
                     document.getElementById('view_industry').innerText = data.industry || '-';
                     document.getElementById('view_position').innerText = data.position || '-';
                     document.getElementById('view_company_url').innerText = data.company_url || '-';
+                    document.getElementById('view_employee_size').innerText = data.employee_size || '-';
+                    document.getElementById('view_annual_revenue').innerText = data.annual_revenue || '-';
+                    document.getElementById('view_message').innerText = data.message || '-';
 
                     openModal('viewModal');
                 })

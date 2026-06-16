@@ -39,11 +39,18 @@ class MemberController extends Controller
 
         $members = $query->latest()->paginate(10)->withQueryString();
 
+        $statusCounts = [
+            'published' => Member::where('status', 'published')->count(),
+            'draft'     => Member::where('status', 'draft')->count(),
+            'archived'  => Member::where('status', 'archived')->count(),
+            'trash'     => Member::onlyTrashed()->count(),
+        ];
+
         $tabs = [
-            ['label' => 'Published', 'count' => Member::where('status', 'published')->count()],
-            ['label' => 'Draft', 'count' => Member::where('status', 'draft')->count()],
-            ['label' => 'Archived', 'count' => Member::where('status', 'archived')->count()],
-            ['label' => 'Trash', 'count' => Member::onlyTrashed()->count()],
+            ['label' => 'Published', 'count' => $statusCounts['published']],
+            ['label' => 'Draft', 'count' => $statusCounts['draft']],
+            ['label' => 'Archived', 'count' => $statusCounts['archived']],
+            ['label' => 'Trash', 'count' => $statusCounts['trash']],
         ];
 
         $categories = Member::select('industry as name')
@@ -52,7 +59,7 @@ class MemberController extends Controller
             ->distinct()
             ->get();
 
-        return view('crm.members', compact('members', 'tabs', 'categories'));
+        return view('crm.members', compact('members', 'tabs', 'categories', 'statusCounts'));
     }
 
     public function show(string $id)
