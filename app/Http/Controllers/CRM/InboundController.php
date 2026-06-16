@@ -73,10 +73,14 @@ class InboundController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
+        $request->validate([
+            'status' => 'required|in:review,approved,rejected',
+        ]);
+
         Log::info('updateStatus called', ['id' => $id, 'status' => $request->status]);
 
         return DB::transaction(function () use ($request, $id) {
-            $inbound  = Inbound::findOrFail($id);
+            $inbound   = Inbound::findOrFail($id);
             $newStatus = $request->status;
 
             // Update status + approved_at
@@ -85,29 +89,9 @@ class InboundController extends Controller
                 'approved_at' => $newStatus === 'approved' ? now() : null,
             ]);
 
+            // Jika approved → buat/update Member dari data inbound
             if ($newStatus === 'approved') {
-                Log::info('Creating member for: ' . $inbound->email);
-                try {
-                    Member::updateOrCreate(
-                        ['email' => $inbound->email],
-                        [
-                            'name'           => $inbound->name,
-                            'phone'          => $inbound->phone ?? null,
-                            'company_name'   => $inbound->company_name ?? $inbound->company ?? '-',
-                            'industry'       => $inbound->industry ?? null,
-                            'position'       => $inbound->position ?? null,
-                            'company_url'    => $inbound->company_url ?? null,
-                            'linkedin_url'   => $inbound->linkedin_url ?? null,
-                            'employee_size'  => $inbound->employee_size ?? null,
-                            'annual_revenue' => $inbound->annual_revenue ?? null,
-                            'message'        => $inbound->message ?? null,
-                            'status'         => 'active',
-                        ]
-                    );
-                    Log::info('Member created successfully');
-                } catch (\Exception $e) {
-                    Log::error('Member creation failed: ' . $e->getMessage());
-                }
+                $this->createMemberFromInbound($inbound);
             }
 
             return response()->json(['success' => "Status berhasil diubah ke $newStatus"]);
@@ -116,8 +100,12 @@ class InboundController extends Controller
 
     public function bulkApprove(Request $request)
     {
+        $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'integer|exists:inbounds,id',
+        ]);
+
         $ids = $request->ids;
-        if (!$ids) return response()->json(['error' => 'No data selected'], 400);
 
         DB::transaction(function () use ($ids) {
             $selectedInbounds = Inbound::whereIn('id', $ids)->get();
@@ -128,26 +116,42 @@ class InboundController extends Controller
                     'approved_at' => now(),
                 ]);
 
-                // Create member
-                Member::updateOrCreate(
-                    ['email' => $inbound->email],
-                    [
-                        'name'          => $inbound->name,
-                        'phone'         => $inbound->phone,
-                        'company_name'  => $inbound->company_name ?? $inbound->company ?? '-',
-                        'industry'      => $inbound->industry ?? '-',
-                        'position'      => $inbound->position ?? '-',
-                        'company_url'   => $inbound->company_url,
-                        'linkedin_url'  => $inbound->linkedin_url,
-                        'employee_size' => $inbound->employee_size ?? null,
-                        'annual_revenue' => $inbound->annual_revenue ?? null,
-                        'message'       => $inbound->message ?? null,
-                        'status'        => 'active',
-                    ]
-                );
+                // Buat/update member dari data inbound
+                $this->createMemberFromInbound($inbound);
             }
         });
 
         return response()->json(['success' => 'Selected inbound data has been approved successfully!']);
+    }
+
+    /**
+     * Helper: Buat atau update Member dari data Inbound yang di-approve.
+     * Menggunakan email sebagai unique key.
+     * Status member di-set 'published' agar konsisten dengan MemberController.
+     */
+    private function createMemberFromInbound(Inbound $inbound): void
+    {
+        try {
+            Member::updateOrCreate(
+                ['email' => $inbound->email],
+                [
+                    'name'           => $inbound->name,
+                    'phone'          => $inbound->phone ?? null,
+                    'company_name'   => $inbound->company_name ?? $inbound->company ?? null,
+                    'industry'       => $inbound->industry ?? null,
+                    'position'       => $inbound->position ?? null,
+                    'company_url'    => $inbound->company_url ?? null,
+                    'linkedin_url'   => $inbound->linkedin_url ?? null,
+                    'employee_size'  => $inbound->employee_size ?? null,
+                    'annual_revenue' => $inbound->annual_revenue ?? null,
+                    'message'        => $inbound->message ?? null,
+                    'status'         => 'published',
+                ]
+            );
+            Log::info('Member created/updated successfully for: ' . $inbound->email);
+        } catch (\Exception $e) {
+            Log::error('Member creation failed for ' . $inbound->email . ': ' . $e->getMessage());
+            throw $e; // Re-throw agar DB::transaction() rollback
+        }
     }
 }

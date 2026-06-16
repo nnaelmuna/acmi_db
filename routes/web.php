@@ -150,7 +150,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/inbound/{id}', 'show')->name('inbound.show');
         Route::patch('/inbound/{id}/status', 'updateStatus')->name('inbound.status');
         Route::post('/inbound/bulk-approve', 'bulkApprove')->name('inbound.bulkApprove');
-        Route::post('/inbound/{id}/approve', 'approve')->name('inbound.approve');
         Route::post('/inbound', 'store')->name('inbound.store');
     });
 
@@ -165,6 +164,11 @@ Route::middleware('auth')->group(function () {
     // Members
     Route::prefix('crm')->controller(MemberController::class)->group(function () {
         Route::get('/members', 'index')->name('members.index');
+        Route::get('/members/{id}', 'show')->name('members.show');
+        Route::put('/members/{id}', 'update')->name('members.update');
+        Route::delete('/members/{id}', 'destroy')->name('members.destroy');
+        Route::post('/members/{id}/restore', 'restore')->name('members.restore');
+        Route::delete('/members/{id}/force-delete', 'forceDelete')->name('members.forceDelete');
     });
 
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');;
