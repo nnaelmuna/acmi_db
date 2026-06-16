@@ -298,7 +298,7 @@
                 const file = uploadedFiles[i - 1];
 
                 if (file) {
-                    const reader = new FileReader();
+                    const reader = new FileReader(); //preview image sblm submit
                     reader.onload = e => {
                         slot.innerHTML = `
                     <img src="${e.target.result}" class="w-full h-full object-cover">

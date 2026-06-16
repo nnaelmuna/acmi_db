@@ -8,6 +8,7 @@ use App\Models\WebsiteView;
 use App\Models\ActivityLog;
 use App\Models\Inbound;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // <-- BAGIAN YANG KURANG: Ditambahkan biar VS Code gak garis merah
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -38,7 +39,8 @@ class DashboardController extends Controller
         }
 
         // 4. RECENT ACTIVITY
-        $userId = auth()->user()->id;
+        // BAGIAN YANG SALAH: Diubah pakai Auth::id() biar aman dan anti-error di VS Code Mac kamu
+        $userId = Auth::id();
 
         $recentActivities = ActivityLog::where('user_id', $userId)
             ->latest()
@@ -46,9 +48,10 @@ class DashboardController extends Controller
             ->get();
 
         // 5. MEMBER REQUESTS
-        $requestedCount = Inbound::where('status', 'review')->count();
-        $approvedCount  = Inbound::where('status', 'approved')->count();
-        $rejectedCount  = Inbound::where('status', 'rejected')->count();
+        // BAGIAN YANG SALAH: Sudah diganti total dari MemberRequest:: menjadi Member:: karena mau ambil data dari tabel database
+        $requestedCount = Member::where('status', 'review')->count();
+        $approvedCount  = Member::where('status', 'approved')->count();
+        $rejectedCount  = Member::where('status', 'rejected')->count();
 
         return view('dashboard', [
             'totalMember'      => $totalMember,

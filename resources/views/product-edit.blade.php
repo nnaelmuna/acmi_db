@@ -259,7 +259,7 @@
     <script>
         // data inisialisasi
         let uploadedFiles = [];
-        let existingFiles = {!! json_encode($product->images ?? []) !!};
+        let existingFiles = {!! json_encode($product->images ?? []) !!}; //pas edit gambar, jadi gambar lama dimasukin ke JS.
         let selectedCategories = @json(old('category', $product->category ?? []));
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -322,12 +322,12 @@
         }
 
         function removeEx(idx) {
-            existingFiles.splice(idx, 1);
+            existingFiles.splice(idx, 1); //hapus dari array lama
             renderPreviews();
         }
 
         function removeNew(idx) {
-            uploadedFiles.splice(idx, 1);
+            uploadedFiles.splice(idx, 1); //hapus upload baru
             renderPreviews();
         }
 
@@ -424,7 +424,7 @@
 
         // Submit Logic
         document.getElementById('productForm').onsubmit = function() {
-            const dt = new DataTransfer();
+            const dt = new DataTransfer(); //ini bikin ulang file input, pas nyubmit, karena JS array gabisa langsung dikirim
 
             uploadedFiles.forEach(f => dt.items.add(f));
 

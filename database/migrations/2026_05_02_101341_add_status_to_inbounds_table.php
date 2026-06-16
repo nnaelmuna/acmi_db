@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('inbounds', function (Blueprint $table) {
+       // Schema::table('inbounds', function (Blueprint $table) {
             // Kasih default 'pending' biar data baru otomatis masuk kategori requested
-            $table->string('status')->default('pending');
-        });
+            // $table->string('status')->default('pending');
+       // });
     }
 
     public function down(): void

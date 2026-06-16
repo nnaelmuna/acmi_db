@@ -10,23 +10,36 @@ class CategoryController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100|unique:categories,name'
-        ]);
-        
-        $category = Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-        ]);
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'category' => $category,
+        try {
+            $request->validate([
+                'name' => 'required|string|max:100|unique:categories,name'
             ]);
+            
+            $category = Category::create([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'category' => $category,
+                ]);
+            }
+        
+            return redirect()->back()->with('success', 'Category added!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors()['name'][0] ?? 'Validation error',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to add category. It might already exist (even if deleted).'
+            ], 500);
         }
-    
-        return redirect()->back()->with('success', 'Category added!');
     }
     
     public function destroy($id)

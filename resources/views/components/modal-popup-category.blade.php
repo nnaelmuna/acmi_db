@@ -1,7 +1,7 @@
 @props(['id', 'title', 'closeAction'])
 
 <div id="{{ $id }}"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+    class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300">
     <div
         class="w-full max-w-md rounded-xl border border-gray-300 bg-white p-6 shadow-xl scale-95 transform transition-transform duration-300">
 

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Services\TabFilterService;
+use Illuminate\Support\Facades\Auth; 
 
 class ProductController extends Controller
 {
@@ -104,10 +105,11 @@ class ProductController extends Controller
 
         Product::create($data);
 
+        // Menggunakan Facade Auth yang aman dari error VS Code
         ActivityLog::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::id(),
             'activity_type' => 'product',
-            'description' => auth()->user()->name . ' created a new product',
+            'description' => Auth::user()->name . ' created a new product',
         ]);
 
         return redirect()->route('product.index')->with('success', 'Produk created successfully!');
@@ -155,30 +157,30 @@ class ProductController extends Controller
             'phone.regex' => 'Phone number must be a valid phone number.',
         ]);
 
-        $finalImages = $request->input('existing_images', []);
+        $finalImages = $request->input('existing_images', []); //ambil gambar lama yang masih dipertahankan
 
         $oldImagesInDb = $product->images ?? [];
         foreach ($oldImagesInDb as $oldPath) {
             if (!in_array($oldPath, $finalImages)) {
-                Storage::disk('public')->delete($oldPath);
+                Storage::disk('public')->delete($oldPath); //hapus dr storage
             }
         }
 
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $file) {
                 if ($file && $file->isValid() && count($finalImages) < 3) {
-                    $finalImages[] = $file->store('products', 'public');
+                    $finalImages[] = $file->store('products', 'public'); //ambil img br simpen di storage/app/public/products
                 }
             }
         }
 
-        $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
+        $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null; //img pertama jd thumbnail
 
-        $product->update([
+        $product->update([ //semua data simpan
             'status'       => $request->input('status', $product->status),
             'category'     => $request->category,
             'title'        => $request->title,
-            'company_name' => $request->company_name,
+            'company_name' => $company_name = $request->company_name,
             'ceo_name'     => $request->ceo_name,
             'description'  => $request->description,
             'image'        => $mainThumbnail,
@@ -190,10 +192,10 @@ class ProductController extends Controller
             'address'      => $request->address,
         ]);
 
-        ActivityLog::create([
-            'user_id' => auth()->user()->id,
+        ActivityLog::create([ //buat histori kl misal kita update product
+            'user_id' => Auth::id(),
             'activity_type' => 'product',
-            'description' => auth()->user()->name . ' updated a product',
+            'description' => Auth::user()->name . ' updated a product',
         ]);
 
         return redirect()->route('product.index')->with('success', 'Produk updated successfully!');
@@ -205,9 +207,9 @@ class ProductController extends Controller
         $product->delete();
 
         ActivityLog::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::id(),
             'activity_type' => 'product',
-            'description' => auth()->user()->name . ' moved a product to trash',
+            'description' => Auth::user()->name . ' moved a product to trash',
         ]);
 
         return redirect()->route('product.index', ['status' => 'trash'])
@@ -220,16 +222,16 @@ class ProductController extends Controller
         $product->restore();
 
         ActivityLog::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::id(),
             'activity_type' => 'product',
-            'description' => auth()->user()->name . ' restored a product',
+            'description' => Auth::user()->name . ' restored a product',
         ]);
 
         return redirect()->route('product.index', ['status' => 'trash'])
             ->with('success', 'Product restored successfully');
     }
 
-    public function forceDelete($id)
+    public function forceDelete($id) // permanen delete
     {
         $product = Product::onlyTrashed()->findOrFail($id);
 
@@ -248,9 +250,9 @@ class ProductController extends Controller
         $product->forceDelete();
 
         ActivityLog::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::id(),
             'activity_type' => 'product',
-            'description' => auth()->user()->name . ' permanently deleted a product',
+            'description' => Auth::user()->name . ' permanently deleted a product',
         ]);
 
         return redirect()->route('product.index', ['status' => 'trash'])
