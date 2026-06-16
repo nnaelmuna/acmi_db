@@ -29,7 +29,8 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'images'   => 'array',
+        // databse nyimpen data json, tp di laravel jd array
+        'images'   => 'array', 
         'image' => 'array',
         'features' => 'array',
         'category' => 'array',
@@ -37,11 +38,11 @@ class Product extends Model
 
     protected static function boot()
     {
-        parent::boot();
+        parent::boot(); //auto jalan sblm create
 
         static::creating(function ($product) {
             if (!$product->slug) {
-                $product->slug = Str::slug($product->title);
+                $product->slug = Str::slug($product->title); //slug otomatis
             }
         });
 

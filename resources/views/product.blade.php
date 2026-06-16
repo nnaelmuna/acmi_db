@@ -308,9 +308,10 @@
 
         function openCategoryModal() {
             const modal = document.getElementById('categoryModal');
-            const modalBox = modal.querySelector('.scale-95') || modal.children;
+            const modalBox = modal.querySelector('.scale-95') || modal.children[0];
 
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
             setTimeout(() => {
                 modalBox.classList.remove('scale-95');
                 modalBox.classList.add('scale-100');
@@ -327,6 +328,7 @@
             }
             setTimeout(() => {
                 modal.classList.add('hidden');
+                modal.classList.remove('flex');
             }, 200);
         }
 

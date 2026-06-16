@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
+              $table->json('category')->change();
             $table->string('title');
             $table->string('company_name');
             $table->string('ceo_name');

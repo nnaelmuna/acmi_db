@@ -6,12 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
+   public function up(): void
+{
+    // Cek dulu, kalau tabel 'members' BELUM ADA, baru buat. Kalau udah ada, lewatin!
+    if (!Schema::hasTable('members')) {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('phone');
             $table->string('company_name')->nullable();
             $table->string('industry')->nullable();
@@ -19,11 +21,11 @@ return new class extends Migration
             $table->string('company_url')->nullable();
             $table->string('linkedin_url')->nullable();
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
-            
             $table->softDeletes();
             $table->timestamps();
         });
     }
+}
 
     public function down(): void
     {

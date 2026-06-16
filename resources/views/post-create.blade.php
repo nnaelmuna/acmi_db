@@ -54,12 +54,62 @@
     @endif
 
     <form id="postForm" action="{{ route('post.store') }}" enctype="multipart/form-data" method="POST"
-        class="grid grid-cols-1 gap-8 pb-20 xl:grid-cols-12">
+        class="flex flex-col gap-8 pb-20">
         @csrf
 
-        {{-- Left Section --}}
-        <div class="space-y-6 xl:col-span-7">
+        {{-- Category (Full Width) --}}
+        <div class="rounded-2xl bg-gray-100/80 p-6">
+            <div class="mb-5 flex items-center justify-between">
+                <h3 class="text-sm font-bold text-black">Select Category</h3>
 
+                <button type="button" onclick="openCategoryModal()"
+                    class="rounded-lg border border-acmi-blueprimer px-3 py-1.5 text-xs font-medium text-acmi-blueprimer transition hover:bg-acmi-softblue">
+                    Edit Category
+                </button>
+            </div>
+
+            <div id="categoryCheckboxList" class="flex flex-wrap gap-x-10 gap-y-4">
+                @foreach ($categories as $category)
+                    <label class="group flex cursor-pointer items-center gap-3 text-xs text-gray-700">
+                        <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                            class="h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer accent-acmi-blueprimer">
+                        <span class="transition group-hover:text-black">{{ $category->name }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Upload Image (Stack Below Category) --}}
+        <div class="w-full lg:w-[450px]">
+            <h3 class="mb-3 text-sm font-bold text-black">Upload Image</h3>
+
+            <div id="dropZone" onclick="document.getElementById('imageInput').click()"
+                class="group relative flex h-[280px] w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:bg-gray-50">
+
+                <img id="imagePreview" src="" alt="Preview"
+                    class="absolute inset-0 hidden h-full w-full rounded-2xl object-cover">
+
+                <button id="removeImageBtn" type="button" onclick="removeImage(event)"
+                    class="absolute right-3 top-3 z-10 hidden h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition hover:bg-red-600">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+
+                <div id="uploadPlaceholder" class="flex flex-col items-center justify-center">
+                    <div
+                        class="mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 transition group-hover:bg-gray-200">
+                        <i class="fa-regular fa-image text-2xl text-gray-400"></i>
+                    </div>
+                    <p class="text-sm font-medium text-gray-500">Click to upload image</p>
+                    <p class="mt-1 text-xs text-gray-400">PNG, JPG, WEBP up to 2MB</p>
+                </div>
+            </div>
+
+            <input type="file" id="imageInput" name="image" accept="image/png, image/jpeg, image/webp"
+                class="hidden">
+        </div>
+
+        {{-- Content Section (Full Width) --}}
+        <div class="space-y-6">
             <p class="text-small pl-3 text-gray-800">
                 Fill in either English or Indonesian content / Isi salah satu konten: Bahasa Inggris atau Bahasa Indonesia
             </p>
@@ -119,71 +169,14 @@
             <input type="hidden" name="status" id="postStatus" value="published">
         </div>
 
-        {{-- Right Section --}}
-        <div class="space-y-8 xl:col-span-5">
-
-            {{-- Category --}}
-            <div class="rounded-2xl bg-gray-100/80 p-6">
-                <div class="mb-5 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-black">Select Category</h3>
-
-                    <button type="button" onclick="openCategoryModal()"
-                        class="rounded-lg border border-acmi-blueprimer px-3 py-1.5 text-xs font-medium text-acmi-blueprimer transition hover:bg-acmi-softblue">
-                        Edit Category
-                    </button>
-                </div>
-
-                <div id="categoryCheckboxList" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    @foreach ($categories as $category)
-                        <label class="group flex cursor-pointer items-center gap-3 text-xs text-gray-700">
-                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
-                                class="h-4 w-4 rounded border-gray-300 text-acmi-blueprimer focus:ring-acmi-blueprimer accent-acmi-blueprimer">
-                            <span class="transition group-hover:text-black">{{ $category->name }}</span>
-                        </label>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Upload Image --}}
-            <div>
-                <h3 class="mb-3 text-sm font-bold text-black">Upload Image</h3>
-
-                <div id="dropZone" onclick="document.getElementById('imageInput').click()"
-                    class="group relative flex h-[280px] w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-white transition hover:bg-gray-50">
-
-                    <img id="imagePreview" src="" alt="Preview"
-                        class="absolute inset-0 hidden h-full w-full rounded-2xl object-cover">
-
-                    <button id="removeImageBtn" type="button" onclick="removeImage(event)"
-                        class="absolute right-3 top-3 z-10 hidden h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition hover:bg-red-600">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-
-                    <div id="uploadPlaceholder" class="flex flex-col items-center justify-center">
-                        <div
-                            class="mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-gray-100 transition group-hover:bg-gray-200">
-                            <i class="fa-regular fa-image text-2xl text-gray-400"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-500">Click to upload image</p>
-                        <p class="mt-1 text-xs text-gray-400">PNG, JPG, WEBP up to 2MB</p>
-                    </div>
-                </div>
-
-                <input type="file" id="imageInput" name="image" accept="image/png, image/jpeg, image/webp"
-                    class="hidden">
-            </div>
-        </div>
-
         {{-- Bottom Action Buttons --}}
-        <div class="xl:col-span-12">
-            <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-end">
-                <button type="button" onclick="window.location='{{ route('post') }}'"
-                    class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
-                    Cancel
-                </button>
+        <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-end">
+            <button type="button" onclick="window.location='{{ route('post') }}'"
+                class="rounded-md border border-gray-300 px-4 py-2 text-xs font-medium text-gray-600 transition hover:bg-gray-100">
+                Cancel
+            </button>
 
-                <x-form-status-buttons />
-            </div>
+            <x-form-status-buttons />
         </div>
     </form>
 
@@ -269,9 +262,10 @@
 
         function openCategoryModal() {
             const modal = document.getElementById('categoryModal');
-            const modalBox = modal.querySelector('.scale-95');
+            const modalBox = modal.querySelector('.scale-95') || modal.children[0];
 
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
 
             setTimeout(() => {
                 modalBox.classList.remove('scale-95');
@@ -281,7 +275,7 @@
 
         function closeCategoryModal() {
             const modal = document.getElementById('categoryModal');
-            const modalBox = modal.querySelector('.scale-100');
+            const modalBox = modal.querySelector('.scale-100') || modal.children[0];
 
             if (modalBox) {
                 modalBox.classList.remove('scale-100');
@@ -290,6 +284,7 @@
 
             setTimeout(() => {
                 modal.classList.add('hidden');
+                modal.classList.remove('flex');
             }, 200);
         }
 
@@ -500,7 +495,8 @@
                     closeCategoryModal();
                     showToast('Category added successfully.');
                 } else {
-                    alert('Failed to add category.');
+                    const msg = data.message || 'Failed to add category.';
+                    alert(msg);
                 }
 
             } catch (error) {
