@@ -41,6 +41,36 @@ class CategoryController extends Controller
             ], 500);
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:100|unique:categories,name,' . $id
+            ]);
+
+            $category = Category::findOrFail($id);
+            $category->update([
+                'name' => $request->name,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'category' => $category,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors()['name'][0] ?? 'Validation error',
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update category.'
+            ], 500);
+        }
+    }
     
     public function destroy($id)
     {

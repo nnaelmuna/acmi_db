@@ -55,7 +55,7 @@ class MediaCategoryController extends Controller
             'description' => auth()->user()->name . ' created a media category',
         ]);
 
-        if ($request->expectsJson()) {
+        if ($request->ajax() || $request->expectsJson()) {
             return response()->json(['success' => true, 'category' => $category]);
         }
 
@@ -67,7 +67,7 @@ class MediaCategoryController extends Controller
         $category = MediaCategory::findOrFail($id);
 
         if ($category->is_default) {
-            return back()->with('success', 'Default category cannot be edited');
+            return response()->json(['success' => false, 'message' => 'Default category cannot be edited'], 403);
         }
 
         $request->validate([
@@ -85,6 +85,13 @@ class MediaCategoryController extends Controller
             'description' => auth()->user()->name . ' updated a media category',
         ]);
 
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'category' => $category
+            ]);
+        }
+
         return back()->with('success', 'Category updated successfully');
     }
 
@@ -99,7 +106,7 @@ class MediaCategoryController extends Controller
             'description' => auth()->user()->name . ' deleted a media category',
         ]);
 
-        if ($request->expectsJson()) {
+        if ($request->ajax() || $request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Category deleted successfully',

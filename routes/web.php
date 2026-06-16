@@ -79,12 +79,7 @@ Route::middleware('auth')->group(function () {
     // Post Category
     Route::controller(CategoryController::class)->group(function () {
         Route::post('/post-categories', 'store')->name('categories.store');
-        Route::delete('/post-categories/{category}', 'destroy')->name('categories.destroy');
-    });
-
-    // Category Post
-    Route::controller(CategoryController::class)->group(function () {
-        Route::post('/post-categories', 'store')->name('categories.store');
+        Route::put('/post-categories/{category}', 'update')->name('categories.update');
         Route::delete('/post-categories/{category}', 'destroy')->name('categories.destroy');
     });
 
@@ -117,6 +112,7 @@ Route::middleware('auth')->group(function () {
     // Product Category
     Route::controller(ProductCategoryController::class)->group(function () {
         Route::post('/product-categories', 'store')->name('product.categories.store');
+        Route::put('/product-categories/{id}', 'update')->name('product.categories.update');
         Route::delete('/product-categories/{id}', 'destroy')->name('product.categories.destroy');
     });
 

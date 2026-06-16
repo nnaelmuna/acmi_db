@@ -183,12 +183,37 @@
                         id="category-item-{{ $category->id }}">
 
                         <div class="flex items-center justify-between normal-state-{{ $category->id }}">
-                            <span class="text-sm text-gray-700">{{ $category->name }}</span>
+                            <span class="text-sm text-gray-700 font-medium" id="category-name-label-{{ $category->id }}">
+                                {{ $category->name }}
+                            </span>
 
-                            <button type="button" onclick="askDeleteCategory({{ $category->id }})"
-                                class="ml-3 flex-shrink-0 text-gray-400 transition hover:text-red-500">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="startEditCategory({{ $category->id }}, '{{ $category->name }}')"
+                                    class="text-gray-400 transition hover:text-acmi-blueprimer">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </button>
+                                <button type="button" onclick="askDeleteCategory({{ $category->id }})"
+                                    class="text-gray-400 transition hover:text-red-500">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Edit State --}}
+                        <div class="edit-state-{{ $category->id }} hidden flex-col gap-2">
+                            <input type="text" id="edit-input-{{ $category->id }}"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
+                            
+                            <div class="flex justify-end gap-2">
+                                <button type="button" onclick="cancelEditCategory({{ $category->id }})"
+                                    class="text-xs font-medium text-gray-500 hover:text-gray-700">
+                                    Cancel
+                                </button>
+                                <button type="button" onclick="saveEditCategory({{ $category->id }})"
+                                    class="text-xs font-bold text-acmi-blueprimer hover:text-acmi-darkblue">
+                                    Save
+                                </button>
+                            </div>
                         </div>
 
                         <div class="hidden items-center justify-between gap-3 confirm-state-{{ $category->id }}">
@@ -487,7 +512,8 @@
         }
 
         function askDeleteCategory(id) {
-            document.querySelector(`.normal-state-${id}`).classList.add('hidden');
+            document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll(`.edit-state-${id}`).forEach(el => el.classList.add('hidden'));
 
             const confirmState = document.querySelector(`.confirm-state-${id}`);
             confirmState.classList.remove('hidden');
@@ -499,8 +525,72 @@
             confirmState.classList.add('hidden');
             confirmState.classList.remove('flex');
 
-            document.querySelector(`.normal-state-${id}`).classList.remove('hidden');
-            document.querySelector(`.normal-state-${id}`).classList.add('flex');
+            document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.remove('hidden'));
+        }
+
+        function startEditCategory(id, currentName) {
+            document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll(`.confirm-state-${id}`).forEach(el => el.classList.add('hidden'));
+
+            const editState = document.querySelector(`.edit-state-${id}`);
+            const input = document.getElementById(`edit-input-${id}`);
+
+            editState.classList.remove('hidden');
+            editState.classList.add('flex');
+            input.value = currentName;
+            input.focus();
+        }
+
+        function cancelEditCategory(id) {
+            const editState = document.querySelector(`.edit-state-${id}`);
+            editState.classList.add('hidden');
+            editState.classList.remove('flex');
+            document.querySelectorAll(`.normal-state-${id}`).forEach(el => el.classList.remove('hidden'));
+        }
+
+        async function saveEditCategory(id) {
+            const input = document.getElementById(`edit-input-${id}`);
+            const newName = input.value.trim();
+
+            if (!newName) return;
+
+            try {
+                // Gunakan URL absolut untuk menghindari tabrakan rute
+                const response = await fetch(`${window.location.origin}/categories/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: newName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update label di modal
+                    const label = document.getElementById(`category-name-label-${id}`);
+                    if (label) label.innerText = data.category.name;
+                    
+                    // Update onclick param di tombol edit agar data barunya tersimpan
+                    const editBtn = document.querySelector(`.normal-state-${id} button[onclick^="startEditCategory"]`);
+                    if (editBtn) {
+                        const safeName = data.category.name.replace(/'/g, "\\'");
+                        editBtn.setAttribute('onclick', `startEditCategory(${id}, '${safeName}')`);
+                    }
+
+                    cancelEditCategory(id);
+                    showCategoryModalNotif('Category updated successfully');
+                } else {
+                    alert(data.message || 'Failed to update category');
+                }
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                alert('Update failed. Please check your connection or route.');
+            }
         }
 
         function confirmDeleteCategory(url, id) {
