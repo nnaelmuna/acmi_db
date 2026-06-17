@@ -16,26 +16,45 @@ class PostService
             $imagePath = $image->store('posts', 'public');
         }
 
-        $title = $data['title_en'] ?? $data['title_id'] ?? 'Untitled Post';
-        $description = $data['description_en'] ?? $data['description_id'] ?? null;
-        $content = $data['content_en'] ?? $data['content_id'] ?? null;
+        $title = $data['title_id']
+            ?? $data['title_en']
+            ?? 'Untitled Post';
+
+        $description = $data['description_id']
+            ?? $data['description_en']
+            ?? null;
+
+        $content = $data['content_id']
+            ?? $data['content_en']
+            ?? null;
 
         $post = Post::create([
             'title' => $title,
+        
             'slug' => Str::slug($title) . '-' . time(),
+        
+            'slug_id' => !empty($data['title_id'])
+                ? Str::slug($data['title_id'])
+                : null,
+        
+            'slug_en' => !empty($data['title_en'])
+                ? Str::slug($data['title_en'])
+                : null,
+        
             'description' => $description,
             'content' => $content,
-
+        
             'title_en' => $data['title_en'] ?? null,
             'description_en' => $data['description_en'] ?? null,
             'content_en' => $data['content_en'] ?? null,
-
+        
             'title_id' => $data['title_id'] ?? null,
             'description_id' => $data['description_id'] ?? null,
             'content_id' => $data['content_id'] ?? null,
-
+        
             'image' => $imagePath,
             'status' => $data['status'] ?? 'published',
+            'published_at' => now(),
         ]);
 
         if (!empty($data['categories'])) {
@@ -57,9 +76,17 @@ class PostService
             $imagePath = $image->store('posts', 'public');
         }
 
-        $title = $data['title_en'] ?? $data['title_id'] ?? $post->title;
-        $description = $data['description_en'] ?? $data['description_id'] ?? $post->description;
-        $content = $data['content_en'] ?? $data['content_id'] ?? $post->content;
+        $title = $data['title_id']
+            ?? $data['title_en']
+            ?? 'Untitled Post';
+
+        $description = $data['description_id']
+            ?? $data['description_en']
+            ?? null;
+
+        $content = $data['content_id']
+            ?? $data['content_en']
+            ?? null;
 
         $post->update([
             'title' => $title,
@@ -74,6 +101,14 @@ class PostService
             'title_id' => $data['title_id'] ?? null,
             'description_id' => $data['description_id'] ?? null,
             'content_id' => $data['content_id'] ?? null,
+
+            'slug_id' => !empty($data['title_id'])
+                ? Str::slug($data['title_id'])
+                : $post->slug_id,
+
+            'slug_en' => !empty($data['title_en'])
+                ? Str::slug($data['title_en'])
+                : $post->slug_en,
 
             'image' => $imagePath,
             'status' => $data['status'] ?? $post->status,

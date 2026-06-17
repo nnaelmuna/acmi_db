@@ -14,5 +14,9 @@ class Faq extends Model
         'question',
         'answer',
         'status',
+        'question_en',
+        'question_id',
+        'answer_en',
+        'answer_id'
     ];
 }
