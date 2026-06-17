@@ -1,20 +1,16 @@
 @extends('layouts.app')
 
-@section('title', isset($product) ? 'Edit Product - ACMI' : 'New Product - ACMI')
+@section('title', 'New Product - ACMI')
 
-@section('page_title', isset($product) ? 'Edit Product' : 'New Product')
+@section('page_title', 'New Product')
 
 @section('content')
 
 
     <div class="max-w-6xl mx-auto pb-10">
-        {{-- Update atau ke Store --}}
-        <form action="{{ isset($product) ? route('product.update', $product->id) : route('product.store') }}" method="POST"
-            enctype="multipart/form-data" id="productForm">
+        {{-- Store --}}
+        <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data" id="productForm">
             @csrf
-            @if (isset($product))
-                @method('PUT')
-            @endif
 
             <div>
                 {{-- Info --}}
@@ -45,11 +41,15 @@
 
                             <div id="category-hidden-inputs"></div>
                         </div>
+
+                        @error('category')
+                            <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">Product Title</label>
-                        <input type="text" name="title" value="{{ old('title', $product->title ?? '') }}"
+                        <input type="text" name="title" value="{{ old('title') }}"
                             placeholder="Green Energy Solutions"
                             class="w-full rounded-md border {{ $errors->has('title') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
                         @error('title')
@@ -59,8 +59,7 @@
 
                     <div>
                         <label class="block text-sm font-bold text-gray-800 mb-2">Company Name</label>
-                        <input type="text" name="company_name"
-                            value="{{ old('company_name', $product->company_name ?? '') }}"
+                        <input type="text" name="company_name" value="{{ old('company_name') }}"
                             placeholder="PT Energi Hijau Indonesia"
                             class="w-full rounded-md border {{ $errors->has('company_name') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
                         @error('company_name')
@@ -86,12 +85,7 @@
 
                             <div id="preview-slot-1"
                                 class="w-32 h-40 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 relative shadow-sm">
-                                @if (isset($product) && $product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}"
-                                        class="w-full h-full object-cover">
-                                @else
-                                    <span class="text-[12px] font-medium text-gray-400">Image 1</span>
-                                @endif
+                                <span class="text-[12px] font-medium text-gray-400">Image 1</span>
                             </div>
 
                             <div id="preview-slot-2"
@@ -104,13 +98,23 @@
                                 <span class="text-[12px] font-medium text-gray-400">Image 3</span>
                             </div>
                         </div>
+
+                        @error('product_images')
+                            <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                        @enderror
+
+                        @error('product_images.*')
+                            <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="md:col-span-4">
                         <label class="block text-sm font-bold text-gray-800 mb-3">CEO</label>
-                        <input type="text" name="ceo_name" value="{{ old('ceo_name', $product->ceo_name ?? '') }}"
-                            placeholder="Dewi Kusuma"
+                        <input type="text" name="ceo_name" value="{{ old('ceo_name') }}" placeholder="Dewi Kusuma"
                             class="w-full rounded-md border {{ $errors->has('ceo_name') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
+                        @error('ceo_name')
+                            <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -118,7 +122,10 @@
                 <div class="mb-8">
                     <label class="block text-sm font-bold text-gray-800 mb-2">Product Description</label>
                     <textarea name="description" rows="4" placeholder="Green Energy Solution provides..."
-                        class="w-full rounded-sm border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-200' }} p-4 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none shadow-sm text-sm leading-relaxed">{{ old('description', $product->description ?? '') }}</textarea>
+                        class="w-full rounded-sm border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-200' }} p-4 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none shadow-sm text-sm leading-relaxed">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Features & Contact --}}
@@ -128,8 +135,8 @@
                     <div class="space-y-4">
                         <h3 class="text-sm font-bold text-gray-800">Key Features</h3>
                         <div id="feature-container" class="space-y-3">
-                            @if (isset($product) && $product->features)
-                                @foreach ($product->features as $feature)
+                            @if (old('features'))
+                                @foreach (old('features') as $feature)
                                     <div
                                         class="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
                                         <div
@@ -172,8 +179,7 @@
                                     <div class="w-10 h-10 flex items-center justify-center">
                                         <i class="fas fa-globe text-gray-800"></i>
                                     </div>
-                                    <input type="text" name="website"
-                                        value="{{ old('website', $product->website ?? '') }}"
+                                    <input type="text" name="website" value="{{ old('website') }}"
                                         placeholder="https://energihijau.co.id"
                                         class="w-full rounded-md border {{ $errors->has('website') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
                                 </div>
@@ -189,8 +195,7 @@
                                     <div class="w-10 h-10 flex items-center justify-center">
                                         <i class="fas fa-envelope text-gray-800"></i>
                                     </div>
-                                    <input type="email" name="email"
-                                        value="{{ old('email', $product->email ?? '') }}"
+                                    <input type="email" name="email" value="{{ old('email') }}"
                                         placeholder="contact@energihijau.co.id"
                                         class="w-full rounded-md border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
                                 </div>
@@ -206,9 +211,9 @@
                                     <div class="w-10 h-10 flex items-center justify-center">
                                         <i class="fas fa-phone text-gray-800"></i>
                                     </div>
-                                    <input type="text" name="phone"
-                                        value="{{ old('phone', $product->phone ?? '') }}" placeholder="+62 21 5555 0202"
-                                        inputmode="tel" oninput="this.value = this.value.replace(/[^0-9+\-\s()]/g, '')"
+                                    <input type="text" name="phone" value="{{ old('phone') }}"
+                                        placeholder="+62 21 5555 0202" inputmode="tel"
+                                        oninput="this.value = this.value.replace(/[^0-9+\-\s()]/g, '')"
                                         class="w-full rounded-md border {{ $errors->has('phone') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
                                 </div>
                                 @error('phone')
@@ -222,8 +227,7 @@
                                     <div class="w-10 h-10 flex items-center justify-center">
                                         <i class="fa-solid fa-location-dot text-gray-800"></i>
                                     </div>
-                                    <input type="text" name="address"
-                                        value="{{ old('address', $product->address ?? '') }}"
+                                    <input type="text" name="address" value="{{ old('address') }}"
                                         placeholder="Sekretariat ACMI Jakarta, Indonesia"
                                         class="w-full rounded-md border {{ $errors->has('address') ? 'border-red-500' : 'border-gray-300' }} py-2 px-3 caret-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20 focus:border-acmi-blueprimer outline-none">
                                 </div>
@@ -275,19 +279,30 @@
         let uploadedFiles = [];
 
         function handleImageUpload(input) {
-            if (input.files && input.files.length > 0) {
-                const newFiles = Array.from(input.files);
+            if (!input.files || input.files.length === 0) return;
 
-                newFiles.forEach(file => {
-                    if (uploadedFiles.length < 3) {
-                        uploadedFiles.push(file);
-                    }
-                });
+            const newFiles = Array.from(input.files);
 
-                input.value = '';
+            newFiles.forEach(file => {
+                if (uploadedFiles.length < 3) {
+                    uploadedFiles.push(file);
+                }
+            });
 
-                renderPreviews();
-            }
+            syncFileInput();
+            renderPreviews();
+
+            input.value = '';
+        }
+
+        function syncFileInput() {
+            const dt = new DataTransfer();
+
+            uploadedFiles.forEach(file => {
+                dt.items.add(file);
+            });
+
+            document.getElementById('mainImageInput').files = dt.files;
         }
 
         function renderPreviews() {
@@ -298,34 +313,31 @@
                 const file = uploadedFiles[i - 1];
 
                 if (file) {
-                    const reader = new FileReader(); //preview image sblm submit
+                    const reader = new FileReader();
                     reader.onload = e => {
                         slot.innerHTML = `
-                    <img src="${e.target.result}" class="w-full h-full object-cover">
-                    <button type="button" onclick="removeImage(${i-1})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center shadow-lg">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
+                            <img src="${e.target.result}" class="w-full h-full object-cover">
+                            <button type="button" onclick="removeImage(${i - 1})" class="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center shadow-lg">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i-1]}</span>`;
+                    slot.innerHTML = `<span class="text-[12px] font-medium text-gray-400">${defaultLabels[i - 1]}</span>`;
                 }
             }
         }
 
         function removeImage(index) {
             uploadedFiles.splice(index, 1);
+            syncFileInput();
             renderPreviews();
         }
 
-        document.getElementById('productForm').onsubmit = function(e) {
-            if (uploadedFiles.length > 0) {
-                const dt = new DataTransfer();
-                uploadedFiles.forEach(f => dt.items.add(f));
-                document.getElementById('mainImageInput').files = dt.files;
-            }
-        };
+        document.getElementById('productForm').addEventListener('submit', function() {
+            syncFileInput();
+        });
 
         // --- 4. REAL-TIME ERROR REMOVAL ---
         document.querySelectorAll('input, textarea, select').forEach(el => {
@@ -341,7 +353,7 @@
     </script>
 
     <script>
-        let selectedCategories = @json(old('category', isset($product) && is_array($product->category) ? $product->category : []));
+        let selectedCategories = @json(old('category', []));
 
         document.addEventListener('DOMContentLoaded', function() {
             renderCategoryTags();
@@ -388,13 +400,13 @@
 
             selectedCategories.forEach((cat, index) => {
                 tagContainer.innerHTML += `
-            <div class="flex items-center gap-2 bg-gray-100 px-2 py-1 rounded-md text-xs font-medium text-gray-700 border border-gray-200">
-                ${cat}
-                <button type="button" onclick="removeCategory(${index})" class="text-gray-400 hover:text-red-500">
-                    <i class="fas fa-times text-[10px]"></i>
-                </button>
-            </div>
-        `;
+                    <div class="flex items-center gap-2 bg-gray-100 px-2 py-1 rounded-md text-xs font-medium text-gray-700 border border-gray-200">
+                        ${cat}
+                        <button type="button" onclick="removeCategory(${index})" class="text-gray-400 hover:text-red-500">
+                            <i class="fas fa-times text-[10px]"></i>
+                        </button>
+                    </div>
+                `;
                 hiddenContainer.innerHTML += `<input type="hidden" name="category[]" value="${cat}">`;
             });
         }
