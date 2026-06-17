@@ -7,10 +7,9 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Services\TabFilterService;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -64,8 +63,7 @@ class ProductController extends Controller
         $request->validate([
             'title'            => 'required|string|max:255',
             'company_name'     => 'required|string|max:255',
-            'category' => 'required|array|min:1|max:3',
-            'category.max' => 'Maximum 3 categories allowed.',
+            'category'         => 'required|array|min:1|max:3',
             'ceo_name'         => 'required|string|max:255',
             'description'      => 'required|string',
 
@@ -81,37 +79,45 @@ class ProductController extends Controller
 
             'status'           => 'nullable|in:draft,published,archived',
             'address'          => 'required|string|max:255',
-            'title_en'         => 'nullable|string|max:255',
-            'title_id'         => 'nullable|string|max:255',
-            'description_en'   => 'nullable|string',
-            'description_id'   => 'nullable|string',
-            'features_en'      => 'nullable|array',
-            'features_id'      => 'nullable|array',
         ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
+
             'website.required' => 'Website is required.',
             'website.url' => 'Website must be a valid URL.',
+
             'email.required' => 'Email is required.',
+            'email.email' => 'Email must be a valid email address.',
+
             'phone.required' => 'Phone number is required.',
             'phone.regex' => 'Phone number must be a valid phone number.',
+
             'address.required' => 'Address is required.',
+
+            'product_images.required' => 'Please upload at least one product image.',
+            'product_images.max' => 'Maximum 3 images allowed.',
+            'product_images.*.image' => 'Uploaded file must be an image.',
+            'product_images.*.mimes' => 'Image must be jpg, jpeg, png, or webp.',
+            'product_images.*.max' => 'Image size must not exceed 2MB.',
         ]);
 
         $data = $request->except(['product_images']);
 
         if ($request->hasFile('product_images')) {
             $imagePaths = [];
+
             foreach ($request->file('product_images') as $file) {
-                $imagePaths[] = $file->store('products', 'public');
+                if ($file && $file->isValid()) {
+                    $imagePaths[] = $file->store('products', 'public');
+                }
             }
-            $data['image']  = $imagePaths[0];
+
+            $data['image'] = $imagePaths[0] ?? null;
             $data['images'] = $imagePaths;
         }
 
         Product::create($data);
 
-        // Menggunakan Facade Auth yang aman dari error VS Code
         ActivityLog::create([
             'user_id' => Auth::id(),
             'activity_type' => 'product',
@@ -124,6 +130,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::withTrashed()->findOrFail($id);
+
         return view('product-show', compact('product'));
     }
 
@@ -131,23 +138,37 @@ class ProductController extends Controller
     {
         $product = Product::withTrashed()->findOrFail($id);
         $categories = ProductCategory::all();
+
         return view('product-edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withTrashed()->findOrFail($id);
 
         $request->validate([
-            'title'        => 'required|string|max:255',
-            'company_name' => 'required|string|max:255',
-            'category' => 'required|array|min:1|max:3',
-            'category.max' => 'Maximum 3 categories allowed.',
-            'ceo_name'     => 'required|string|max:255',
-            'description'  => 'required|string',
+            'title'            => 'required|string|max:255',
+            'company_name'     => 'required|string|max:255',
+            'category'         => 'required|array|min:1|max:3',
+            'ceo_name'         => 'required|string|max:255',
+            'description'      => 'required|string',
 
-            'features'     => 'required|array|min:1',
-            'features.*'   => 'required|string|max:255',
+            'features'         => 'required|array|min:1',
+            'features.*'       => 'required|string|max:255',
+
+            'website'          => 'required|url',
+            'email'            => 'required|email',
+            'phone'            => ['required', 'regex:/^[0-9+\-\s()]{8,20}$/'],
+            'address'          => 'nullable|string|max:255',
+
+            'existing_images'  => 'nullable|array|max:3',
+            'product_images'   => 'nullable|array|max:3',
+            'product_images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'status'           => 'nullable|in:draft,published,archived',
+        ], [
+            'category.required' => 'Please select at least one category.',
+            'category.max' => 'Maximum 3 categories allowed.',
 
             'website'      => 'required|url',
             'email'        => 'required|email',
@@ -163,37 +184,64 @@ class ProductController extends Controller
         ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
+
             'website.required' => 'Website is required.',
             'website.url' => 'Website must be a valid URL.',
+
             'email.required' => 'Email is required.',
+            'email.email' => 'Email must be a valid email address.',
+
             'phone.required' => 'Phone number is required.',
             'phone.regex' => 'Phone number must be a valid phone number.',
+
+            'product_images.max' => 'Maximum 3 images allowed.',
+            'product_images.*.image' => 'Uploaded file must be an image.',
+            'product_images.*.mimes' => 'Image must be jpg, jpeg, png, or webp.',
+            'product_images.*.max' => 'Image size must not exceed 2MB.',
         ]);
 
-        $finalImages = $request->input('existing_images', []); //ambil gambar lama yang masih dipertahankan
+        $oldImagesInDb = [];
 
-        $oldImagesInDb = $product->images ?? [];
+        if (is_array($product->images)) {
+            $oldImagesInDb = $product->images;
+        } elseif (is_string($product->images)) {
+            $decodedImages = json_decode($product->images, true);
+            $oldImagesInDb = is_array($decodedImages) ? $decodedImages : [];
+        }
+
+        if (empty($oldImagesInDb) && $product->image) {
+            $oldImagesInDb = [$product->image];
+        }
+
+        $finalImages = $request->has('existing_images')
+            ? $request->input('existing_images', [])
+            : $oldImagesInDb;
+
         foreach ($oldImagesInDb as $oldPath) {
             if (!in_array($oldPath, $finalImages)) {
-                Storage::disk('public')->delete($oldPath); //hapus dr storage
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
             }
         }
 
         if ($request->hasFile('product_images')) {
             foreach ($request->file('product_images') as $file) {
                 if ($file && $file->isValid() && count($finalImages) < 3) {
-                    $finalImages[] = $file->store('products', 'public'); //ambil img br simpen di storage/app/public/products
+                    $finalImages[] = $file->store('products', 'public');
                 }
             }
         }
 
-        $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null; //img pertama jd thumbnail
+        $finalImages = array_values(array_unique(array_slice($finalImages, 0, 3)));
 
-        $product->update([ //semua data simpan
+        $mainThumbnail = !empty($finalImages) ? $finalImages[0] : null;
+
+        $product->update([
             'status'       => $request->input('status', $product->status),
             'category'     => $request->category,
             'title'        => $request->title,
-            'company_name' => $company_name = $request->company_name,
+            'company_name' => $request->company_name,
             'ceo_name'     => $request->ceo_name,
             'description'  => $request->description,
             'image'        => $mainThumbnail,
@@ -212,7 +260,7 @@ class ProductController extends Controller
             'features_id'    => $request->features_id,
         ]);
 
-        ActivityLog::create([ //buat histori kl misal kita update product
+        ActivityLog::create([
             'user_id' => Auth::id(),
             'activity_type' => 'product',
             'description' => Auth::user()->name . ' updated a product',
@@ -251,20 +299,29 @@ class ProductController extends Controller
             ->with('success', 'Product restored successfully');
     }
 
-    public function forceDelete($id) // permanen delete
+    public function forceDelete($id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
 
-        if ($product->images && is_array($product->images)) {
-            foreach ($product->images as $image) {
-                if ($image && Storage::disk('public')->exists($image)) {
-                    Storage::disk('public')->delete($image);
-                }
-            }
+        $imagesToDelete = [];
+
+        if (is_array($product->images)) {
+            $imagesToDelete = $product->images;
+        } elseif (is_string($product->images)) {
+            $decodedImages = json_decode($product->images, true);
+            $imagesToDelete = is_array($decodedImages) ? $decodedImages : [];
         }
 
-        if ($product->image && Storage::disk('public')->exists($product->image)) {
-            Storage::disk('public')->delete($product->image);
+        if ($product->image) {
+            $imagesToDelete[] = $product->image;
+        }
+
+        $imagesToDelete = array_unique($imagesToDelete);
+
+        foreach ($imagesToDelete as $image) {
+            if ($image && Storage::disk('public')->exists($image)) {
+                Storage::disk('public')->delete($image);
+            }
         }
 
         $product->forceDelete();

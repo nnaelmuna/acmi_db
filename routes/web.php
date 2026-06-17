@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Api\ApifyWebhookController;
 
+
 Route::prefix('public')->controller(PublicContentController::class)->group(function () {
     Route::get('/articles', 'getArticles')->name('public.articles');
     Route::get('/articles/{slug}', 'getArticleDetail')->name('public.articles.detail');
@@ -171,7 +172,15 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{id}/force-delete', 'forceDelete')->name('members.forceDelete');
     });
 
-    Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription');;
+    Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::patch('/subscription/{id}/update-status', [SubscriptionController::class, 'updateStatus'])->name('subscription.updateStatus');
+    Route::get('/subscription/{id}/restore', [SubscriptionController::class, 'restore'])->name('subscription.restore');
+    Route::get('/subscription/{id}/force-delete', [SubscriptionController::class, 'forceDelete'])->name('subscription.forceDelete');
+    Route::get('/subscription/{id}/destroy', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+    Route::delete('/subscription/{id}/destroy', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+    Route::delete('/subscription/{id}/force-delete', [SubscriptionController::class, 'forceDelete'])->name('subscription.forceDelete');
+    Route::patch('/subscription/{id}/update-detail', [SubscriptionController::class, 'updateDetail'])->name('subscription.updateDetail');
+
 
     // Settings Config
     Route::get('/settings-config', [SettingsController::class, 'index'])->name('settings.index');
