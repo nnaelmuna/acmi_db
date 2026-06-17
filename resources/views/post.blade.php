@@ -12,8 +12,7 @@
             <img src="{{ asset('assets/icons/search.svg') }}" alt="Search"
                 class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 object-contain opacity-60">
 
-            <input id="postSearchInput" type="text" name="search" value="{{ request('search') }}"
-                placeholder="Search posts"
+            <input id="postSearchInput" type="text" name="search" value="{{ request('search') }}" placeholder="Search posts"
                 class="w-full rounded-full border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-700 placeholder:text-gray-400 focus:border-acmi-blueprimer focus:outline-none focus:ring-2 focus:ring-acmi-blueprimer/20">
         </div>
     </form>
@@ -70,7 +69,7 @@
                         <span class="rounded-md bg-[#EEF2FF] px-2 py-1 text-[11px] font-medium text-gray-700">Date</span>
                     </div>
 
-                    {{-- Titik 3  --}}
+                    {{-- Titik 3 --}}
                     <div class="col-span-1 flex justify-center">
                         <div class="relative" id="bulkActionWrapper">
                             <button type="button" id="bulkActionBtn" onclick="toggleBulkMenu()"
@@ -105,8 +104,7 @@
                                             {{ $post->title }}
                                         </span>
                                     @else
-                                        <a href="{{ route('post.edit', $post) }}"
-                                            class="hover:text-acmi-blueprimer transition">
+                                        <a href="{{ route('post.edit', $post) }}" class="hover:text-acmi-blueprimer transition">
                                             {{ $post->title }}
                                         </a>
                                     @endif
@@ -218,7 +216,7 @@
 @push('scripts')
     <script>
         // Select All
-        document.getElementById('selectAll').addEventListener('change', function() {
+        document.getElementById('selectAll').addEventListener('change', function () {
             const checkboxes = document.querySelectorAll('.post-checkbox');
             checkboxes.forEach(cb => {
                 cb.checked = this.checked;
@@ -229,7 +227,7 @@
 
         // Select individual
         document.querySelectorAll('.post-checkbox').forEach(cb => {
-            cb.addEventListener('change', function() {
+            cb.addEventListener('change', function () {
                 this.closest('.row-item').classList.toggle('bg-blue-50', this.checked);
 
                 const all = document.querySelectorAll('.post-checkbox');
@@ -270,8 +268,8 @@
             document.getElementById('bulk_delete_ids').value = JSON.stringify(ids);
             document.getElementById('bulkDeleteMessage').innerText =
                 '{{ request('status') === 'trash'
-                    ? 'Permanently delete selected post(s)? This data cannot be recovered!'
-                    : 'Are you sure want to move selected post(s) to trash?' }}';
+        ? 'Permanently delete selected post(s)? This data cannot be recovered!'
+        : 'Are you sure want to move selected post(s) to trash?' }}';
 
             const modal = document.getElementById('bulkDeleteModal');
             const box = document.getElementById('bulkDeleteBox');
@@ -307,7 +305,7 @@
         }
 
         // Tutup semua dropdown kalau klik luar
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('[id^="action-wrapper-"]')) {
                 document.querySelectorAll('[id^="action-menu-"]').forEach(m => m.classList.add('hidden'));
             }
@@ -321,7 +319,7 @@
         let searchTimer;
 
         if (postSearchInput) {
-            postSearchInput.addEventListener('input', function() {
+            postSearchInput.addEventListener('input', function () {
                 clearTimeout(searchTimer);
 
                 searchTimer = setTimeout(() => {

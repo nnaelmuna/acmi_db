@@ -66,8 +66,7 @@
                         <i class="fas fa-user mr-3"></i>Members
                     </a>
 
-                    <a href="{{ route('subscription') }}"
-                        class="pl-[52px] py-2 text-[14px]
+                    <a href="{{ route('subscription.index') }}" class="pl-[52px] py-2 text-[14px]
                         {{ request()->routeIs('subscription-screen.*') ? 'text-acmi-softblue font-semibold' : 'text-white' }}
                         hover:text-acmi-softblue transition-colors duration-200">
                         <i class="fas fa-credit-card mr-3"></i>Subscription
