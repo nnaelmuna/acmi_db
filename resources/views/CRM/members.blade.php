@@ -45,7 +45,6 @@
                 [
                     'label' => 'All Member',
                     'value' => 'all',
-                    // Menggabungkan count yang bukan trash sebagai 'All'
                     'count' =>
                         ($statusCounts['published'] ?? 0) +
                         ($statusCounts['draft'] ?? 0) +
@@ -68,6 +67,12 @@
                 <table class="min-w-[1200px] w-full text-left border-collapse">
                     <thead class="bg-acmi-softblue text-[10px] border-b border-acmi-bordercolor font-bold text-black">
                         <tr>
+                            {{-- Checkbox Select All --}}
+                            <th class="p-4 w-10 text-center border-r border-acmi-bordercolor">
+                                <input type="checkbox" id="selectAll"
+                                    class="rounded border-acmi-bordercolor text-acmi-blueprimer focus:ring-acmi-blueprimer cursor-pointer">
+                            </th>
+
                             <th class="p-4 border-r border-acmi-bordercolor">
                                 <span class="flex items-center gap-2 font-base text-[12px]">
                                     <i class="far fa-user text-acmi-blueprimer"></i> Profile
@@ -114,7 +119,17 @@
 
                     <tbody class="text-sm text-gray-700">
                         @forelse($members as $item)
-                            <tr class="border-b border-acmi-bordercolor/70 hover:bg-acmi-softblue/30 transition">
+                            <tr class="border-b border-acmi-bordercolor/70 hover:bg-acmi-softblue/30 transition cursor-pointer"
+                                onclick="openDetailModal({{ $item->id }})">
+                                
+                                {{-- Individual Checkbox dengan Stop Propagation --}}
+                                <td class="p-4 text-center border-r border-acmi-bordercolor/70"
+                                    onclick="event.stopPropagation()">
+                                    <input type="checkbox"
+                                        class="member-checkbox rounded border-acmi-bordercolor text-acmi-blueprimer focus:ring-acmi-blueprimer cursor-pointer"
+                                        value="{{ $item->id }}">
+                                </td>
+                                
                                 <td class="p-4 border-r border-acmi-bordercolor/70">
                                     <p class="font-bold text-gray-800">{{ $item->name }}</p>
                                     <p class="text-[10px] text-gray-400">
@@ -135,24 +150,23 @@
                                     </div>
                                 </td>
 
-                                <td class="p-4 border-r border-acmi-bordercolor/70">
+                                <td class="p-4 border-r border-acmi-bordercolor/70 font-medium">
                                     {{ $item->company_name ?? '-' }}
                                 </td>
 
                                 <td class="p-4 border-r border-acmi-bordercolor/70 text-center">
-                                    <span
-                                        class="rounded-full bg-acmi-softblue px-3 py-1 text-[10px] font-bold text-acmi-blueprimer">
+                                    <span class="rounded-full bg-acmi-softblue px-3 py-1 text-[10px] font-bold text-acmi-blueprimer">
                                         {{ $item->industry ?? '-' }}
                                     </span>
                                 </td>
 
-                                <td class="p-4 border-r border-acmi-bordercolor/70">
+                                <td class="p-4 border-r border-acmi-bordercolor/70 text-gray-500">
                                     {{ $item->position ?? '-' }}
                                 </td>
 
                                 <td class="p-4 border-r border-acmi-bordercolor/70">
                                     @if ($item->company_url)
-                                        <a href="{{ $item->company_url }}" target="_blank"
+                                        <a href="{{ $item->company_url }}" onclick="event.stopPropagation()" target="_blank"
                                             class="text-acmi-blueprimer border border-acmi-blueaccent/30 rounded-full px-3 py-1 text-[10px] bg-acmi-softblue/40 flex items-center w-fit gap-2 hover:bg-acmi-softblue transition">
                                             <i class="fas fa-link text-[8px]"></i>
                                             {{ Str::limit($item->company_url, 24) }}
@@ -162,7 +176,7 @@
                                     @endif
                                 </td>
 
-                                <td class="p-4 text-center">
+                                <td class="p-4 text-center" onclick="event.stopPropagation()">
                                     <div class="relative inline-block text-left group">
                                         @if (request('status') === 'trash')
                                             <button type="button"
@@ -193,32 +207,13 @@
                                                 Action
                                                 <i class="fas fa-chevron-down text-[8px] ml-1"></i>
                                             </button>
-
-                                            <div
-                                                class="absolute right-0 mt-1 w-40 bg-white border border-acmi-bordercolor rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] overflow-hidden">
-                                                <button type="button" onclick="openViewModal({{ $item->id }})"
-                                                    class="flex items-center w-full px-4 py-2.5 text-[11px] font-semibold text-acmi-blueprimer hover:bg-acmi-softblue transition">
-                                                    <i class="far fa-eye mr-2"></i> View Detail
-                                                </button>
-
-                                                <button type="button" onclick="openEditModal({{ $item->id }})"
-                                                    class="flex items-center w-full px-4 py-2.5 text-[11px] font-semibold text-green-600 hover:bg-green-50 transition border-t border-acmi-bordercolor/50">
-                                                    <i class="far fa-edit mr-2"></i> Edit
-                                                </button>
-
-                                                <button type="button"
-                                                    onclick="openDeleteModal('{{ route('members.destroy', $item->id) }}', 'Move this member to trash?')"
-                                                    class="flex items-center w-full px-4 py-2.5 text-[11px] font-semibold text-red-600 hover:bg-red-50 transition border-t border-acmi-bordercolor/50">
-                                                    <i class="far fa-trash-alt mr-2"></i> Delete
-                                                </button>
-                                            </div>
                                         @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="p-10 text-center text-gray-400 italic">
+                                <td colspan="8" class="p-10 text-center text-gray-400 italic">
                                     No members found.
                                 </td>
                             </tr>
@@ -227,20 +222,22 @@
                 </table>
             </div>
 
-            <div class="mt-auto">
+            <div class="mt-auto pt-4">
                 <x-pagination :paginator="$members" />
             </div>
         </div>
     </div>
 
-    <div id="viewModal" onclick="closeModal('viewModal')"
-        class="hidden fixed inset-0 z-[100] bg-black/50 items-center justify-center p-4 backdrop-blur-sm">
-        <div onclick="event.stopPropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden m-4">
-            <div class="flex items-center justify-between p-6 border-b border-acmi-bordercolor bg-acmi-softblue/20">
-                <h3 class="text-lg font-bold text-gray-800">Member Detail Information</h3>
-                <button onclick="closeModal('viewModal')"
-                    class="text-acmi-blueprimer hover:text-acmi-darkblue transition">
-                    <i class="fas fa-times text-lg"></i>
+    {{-- Detail Modal Pop-up --}}
+    <div id="detailModal" onclick="closeDetailModal()"
+        class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[999] backdrop-blur-sm">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl m-4">
+            <div class="p-6 border-b border-acmi-bordercolor flex justify-between items-center bg-acmi-softblue/20">
+                <h2 class="text-lg font-bold text-gray-800">Member Detail Information</h2>
+
+                <button onclick="closeDetailModal()" class="text-acmi-blueprimer hover:text-acmi-darkblue transition">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
 
@@ -252,34 +249,30 @@
 
                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Title</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_name">-</span>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Nama</label>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_name">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Email</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="view_email">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_email">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Nomor Telepon</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_phone">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_phone">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Linkedin Profile</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="view_linkedin">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_linkedin">-</span>
                             </div>
                         </div>
                     </div>
@@ -293,49 +286,43 @@
                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Perusahaan</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_company_name">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_company">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Jabatan</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_position">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_position">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Industri</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_industry">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_industry">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Website Perusahaan</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="view_company_url">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_url">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Jumlah Karyawan</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_employee_size">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_employee_size">-</span>
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Annual Revenue</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="view_annual_revenue">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_annual_revenue">-</span>
                             </div>
                         </div>
                     </div>
@@ -343,123 +330,18 @@
 
                 <div>
                     <h3 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-3">
-                        Motivasi & Referral
+                        Pesan / Catatan Tambahan
                     </h3>
 
                     <div class="space-y-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Motivasi</label>
-                            <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[100px] whitespace-pre-line items-start">
-                                <span id="view_message">-</span>
+                            <div class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[100px] whitespace-pre-line items-start">
+                                <span id="d_message">-</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div id="editModal" onclick="closeModal('editModal')"
-        class="hidden fixed inset-0 z-[100] bg-black/50 items-center justify-center p-4 backdrop-blur-sm">
-        <div onclick="event.stopPropagation()" class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b border-acmi-bordercolor bg-acmi-softblue/20">
-                <h3 class="text-lg font-bold text-gray-800">Edit Member</h3>
-                <button onclick="closeModal('editModal')"
-                    class="text-acmi-blueprimer hover:text-acmi-darkblue transition">
-                    <i class="fas fa-times text-lg"></i>
-                </button>
-            </div>
-
-            <form id="editForm" method="POST" action="">
-                @csrf
-                @method('PUT')
-
-                <input type="hidden" name="status" id="edit_status" value="published">
-
-                <div class="p-8 space-y-8 max-h-[70vh] overflow-y-auto">
-                    <div>
-                        <h4 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-4">
-                            Personal Information
-                        </h4>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Name</label>
-                                <input type="text" name="name" id="edit_name"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Email</label>
-                                <input type="email" name="email" id="edit_email"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Phone</label>
-                                <input type="text" name="phone" id="edit_phone"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">LinkedIn</label>
-                                <input type="text" name="linkedin" id="edit_linkedin"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-4">
-                            Company Information
-                        </h4>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Company Name</label>
-                                <input type="text" name="company_name" id="edit_company_name"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Industry</label>
-                                <input type="text" name="industry" id="edit_industry"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Position</label>
-                                <input type="text" name="position" id="edit_position"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] font-bold text-gray-800 block mb-1">Company URL</label>
-                                <input type="text" name="company_url" id="edit_company_url"
-                                    class="w-full rounded-xl border border-acmi-bordercolor px-4 py-2.5 text-sm outline-none focus:border-acmi-blueprimer focus:ring-2 focus:ring-acmi-blueprimer/20">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-6 bg-acmi-softblue/20 flex justify-end gap-3 border-t border-acmi-bordercolor">
-                    <button type="submit" onclick="setEditStatus('draft')"
-                        class="px-6 py-2.5 rounded-xl border border-acmi-bordercolor bg-white text-sm font-bold text-gray-600 hover:bg-acmi-softblue/40 transition">
-                        Save to Draft
-                    </button>
-
-                    <button type="submit" onclick="setEditStatus('archived')"
-                        class="px-6 py-2.5 rounded-xl border border-acmi-yellowaccent bg-white text-sm font-bold text-acmi-yellowaccent hover:bg-acmi-yellowaccent hover:text-white transition">
-                        Archive
-                    </button>
-
-                    <button type="submit" onclick="setEditStatus('published')"
-                        class="px-6 py-2.5 rounded-xl bg-acmi-blueprimer text-white text-sm font-bold hover:bg-acmi-darkblue transition">
-                        Publish Now
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -471,8 +353,47 @@
 
 @push('scripts')
     <script>
-        const successAlert = document.getElementById('successAlert');
+        // Logika Sinkronisasi Checkbox (Select All)
+        document.getElementById('selectAll').onclick = function() {
+            let checkboxes = document.querySelectorAll('.member-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        }
 
+        function openDetailModal(id) {
+            fetch(`/crm/members/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('d_name').innerText = data.name || '-';
+                    document.getElementById('d_email').innerText = data.email || '-';
+                    document.getElementById('d_phone').innerText = data.phone || '-';
+                    document.getElementById('d_linkedin').innerText = data.linkedin_url || data.linkedin || '-';
+
+                    document.getElementById('d_company').innerText = data.company_name || '-';
+                    document.getElementById('d_position').innerText = data.position || '-';
+                    document.getElementById('d_industry').innerText = data.industry || '-';
+                    document.getElementById('d_url').innerText = data.company_url || '-';
+                    document.getElementById('d_employee_size').innerText = data.employee_size || '-';
+                    document.getElementById('d_annual_revenue').innerText = data.annual_revenue || '-';
+
+                    document.getElementById('d_message').innerText = data.message || data.motivation_referral || '-';
+
+                    document.getElementById('detailModal').classList.remove('hidden');
+                    document.getElementById('detailModal').classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(error => {
+                    console.error("Gagal mengambil data detail:", error);
+                    Swal.fire('Oops!', 'Gagal memuat detail data.', 'error');
+                });
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        const successAlert = document.getElementById('successAlert');
         if (successAlert) {
             setTimeout(() => {
                 successAlert.style.opacity = '0';
@@ -484,90 +405,26 @@
             }, 3000);
         }
 
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
-        }
-
-        function openViewModal(id) {
-            fetch(`/crm/members/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('view_name').innerText = data.name || '-';
-                    document.getElementById('view_email').innerText = data.email || '-';
-                    document.getElementById('view_phone').innerText = data.phone || '-';
-                    document.getElementById('view_linkedin').innerText = data.linkedin_url || data.linkedin || '-';
-                    document.getElementById('view_company_name').innerText = data.company_name || '-';
-                    document.getElementById('view_industry').innerText = data.industry || '-';
-                    document.getElementById('view_position').innerText = data.position || '-';
-                    document.getElementById('view_company_url').innerText = data.company_url || '-';
-                    document.getElementById('view_employee_size').innerText = data.employee_size || '-';
-                    document.getElementById('view_annual_revenue').innerText = data.annual_revenue || '-';
-                    document.getElementById('view_message').innerText = data.message || '-';
-
-                    openModal('viewModal');
-                })
-                .catch(() => {
-                    Swal.fire('Error', 'Failed to load member detail.', 'error');
-                });
-        }
-
-        function openEditModal(id) {
-            fetch(`/crm/members/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('edit_name').value = data.name || '';
-                    document.getElementById('edit_email').value = data.email || '';
-                    document.getElementById('edit_phone').value = data.phone || '';
-                    document.getElementById('edit_linkedin').value = data.linkedin || '';
-                    document.getElementById('edit_company_name').value = data.company_name || '';
-                    document.getElementById('edit_industry').value = data.industry || '';
-                    document.getElementById('edit_position').value = data.position || '';
-                    document.getElementById('edit_company_url').value = data.company_url || '';
-                    document.getElementById('edit_status').value = data.status || 'published';
-
-                    document.getElementById('editForm').action = `/crm/members/${id}`;
-
-                    openModal('editModal');
-                })
-                .catch(() => {
-                    Swal.fire('Error', 'Failed to load member data.', 'error');
-                });
-        }
-
-        function setEditStatus(status) {
-            document.getElementById('edit_status').value = status;
-        }
-
-        function openDeleteModal(actionUrl, message = 'Are you sure want to delete this member?') {
+        function openDeleteModal(url, text) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: message,
+                title: `<span style="font-size: 18px; font-weight: 700;">Are you sure?</span>`,
+                text: text,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#1120B0',
+                confirmButtonColor: '#E15B5B',
                 cancelButtonColor: '#F3F4F6',
-                confirmButtonText: 'Yes, continue',
+                confirmButtonText: 'Yes, delete permanently',
                 cancelButtonText: 'Cancel',
                 reverseButtons: true,
                 customClass: {
                     popup: 'rounded-[23px] p-6',
-                    confirmButton: 'rounded-xl px-8 py-2.5 text-sm font-bold ml-2',
-                    cancelButton: 'rounded-xl px-8 py-2.5 text-sm font-bold text-gray-500'
+                    confirmButton: 'rounded-xl px-6 py-2.5 text-sm font-bold ml-2',
+                    cancelButton: 'rounded-lg px-6 py-2.5 text-sm font-bold text-gray-500'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const form = document.getElementById('delete-item-form');
-                    form.action = actionUrl;
+                    form.action = url;
                     form.submit();
                 }
             });

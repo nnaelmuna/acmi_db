@@ -19,17 +19,24 @@ return new class extends Migration
                 $table->longText('content_en')->nullable();
             }
         });
-    }
+    } 
 
     public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn(
-                array_filter(
-                    ['title_en', 'description_en', 'content_en'],
-                    fn($col) => Schema::hasColumn('posts', $col)
-                )
-            );
+    
+            if (Schema::hasColumn('posts', 'title_en')) {
+                $table->dropColumn('title_en');
+            }
+    
+            if (Schema::hasColumn('posts', 'description_en')) {
+                $table->dropColumn('description_en');
+            }
+    
+            if (Schema::hasColumn('posts', 'content_en')) {
+                $table->dropColumn('content_en');
+            }
+    
         });
     }
 };

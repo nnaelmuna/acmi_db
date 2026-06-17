@@ -344,7 +344,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Jumlah Karyawan</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_employee_size">{{ $inbound->employee_size ?? '-' }}</span>
+                                <span id="d_employee_size">-</span>
                             </div>
                         </div>
 
@@ -352,7 +352,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Annual Revenue</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
-                                <span id="d_annual_revenue">{{ $inbound->annual_revenue ?? '-' }}</span>
+                                <span id="d_annual_revenue">-</span>
                             </div>
                         </div>
                     </div>
@@ -368,7 +368,7 @@
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Motivasi</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[100px] whitespace-pre-line items-start">
-                                <span id="d_motivation_referral">{{ $inbound->motivation_referral ?? '-' }}</span>
+                                <span id="d_motivation_referral">-</span>
                             </div>
                         </div>
                     </div>
