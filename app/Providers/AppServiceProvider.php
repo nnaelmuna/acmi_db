@@ -7,11 +7,13 @@ use App\Models\MediaItem;
 use App\Models\MediaPartner;
 use App\Models\Post;
 use App\Models\Product;
+use App\Models\Testimonial;
 use App\Observers\FaqObserver;
 use App\Observers\MediaItemObserver;
 use App\Observers\MediaPartnerObserver;
 use App\Observers\PostObserver;
 use App\Observers\ProductObserver;
+use App\Observers\TestimonialObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,5 +36,6 @@ class AppServiceProvider extends ServiceProvider
         Product::observe(ProductObserver::class);
         MediaItem::observe(MediaItemObserver::class);
         MediaPartner::observe(MediaPartnerObserver::class);
+        Testimonial::observe(TestimonialObserver::class);
     }
 }

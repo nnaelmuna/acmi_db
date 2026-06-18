@@ -17,6 +17,7 @@ class Post extends Model
         'content',
         'image',
         'status',
+        'slug',
 
         'title_en',
         'description_en',
@@ -25,6 +26,11 @@ class Post extends Model
         'title_id',
         'description_id',
         'content_id',
+        'published_at'
+    ];
+
+    protected $casts = [
+        'published_at' => 'datetime',
     ];
     public function categories()
     {
