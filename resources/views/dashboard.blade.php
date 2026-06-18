@@ -119,11 +119,6 @@
                     <div class="space-y-4">
                         @forelse($latestMembers as $member)
                             <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 overflow-hidden rounded-full bg-gray-200">
-                                    <img src="{{ $member->photo ? asset('storage/' . $member->photo) : asset('assets/images/default-user.png') }}"
-                                        alt="{{ $member->name }}" class="h-full w-full object-cover">
-                                </div>
-
                                 <div class="min-w-0">
                                     <p class="truncate text-sm font-semibold text-gray-900">
                                         {{ $member->name }}
