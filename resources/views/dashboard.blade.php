@@ -65,7 +65,8 @@
             <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr] pb-10">
 
                 {{-- Recent Activity --}}
-                <div x-data="{ expanded: false }" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm relative">
+                <div x-data="{ expanded: false }"
+                    class="rounded-2xl border border-acmi-blueprimer bg-white p-5 shadow-sm relative">
                     <div class="mb-5 flex items-center justify-between">
                         <div>
                             <h4 class="text-lg font-semibold text-acmi-darkblue">
@@ -85,7 +86,9 @@
 
                     <div class="space-y-2">
                         @forelse($recentActivities as $index => $log)
-                            <div x-show="expanded || {{ $index }} < 5" x-transition.opacity style="{{ $index >= 5 ? 'display: none;' : '' }}" class="flex items-start gap-3 rounded-xl px-3 py-3 transition hover:bg-acmi-softblue/40">
+                            <div x-show="expanded || {{ $index }} < 5" x-transition.opacity
+                                style="{{ $index >= 5 ? 'display: none;' : '' }}"
+                                class="flex items-start gap-3 rounded-xl px-3 py-3 transition hover:bg-acmi-softblue/40">
                                 <div
                                     class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-acmi-softblue text-acmi-blueprimer">
                                     <i class="fas fa-clock-rotate-left text-sm"></i>
@@ -112,11 +115,14 @@
                         @endforelse
                     </div>
 
-                    @if($recentActivities->count() > 5)
-                        <button x-show="!expanded" @click="expanded = true" class="w-full mt-4 py-2 text-sm font-semibold text-acmi-blueprimer bg-acmi-softblue hover:bg-[#E0E7FF] rounded-xl transition-colors">
+                    @if ($recentActivities->count() > 5)
+                        <button x-show="!expanded" @click="expanded = true"
+                            class="w-full mt-4 py-2 text-sm font-semibold text-acmi-blueprimer bg-acmi-softblue hover:bg-[#E0E7FF] rounded-xl transition-colors">
                             View 5 More
                         </button>
-                        <button x-show="expanded" @click="expanded = false" class="w-full mt-4 py-2 text-sm font-semibold text-acmi-blueprimer bg-acmi-softblue hover:bg-[#E0E7FF] rounded-xl transition-colors" style="display: none;">
+                        <button x-show="expanded" @click="expanded = false"
+                            class="w-full mt-4 py-2 text-sm font-semibold text-acmi-blueprimer bg-acmi-softblue hover:bg-[#E0E7FF] rounded-xl transition-colors"
+                            style="display: none;">
                             View Less
                         </button>
                     @endif
