@@ -114,7 +114,7 @@
                     </div>
                 @empty
                     <div
-                        class="flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-acmi-bordercolor bg-white col-span-1 md:col-span-2">
+                        class="flex min-h-[520px] w-full items-center justify-center rounded-2xl border border-dashed border-acmi-bordercolor bg-white col-span-full">
                         <p class="text-sm italic text-gray-400">No Testimonial available yet.</p>
                     </div>
                 @endforelse
