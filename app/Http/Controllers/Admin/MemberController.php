@@ -37,7 +37,7 @@ class MemberController extends Controller
             $query->where('industry', $industry);
         }
 
-        $members = $query->latest()->paginate(10)->withQueryString();
+        $members = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
 
         $statusCounts = [
             'published' => Member::where('status', 'published')->count(),
@@ -128,5 +128,22 @@ class MemberController extends Controller
         return redirect()
             ->route('members.index', ['status' => 'trash'])
             ->with('success', 'Member permanently deleted successfully!');
+    }
+
+    public function updateSubStatus(Request $request, string $id)
+    {
+        $member = Member::findOrFail($id);
+        $request->validate([
+            'sub_status' => ['required', 'in:active,unactive'],
+        ]);
+
+        $member->update(['sub_status' => $request->sub_status]);
+
+        ActivityLog::create([
+            'activity_type' => 'Update Member Sub Status',
+            'description' => 'Updated member sub status: ' . $member->name,
+        ]);
+
+        return redirect()->back()->with('success', 'Member subscription status updated successfully!');
     }
 }

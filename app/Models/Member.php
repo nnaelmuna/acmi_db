@@ -10,11 +10,10 @@ class Member extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Tentukan nama tabel jika berbeda (opsional, Laravel otomatis anggap 'members')
     protected $table = 'members';
 
-    // Daftarkan kolom yang boleh diisi secara massal
     protected $fillable = [
+        'user_id',
         'name',
         'email',
         'phone',
@@ -23,10 +22,11 @@ class Member extends Model
         'position',
         'company_url',
         'linkedin_url',
-        'employee_size', 
+        'status',
+        'sub_status',
+        'employee_size',
         'annual_revenue',
         'message',
-        'status',
     ];
 
     // Jika kamu punya kolom yang harus bertipe date
