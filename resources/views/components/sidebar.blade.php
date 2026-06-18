@@ -26,6 +26,12 @@
                 <span class="text-[15px] font-medium text-white">Faq</span>
             </a>
 
+            <a href="{{ route('testimonial.index') }}"
+                class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('testimonial.*') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
+                <i class="fas fa-comments"></i>
+                <span class="text-[15px] font-medium text-white">Testimonial</span>
+            </a>
+
             <a href="{{ route('product.index') }}"
                 class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('product.index') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-box"></i>

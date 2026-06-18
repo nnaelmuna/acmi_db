@@ -40,7 +40,7 @@ class SubscriptionController extends Controller
             });
         }
 
-        $subscriptions = $query->latest()->paginate(10)->withQueryString();
+        $subscriptions = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
 
         // Format data tabs agar terbaca oleh komponen blade custom-tabs
         $tabs = [

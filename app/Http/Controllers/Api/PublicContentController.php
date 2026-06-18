@@ -16,6 +16,7 @@ use App\Models\Product;
 use App\Models\MediaItem;
 use App\Models\MediaPartner;
 use App\Models\Category;
+use App\Models\Testimonial;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PublicContentController extends Controller

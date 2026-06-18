@@ -149,15 +149,15 @@
                                         @else
                                             @if($item->sub_status === 'active')
                                                 <button type="button"
-                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[11px] font-bold border bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 transition duration-150 cursor-pointer shadow-sm">
+                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[12px] font-semibold border bg-[#E6FEDA] text-black border-[#5389A8]/30 hover:bg-[#D2FEBC] transition duration-150 cursor-pointer shadow-sm">
                                                     <span>Active</span>
                                                     <i class="fas fa-chevron-down text-[9px] ml-2 text-emerald-700"></i>
                                                 </button>
                                             @else
                                                 <button type="button"
-                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[11px] font-bold border bg-red-50 text-red-700 border-red-200 hover:bg-red-100 transition duration-150 cursor-pointer shadow-sm">
-                                                    <span>Unactive</span>
-                                                    <i class="fas fa-chevron-down text-[9px] ml-2 text-red-700"></i>
+                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[12px] font-semibold border bg-[#FFDADA] text-black border-[#A85353]/30 hover:bg-[#FFC9C9] transition duration-150 cursor-pointer shadow-sm">
+                                                    <span>Deactive</span>
+                                                    <i class="fas fa-chevron-down text-[9px] ml-2 text-black"></i>
                                                 </button>
                                             @endif
 
@@ -204,7 +204,7 @@
             </div>
 
             {{-- Pagination Area --}}
-            <div class="mt-auto pt-4">
+            <div class="mt-4">
                 <x-pagination :paginator="$subscriptions" />
             </div>
         </div>

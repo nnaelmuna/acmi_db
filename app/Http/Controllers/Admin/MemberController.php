@@ -37,7 +37,7 @@ class MemberController extends Controller
             $query->where('industry', $industry);
         }
 
-        $members = $query->latest()->paginate(10)->withQueryString();
+        $members = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
 
         $statusCounts = [
             'published' => Member::where('status', 'published')->count(),
