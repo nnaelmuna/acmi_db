@@ -35,14 +35,14 @@ class InboundController extends Controller
         $inbounds = $query->latest()->paginate(10)->withQueryString();
 
         $startOfWeek = Carbon::now()->startOfWeek();
-        $endOfWeek   = Carbon::now()->endOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();
 
         $stats = [
-            'review'   => Inbound::where('status', 'review')
+            'review' => Inbound::where('status', 'review')
                 ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                 ->count(),
             'approved' => Inbound::where('status', 'approved')
-                ->whereBetween('approved_at', [$startOfWeek, $endOfWeek])
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                 ->count(),
             'rejected' => Inbound::where('status', 'rejected')
                 ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
@@ -80,12 +80,12 @@ class InboundController extends Controller
         Log::info('updateStatus called', ['id' => $id, 'status' => $request->status]);
 
         return DB::transaction(function () use ($request, $id) {
-            $inbound   = Inbound::findOrFail($id);
+            $inbound = Inbound::findOrFail($id);
             $newStatus = $request->status;
 
             // Update status + approved_at
             $inbound->update([
-                'status'      => $newStatus,
+                'status' => $newStatus,
                 'approved_at' => $newStatus === 'approved' ? now() : null,
             ]);
 
@@ -101,7 +101,7 @@ class InboundController extends Controller
     public function bulkApprove(Request $request)
     {
         $request->validate([
-            'ids'   => 'required|array|min:1',
+            'ids' => 'required|array|min:1',
             'ids.*' => 'integer|exists:inbounds,id',
         ]);
 
@@ -112,7 +112,7 @@ class InboundController extends Controller
 
             foreach ($selectedInbounds as $inbound) {
                 $inbound->update([
-                    'status'      => 'approved',
+                    'status' => 'approved',
                     'approved_at' => now(),
                 ]);
 
@@ -135,17 +135,17 @@ class InboundController extends Controller
             Member::updateOrCreate(
                 ['email' => $inbound->email],
                 [
-                    'name'           => $inbound->name,
-                    'phone'          => $inbound->phone ?? null,
-                    'company_name'   => $inbound->company_name ?? $inbound->company ?? null,
-                    'industry'       => $inbound->industry ?? null,
-                    'position'       => $inbound->position ?? null,
-                    'company_url'    => $inbound->company_url ?? null,
-                    'linkedin_url'   => $inbound->linkedin_url ?? null,
-                    'employee_size'  => $inbound->employee_size ?? null,
+                    'name' => $inbound->name,
+                    'phone' => $inbound->phone ?? null,
+                    'company_name' => $inbound->company_name ?? $inbound->company ?? null,
+                    'industry' => $inbound->industry ?? null,
+                    'position' => $inbound->position ?? null,
+                    'company_url' => $inbound->company_url ?? null,
+                    'linkedin_url' => $inbound->linkedin_url ?? null,
+                    'employee_size' => $inbound->employee_size ?? null,
                     'annual_revenue' => $inbound->annual_revenue ?? null,
-                    'message'        => $inbound->message ?? null,
-                    'status'         => 'published',
+                    'message' => $inbound->message ?? null,
+                    'status' => 'published',
                 ]
             );
             Log::info('Member created/updated successfully for: ' . $inbound->email);

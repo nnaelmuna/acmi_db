@@ -21,18 +21,25 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PublicContentController extends Controller
 {
-    public function getTestimonials()
+    public function show(string $locale, string $slug)
     {
-        $testimonials = Testimonial::where('status', 'published')
-            ->latest()
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Testimoni Berhasil Diambil',
-            'data'    => $testimonials,
-        ], 200);
+        $response = Http::get(
+            "http://localhost:8000/api/articles/{$locale}/{$slug}"
+        );
+    
+        if ($response->successful() && $response->json('success')) {
+    
+            $article = $response->json('data');
+    
+            return view(
+                'ontopic-detail',
+                compact('article')
+            );
+        }
+    
+        abort(404);
     }
+
     public function getArticles(Request $request)
     {
         $query = Post::where('status', 'published')
@@ -53,18 +60,23 @@ class PublicContentController extends Controller
         ]);
     }
 
-    public function getArticleDetail($slug)
+    public function getArticleDetail($locale, $slug)
     {
         try {
-            $article = Post::where('slug', $slug)
+            $column = $locale === 'id' ? 'slug_id' : 'slug_en';
+            
+            $article = Post::where($column, $slug)
+                ->orWhere('slug', $slug) // fallback ke slug utama
                 ->where('status', 'published')
                 ->firstOrFail();
+    
         } catch (ModelNotFoundException) {
             return response()->json([
                 'success' => false,
                 'message' => 'Artikel tidak ditemukan'
             ], 404);
         }
+    
         return response()->json([
             'success' => true,
             'message' => 'Detail Artikel Berhasil Diambil',

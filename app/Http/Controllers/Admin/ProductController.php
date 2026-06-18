@@ -80,9 +80,6 @@ class ProductController extends Controller
             'status'           => 'nullable|in:draft,published,archived',
             'address'          => 'required|string|max:255',
         ], [
-            'category.required' => 'Please select at least one category.',
-            'category.max' => 'Maximum 3 categories allowed.',
-
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
 
@@ -173,6 +170,18 @@ class ProductController extends Controller
             'category.required' => 'Please select at least one category.',
             'category.max' => 'Maximum 3 categories allowed.',
 
+            'website'      => 'required|url',
+            'email'        => 'required|email',
+            'phone'        => ['required', 'regex:/^[0-9+\-\s()]{8,20}$/'],
+            'address'      => 'nullable|string|max:255',
+
+            'title_en'       => 'nullable|string|max:255',
+            'title_id'       => 'nullable|string|max:255',
+            'description_en' => 'nullable|string',
+            'description_id' => 'nullable|string',
+            'features_en'    => 'nullable|array',
+            'features_id'    => 'nullable|array',
+        ], [
             'features.required' => 'Key Features must be filled.',
             'features.min' => 'Please add at least one key feature.',
 
@@ -242,6 +251,13 @@ class ProductController extends Controller
             'email'        => $request->email,
             'phone'        => $request->phone,
             'address'      => $request->address,
+
+            'title_en'       => $request->title_en,
+            'title_id'       => $request->title_id,
+            'description_en' => $request->description_en,
+            'description_id' => $request->description_id,
+            'features_en'    => $request->features_en,
+            'features_id'    => $request->features_id,
         ]);
 
         ActivityLog::create([

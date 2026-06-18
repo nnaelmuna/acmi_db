@@ -36,48 +36,60 @@ class FaqController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'question' => ['required', 'string', 'max:255'],
-            'answer' => ['required', 'string'],
-            'status' => ['nullable', 'in:draft,published,archived'],
+            'question_en' => ['nullable', 'string', 'max:255'],
+            'question_id' => ['nullable', 'string', 'max:255'],
+            'answer_en'   => ['nullable', 'string'],
+            'answer_id'   => ['nullable', 'string'],
+            'status'      => ['nullable', 'in:draft,published,archived'],
         ]);
-
+    
         Faq::create([
-            'question' => $validated['question'],
-            'answer' => $validated['answer'],
-            'status' => $validated['status'] ?? 'published',
+            'question'    => $validated['question_en'] ?? $validated['question_id'],
+            'question_en' => $validated['question_en'] ?? null,
+            'question_id' => $validated['question_id'] ?? null,
+            'answer'      => $validated['answer_en'] ?? $validated['answer_id'],
+            'answer_en'   => $validated['answer_en'] ?? null,
+            'answer_id'   => $validated['answer_id'] ?? null,
+            'status'      => $validated['status'] ?? 'published',
         ]);
-
+    
         ActivityLog::create([
-            'user_id' => auth()->user()->id,
+            'user_id'       => auth()->id(),
             'activity_type' => 'faq',
-            'description' => auth()->user()->name . ' created a FAQ',
+            'description'   => auth()->user()->name . ' created a FAQ',
         ]);
-
+    
         return redirect()->route('faq')->with('success', 'FAQ created successfully.');
     }
-
+    
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'question' => ['required', 'string', 'max:255'],
-            'answer' => ['required', 'string'],
-            'status' => ['nullable', 'in:draft,published,archived'],
+            'question_en' => ['nullable', 'string', 'max:255'],
+            'question_id' => ['nullable', 'string', 'max:255'],
+            'answer_en'   => ['nullable', 'string'],
+            'answer_id'   => ['nullable', 'string'],
+            'status'      => ['nullable', 'in:draft,published,archived'],
         ]);
-
+    
         $faq = Faq::findOrFail($id);
-
+    
         $faq->update([
-            'question' => $validated['question'],
-            'answer' => $validated['answer'],
-            'status' => $validated['status'] ?? $faq->status,
+            'question'    => $validated['question_en'] ?? $validated['question_id'] ?? $faq->question,
+            'question_en' => $validated['question_en'] ?? null,
+            'question_id' => $validated['question_id'] ?? null,
+            'answer'      => $validated['answer_en'] ?? $validated['answer_id'] ?? $faq->answer,
+            'answer_en'   => $validated['answer_en'] ?? null,
+            'answer_id'   => $validated['answer_id'] ?? null,
+            'status'      => $validated['status'] ?? $faq->status,
         ]);
-
+    
         ActivityLog::create([
-            'user_id' => auth()->user()->id,
+            'user_id'       => auth()->id(),
             'activity_type' => 'faq',
-            'description' => auth()->user()->name . ' updated a FAQ',
+            'description'   => auth()->user()->name . ' updated a FAQ',
         ]);
-
+    
         return redirect()->route('faq')->with('success', 'FAQ updated successfully.');
     }
 
@@ -98,7 +110,7 @@ class FaqController extends Controller
 
     public function restore($id)
     {
-        $faq = FAQ::withTrashed()->findOrFail($id);
+        $faq = Faq::withTrashed()->findOrFail($id);
 
         $faq->restore();
 
@@ -113,7 +125,7 @@ class FaqController extends Controller
 
     public function forceDelete($id)
     {
-        $faq = FAQ::onlyTrashed()->findOrFail($id);
+        $faq = Faq::onlyTrashed()->findOrFail($id);
 
         $faq->forceDelete();
 

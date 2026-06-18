@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\MemberRequestController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
-    Route::get('/articles/{slug}', [PublicContentController::class, 'getArticleDetail']);
+    Route::get('/articles/{locale}/{slug}', [PublicContentController::class, 'getArticleDetail']);
     Route::get('/faqs', [PublicContentController::class, 'getFaqs']);
     Route::get('/services', [PublicContentController::class, 'getServices']);
     Route::get('/testimonials', [PublicContentController::class, 'getTestimonials']);
