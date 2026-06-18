@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->string('phone')->nullable();
             $table->string('company_name')->nullable();
             $table->string('industry')->nullable();
-            $table->string('position')->nullable();
-            $table->string('transaction_url')->nullable();
+            $table->string('business_model')->nullable();
+            $table->string('transaction_image')->nullable();
             $table->string('status')->default('published');
             $table->string('sub_status')->default('active');
             $table->timestamps();

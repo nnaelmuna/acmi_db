@@ -170,6 +170,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{id}', 'destroy')->name('members.destroy');
         Route::post('/members/{id}/restore', 'restore')->name('members.restore');
         Route::delete('/members/{id}/force-delete', 'forceDelete')->name('members.forceDelete');
+        Route::patch('/members/{id}/sub-status', 'updateSubStatus')->name('members.updateSubStatus');
     });
 
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');

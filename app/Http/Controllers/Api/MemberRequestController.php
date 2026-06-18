@@ -27,8 +27,23 @@ class MemberRequestController extends Controller
             ]);
 
             $validated['status'] = 'draft'; // default draft dulu
+            $memberData = $validated;
+            if (isset($memberData['revenue'])) {
+                $memberData['annual_revenue'] = $memberData['revenue'];
+                unset($memberData['revenue']);
+            }
+            Member::create($memberData);
 
-            Member::create($validated);
+            $subscriptionData = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'] ?? null,
+                'company_name' => $validated['company_name'] ?? null,
+                'industry' => $validated['industry'] ?? null,
+                'business_model' => $validated['position'] ?? null, // using position from form
+                'status' => 'published', // beda kondisi status dari member yang draft
+            ];
+            \App\Models\Subscription::create($subscriptionData);
 
             return response()->json([
                 'success' => true,
