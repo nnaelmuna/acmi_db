@@ -13,6 +13,7 @@ Route::prefix('public')->group(function () {
     Route::get('/articles/{slug}', [PublicContentController::class, 'getArticleDetail']);
     Route::get('/faqs', [PublicContentController::class, 'getFaqs']);
     Route::get('/services', [PublicContentController::class, 'getServices']);
+    Route::get('/testimonials', [PublicContentController::class, 'getTestimonials']);
     Route::get('/gallery', [PublicContentController::class, 'getGallery']);
     Route::get('/partners', [PublicContentController::class, 'getPartners']);
     Route::get('/categories', [PublicContentController::class, 'getCategories']);

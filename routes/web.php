@@ -93,6 +93,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/faq/{id}/force-delete', 'forceDelete')->name('faq.forceDelete');
     });
 
+    // Testimonial
+    Route::controller(\App\Http\Controllers\Admin\TestimonialController::class)->group(function () {
+        Route::get('/testimonial', 'index')->name('testimonial.index');
+        Route::post('/testimonial', 'store')->name('testimonial.store');
+        Route::put('/testimonial/{id}', 'update')->name('testimonial.update');
+        Route::delete('/testimonial/{id}', 'destroy')->name('testimonial.destroy');
+        Route::post('/testimonial/{id}/restore', 'restore')->name('testimonial.restore');
+        Route::delete('/testimonial/{id}/force-delete', 'forceDelete')->name('testimonial.forceDelete');
+    });
+
     // Product
     Route::controller(ProductController::class)->group(function () {
         Route::get('/product', 'index')->name('product.index');

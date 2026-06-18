@@ -16,10 +16,23 @@ use App\Models\Product;
 use App\Models\MediaItem;
 use App\Models\MediaPartner;
 use App\Models\Category;
+use App\Models\Testimonial;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PublicContentController extends Controller
 {
+    public function getTestimonials()
+    {
+        $testimonials = Testimonial::where('status', 'published')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Testimoni Berhasil Diambil',
+            'data'    => $testimonials,
+        ], 200);
+    }
     public function getArticles(Request $request)
     {
         $query = Post::where('status', 'published')
