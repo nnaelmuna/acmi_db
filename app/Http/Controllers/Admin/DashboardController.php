@@ -39,7 +39,6 @@ class DashboardController extends Controller
         }
 
         // 4. RECENT ACTIVITY
-        // BAGIAN YANG SALAH: Diubah pakai Auth::id() biar aman dan anti-error di VS Code Mac kamu
         $userId = Auth::id();
 
         $recentActivities = ActivityLog::where('user_id', $userId)
