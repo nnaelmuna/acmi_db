@@ -12,7 +12,7 @@
         @csrf
 
         <div class="form-group">
-            <label class="form-label" for="email">Email Address</label>
+            <label class="form-label" for="email">Email Kamu</label>
             <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
                 placeholder="Enter your email" class="input-custom @error('email') input-error @enderror">
 

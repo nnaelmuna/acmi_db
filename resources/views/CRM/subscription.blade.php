@@ -218,7 +218,6 @@
         class="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-7 shadow-2xl scale-95 transform transition-transform duration-300">
 
         {{-- Header Modal --}}
-        {{-- Header Modal --}}
         <div class="mb-5 flex items-center justify-between border-b border-gray-100 pb-3">
             <h3 class="text-base font-bold text-gray-900">Subscription Detail Screen</h3>
 
