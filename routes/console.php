@@ -9,3 +9,10 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('inbounds:clean')->daily();
+
+Schedule::call(function () {
+    \App\Models\MediaPartner::where('status', 'published')
+        ->whereNotNull('end_date')
+        ->whereDate('end_date', '<', now())
+        ->update(['status' => 'archived']);
+})->daily();

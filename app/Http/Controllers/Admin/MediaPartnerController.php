@@ -39,7 +39,15 @@ class MediaPartnerController extends Controller
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'link' => ['nullable', 'url'],
             'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'end_date' => [
+                'nullable',
+                'date',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->filled('start_date') && $value < $request->start_date) {
+                        $fail('The end date must be after or equal to the start date.');
+                    }
+                }
+            ],
             'status' => ['required', 'in:published,draft,archived'],
         ]);
 
@@ -72,7 +80,15 @@ class MediaPartnerController extends Controller
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'link' => ['nullable', 'url'],
             'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'end_date' => [
+                'nullable',
+                'date',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->filled('start_date') && $value < $request->start_date) {
+                        $fail('The end date must be after or equal to the start date.');
+                    }
+                }
+            ],
             'status' => ['required', 'in:published,draft,archived'],
         ]);
 

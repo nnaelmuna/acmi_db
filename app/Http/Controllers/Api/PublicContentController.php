@@ -154,6 +154,10 @@ class PublicContentController extends Controller
     public function getPartners()
     {
         $partners = MediaPartner::where('status', 'published')
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                      ->orWhereDate('end_date', '>=', now());
+            })
             ->latest()
             ->get();
 
