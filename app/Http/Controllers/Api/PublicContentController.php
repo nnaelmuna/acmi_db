@@ -186,4 +186,29 @@ class PublicContentController extends Controller
             'data'    => $formattedPosts
         ]);
     }
+
+    public function getHeader()
+    {
+        $header = \App\Models\Header::first();
+        
+        $data = null;
+        if ($header) {
+            $formattedImages = collect($header->images)->map(function ($img) {
+                return asset('storage/' . $img);
+            })->toArray();
+
+            $data = [
+                'title_1' => $header->title_1,
+                'title_2' => $header->title_2,
+                'description' => $header->description,
+                'images' => $formattedImages,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Header Berhasil Diambil',
+            'data'    => $data,
+        ], 200);
+    }
 }

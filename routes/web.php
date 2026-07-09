@@ -194,6 +194,11 @@ Route::middleware('auth')->group(function () {
 
 
     // Settings Config
+    // Header Config
+    Route::get('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'edit'])->name('header.edit');
+    Route::post('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'update'])->name('header.update');
+
+    Route::resource('testimonial', \App\Http\Controllers\Admin\TestimonialController::class);
     Route::get('/settings-config', [SettingsController::class, 'index'])->name('settings.index');
 
     // Logout
