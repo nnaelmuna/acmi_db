@@ -4,8 +4,8 @@
 @section('page_title', 'Subscription')
 
 @section('header_right')
-    <div class="hidden md:block w-64 mr-4">
-        <form action="{{ route('subscription.index') }}" method="GET" class="relative group">
+    <div class="hidden md:flex items-center w-64 mr-4">
+        <form action="{{ route('subscription.index') }}" method="GET" class="relative group w-full">
             <input type="hidden" name="status" value="{{ request('status', 'published') }}">
 
             <i
@@ -46,28 +46,36 @@
                     <thead class="bg-acmi-softblue text-[10px] border-b border-acmi-bordercolor font-bold text-black">
                         <tr>
                             <th class="p-4 w-10 text-center border-r border-acmi-bordercolor">
-                                <input type="checkbox" id="select-all" class="rounded border-acmi-bordercolor text-acmi-blueprimer focus:ring-acmi-blueprimer cursor-pointer">
+                                <input type="checkbox" id="select-all"
+                                    class="rounded border-acmi-bordercolor text-acmi-blueprimer focus:ring-acmi-blueprimer cursor-pointer">
                             </th>
                             <th class="p-4 border-r border-acmi-bordercolor">
-                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-user text-acmi-blueprimer"></i> Profile</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i
+                                        class="far fa-user text-acmi-blueprimer"></i> Profile</span>
                             </th>
                             <th class="p-4 border-r border-acmi-bordercolor">
-                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-address-card text-acmi-blueprimer"></i> Contact</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i
+                                        class="far fa-address-card text-acmi-blueprimer"></i> Contact</span>
                             </th>
                             <th class="p-4 border-r border-acmi-bordercolor">
-                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-building text-acmi-blueprimer"></i> Company</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i
+                                        class="far fa-building text-acmi-blueprimer"></i> Company</span>
                             </th>
                             <th class="p-4 border-r border-acmi-bordercolor">
-                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-cubes text-acmi-blueprimer"></i> Industry</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i
+                                        class="fas fa-cubes text-acmi-blueprimer"></i> Industry</span>
                             </th>
                             <th class="p-4 border-r border-acmi-bordercolor">
-                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-briefcase text-acmi-blueprimer"></i> Position</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i
+                                        class="fas fa-briefcase text-acmi-blueprimer"></i> Position</span>
                             </th>
                             <th class="p-4 border-r border-acmi-bordercolor">
-                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-image text-acmi-blueprimer"></i> Transaction</span>
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i
+                                        class="fas fa-image text-acmi-blueprimer"></i> Transaction</span>
                             </th>
                             <th class="p-4 text-center">
-                                <span class="flex items-center justify-center gap-2 font-base text-[12px]"><i class="far fa-dot-circle text-acmi-blueprimer"></i> Action</span>
+                                <span class="flex items-center justify-center gap-2 font-base text-[12px]"><i
+                                        class="far fa-dot-circle text-acmi-blueprimer"></i> Action</span>
                             </th>
                         </tr>
                     </thead>
@@ -75,8 +83,8 @@
                     <tbody class="text-xs text-gray-700 divide-y divide-gray-100">
                         @forelse($subscriptions as $item)
                             <tr class="hover:bg-slate-50/80 transition cursor-pointer"
-                                onclick="openDetailModal('{{ $item->id }}', '{{ $item->name }}', '{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}')">
-                                <td class="p-3 text-center border-r border-gray-100">
+                                onclick="openDetailModal('{{ $item->id }}', '{{ $item->name }}', '{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}', '{{ $item->partner_link }}', '{{ $item->transaction_image }}')">
+                                <td class="p-3 text-center border-r border-gray-100" onclick="event.stopPropagation()">
                                     <input type="checkbox"
                                         class="subscription-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                         value="{{ $item->id }}">
@@ -103,9 +111,11 @@
                                 </td>
 
                                 {{-- Company & Info --}}
-                                <td class="p-3 border-r border-gray-100 font-medium text-gray-800">{{ $item->company_name }}</td>
+                                <td class="p-3 border-r border-gray-100 font-medium text-gray-800">{{ $item->company_name }}
+                                </td>
                                 <td class="p-3 border-r border-gray-100 text-gray-500">
-                                    <span class="inline-block px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-[10px] font-bold uppercase">{{ $item->industry }}</span>
+                                    <span
+                                        class="inline-block px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-[10px] font-bold uppercase">{{ $item->industry }}</span>
                                 </td>
                                 <td class="p-3 border-r border-gray-100 text-gray-500">{{ $item->business_model }}</td>
 
@@ -113,7 +123,8 @@
                                 <td class="p-3 border-r border-gray-100">
                                     @if($item->transaction_image)
                                         <a href="{{ asset('uploads/transactions/' . $item->transaction_image) }}" target="_blank"
-                                            class="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-acmi-blueprimer hover:bg-gray-100 transition truncate max-w-[150px]" onclick="event.stopPropagation()">
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-acmi-blueprimer hover:bg-gray-100 transition truncate max-w-[150px]"
+                                            onclick="event.stopPropagation()">
                                             <i class="fas fa-image text-[9px] text-gray-400"></i>
                                             View Image
                                         </a>
@@ -215,13 +226,12 @@
 <div id="subscriptionDetailModal"
     class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
     <div
-        class="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-7 shadow-2xl scale-95 transform transition-transform duration-300">
+        class="w-full max-w-2xl rounded-3xl border border-gray-200 bg-white p-7 shadow-2xl scale-95 transform transition-transform duration-300">
 
         {{-- Header Modal --}}
         <div class="mb-5 flex items-center justify-between border-b border-gray-100 pb-3">
             <h3 class="text-base font-bold text-gray-900">Subscription Detail Screen</h3>
 
-            {{-- FIX: Tambahin onclick="event.stopPropagation(); closeDetailModal()" --}}
             <button type="button" onclick="event.stopPropagation(); closeDetailModal()"
                 class="text-gray-400 hover:text-gray-600 transition p-1 z-50 cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -240,18 +250,26 @@
                     class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-800 font-medium outline-none focus:border-acmi-blueprimer focus:ring-1 focus:ring-acmi-blueprimer">
             </div>
 
-            {{-- Partner Image (Bisa Diklik Pilih File Beneran) --}}
+            {{-- Partner Link --}}
             <div>
-                <label class="block font-semibold text-gray-500 mb-1.5">Partner Image</label>
-                <input type="file" name="partner_image" id="modal-partner-image"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-700 outline-none file:mr-4 file:py-1 file:px-2.5 file:rounded file:border file:border-gray-300 file:text-[11px] file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
+                <label class="block font-semibold text-gray-500 mb-1.5">Partner Link</label>
+                <input type="text" name="partner_link" id="modal-partner-link" placeholder="https://example.com"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-800 font-medium outline-none focus:border-acmi-blueprimer focus:ring-1 focus:ring-acmi-blueprimer">
             </div>
 
             {{-- Transaction Image --}}
             <div>
                 <label class="block font-semibold text-gray-500 mb-1.5">Transaction Image</label>
-                <input type="file" name="transaction_image" id="modal-transaction-image" accept="image/*"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-700 outline-none file:mr-4 file:py-1 file:px-2.5 file:rounded file:border file:border-gray-300 file:text-[11px] file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
+                <div
+                    class="relative flex items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-700">
+                    <span id="modal-transaction-image-name" class="truncate text-gray-500">No file chosen</span>
+                    <label for="modal-transaction-image"
+                        class="cursor-pointer rounded bg-gray-100 px-2.5 py-1 text-[11px] font-medium text-gray-700 border border-gray-300 hover:bg-gray-200 transition">
+                        Choose File
+                    </label>
+                    <input type="file" name="transaction_image" id="modal-transaction-image" accept=".jpg,.jpeg,.png,.webp,.pdf"
+                        class="hidden">
+                </div>
             </div>
 
             {{-- Row Start & End Date (Tipe 'date' Biar Keluar Kalender Otomatis) --}}
@@ -282,18 +300,21 @@
 </div>
 @push('scripts')
     <script>
-        function openDetailModal(id, name, rawDate) {
+        function openDetailModal(id, name, rawDate, partnerLink, transactionImage) {
             // 1. Set Action Form URL secara dinamis sesuai ID data yang diklik
             let updateUrl = "{{ url('/subscription') }}/" + id + "/update-detail";
             document.getElementById('edit-subscription-form').setAttribute('action', updateUrl);
 
             // 2. Masukkan data awal ke input form modal
             document.getElementById('modal-partner-name').value = name;
+            document.getElementById('modal-partner-link').value = partnerLink || "";
             document.getElementById('modal-start-date').value = rawDate;
 
-            // Reset input file biar kosong siap upload file baru
-            document.getElementById('modal-partner-image').value = "";
+            // Reset input file dan setup label/existing data
             document.getElementById('modal-transaction-image').value = "";
+            let cleanedImage = transactionImage ? transactionImage.replace(/^\d+(_tr_|_)?/, '') : 'No file chosen';
+            document.getElementById('modal-transaction-image-name').textContent = cleanedImage;
+            document.getElementById('modal-transaction-image').dataset.existing = transactionImage || "";
 
             // Hitung estimasi end date otomatis (+1 tahun) sebagai default value kalender kanan
             if (rawDate) {
@@ -346,6 +367,21 @@
                         const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
                         selectAllCheckbox.checked = allChecked;
                     });
+                });
+            }
+
+            // Update custom file input text on change
+            const fileInput = document.getElementById('modal-transaction-image');
+            const fileNameSpan = document.getElementById('modal-transaction-image-name');
+            if (fileInput && fileNameSpan) {
+                fileInput.addEventListener('change', function (e) {
+                    let fileName = 'No file chosen';
+                    if (e.target.files[0]) {
+                        fileName = e.target.files[0].name;
+                    } else if (e.target.dataset.existing) {
+                        fileName = e.target.dataset.existing.replace(/^\d+(_tr_|_)?/, '');
+                    }
+                    fileNameSpan.textContent = fileName;
                 });
             }
         });
