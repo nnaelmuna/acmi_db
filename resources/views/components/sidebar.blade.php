@@ -87,6 +87,13 @@
                 <span class="text-[15px] font-medium text-white">Media Partner</span>
             </a>
 
+            <a href="{{ route('header.edit') }}"
+                class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300
+                {{ request()->routeIs('header.*') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
+                <i class="fas fa-heading"></i>
+                <span class="text-[15px] font-medium text-white">Header</span>
+            </a>
+
         </nav>
     </div>
 

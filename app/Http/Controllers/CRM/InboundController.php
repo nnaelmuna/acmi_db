@@ -148,7 +148,21 @@ class InboundController extends Controller
                     'status' => 'published',
                 ]
             );
-            Log::info('Member created/updated successfully for: ' . $inbound->email);
+
+            \App\Models\Subscription::updateOrCreate(
+                ['email' => $inbound->email],
+                [
+                    'name' => $inbound->name,
+                    'phone' => $inbound->phone ?? null,
+                    'company_name' => $inbound->company_name ?? $inbound->company ?? null,
+                    'industry' => $inbound->industry ?? null,
+                    'business_model' => $inbound->position ?? null,
+                    'status' => 'published', // beda kondisi status
+                    'sub_status' => 'active',
+                ]
+            );
+
+            Log::info('Member and Subscription created/updated successfully for: ' . $inbound->email);
         } catch (\Exception $e) {
             Log::error('Member creation failed for ' . $inbound->email . ': ' . $e->getMessage());
             throw $e; // Re-throw agar DB::transaction() rollback

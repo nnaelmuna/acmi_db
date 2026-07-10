@@ -40,20 +40,34 @@
         </div>
 
         {{-- Main Table Area --}}
-        <div class="flex flex-col">
+        <div class="flex min-h-[calc(100vh-230px)] flex-col">
             <div class="overflow-x-auto rounded-xl border border-acmi-bordercolor bg-white shadow-sm">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-acmi-softblue text-[11px] border-b border-acmi-bordercolor font-bold text-gray-700">
+                <table class="min-w-[1200px] w-full text-left border-collapse">
+                    <thead class="bg-acmi-softblue text-[10px] border-b border-acmi-bordercolor font-bold text-black">
                         <tr>
-                            <th class="p-3 w-10 text-center"><input type="checkbox" id="select-all"
-                                    class="rounded border-gray-300"></th>
-                            <th class="p-3"><i class="far fa-user mr-1 text-acmi-blueprimer"></i> Profile</th>
-                            <th class="p-3"><i class="far fa-address-card mr-1 text-acmi-blueprimer"></i> Contact</th>
-                            <th class="p-3"><i class="far fa-building mr-1 text-acmi-blueprimer"></i> Company</th>
-                            <th class="p-3"><i class="fas fa-cubes mr-1 text-acmi-blueprimer"></i> Industry</th>
-                            <th class="p-3"><i class="fas fa-briefcase mr-1 text-acmi-blueprimer"></i> Position</th>
-                            <th class="p-3"><i class="fas fa-link mr-1 text-acmi-blueprimer"></i> Transaction</th>
-                            <th class="p-3 text-center"><i class="far fa-dot-circle mr-1 text-acmi-blueprimer"></i> Status
+                            <th class="p-4 w-10 text-center border-r border-acmi-bordercolor">
+                                <input type="checkbox" id="select-all" class="rounded border-acmi-bordercolor text-acmi-blueprimer focus:ring-acmi-blueprimer cursor-pointer">
+                            </th>
+                            <th class="p-4 border-r border-acmi-bordercolor">
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-user text-acmi-blueprimer"></i> Profile</span>
+                            </th>
+                            <th class="p-4 border-r border-acmi-bordercolor">
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-address-card text-acmi-blueprimer"></i> Contact</span>
+                            </th>
+                            <th class="p-4 border-r border-acmi-bordercolor">
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="far fa-building text-acmi-blueprimer"></i> Company</span>
+                            </th>
+                            <th class="p-4 border-r border-acmi-bordercolor">
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-cubes text-acmi-blueprimer"></i> Industry</span>
+                            </th>
+                            <th class="p-4 border-r border-acmi-bordercolor">
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-briefcase text-acmi-blueprimer"></i> Position</span>
+                            </th>
+                            <th class="p-4 border-r border-acmi-bordercolor">
+                                <span class="flex items-center gap-2 font-base text-[12px]"><i class="fas fa-image text-acmi-blueprimer"></i> Transaction</span>
+                            </th>
+                            <th class="p-4 text-center">
+                                <span class="flex items-center justify-center gap-2 font-base text-[12px]"><i class="far fa-dot-circle text-acmi-blueprimer"></i> Action</span>
                             </th>
                         </tr>
                     </thead>
@@ -61,15 +75,15 @@
                     <tbody class="text-xs text-gray-700 divide-y divide-gray-100">
                         @forelse($subscriptions as $item)
                             <tr class="hover:bg-slate-50/80 transition cursor-pointer"
-                                onclick="openDetailModal('{{ $item->id }}', '{{ $item->name }}', '{{ $item->transaction_url }}', '{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}')">
-                                <td class="p-3 text-center">
+                                onclick="openDetailModal('{{ $item->id }}', '{{ $item->name }}', '{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}')">
+                                <td class="p-3 text-center border-r border-gray-100">
                                     <input type="checkbox"
                                         class="subscription-checkbox rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                         value="{{ $item->id }}">
-                                </td> {{-- 🛠️ FIX: Kemarin lu lupa nutup tag </td> di sini, jadinya kolom geser --}}
+                                </td>
 
                                 {{-- Profile --}}
-                                <td class="p-3">
+                                <td class="p-3 border-r border-gray-100">
                                     <p class="font-bold text-gray-900">{{ $item->name }}</p>
                                     <p class="text-[10px] text-gray-400 mt-0.5">
                                         {{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}
@@ -77,7 +91,7 @@
                                 </td>
 
                                 {{-- Contact --}}
-                                <td class="p-3">
+                                <td class="p-3 border-r border-gray-100">
                                     <div class="space-y-0.5">
                                         <p class="flex items-center gap-1.5 text-gray-600">
                                             <i class="far fa-envelope text-[10px] text-gray-400"></i> {{ $item->email }}
@@ -89,17 +103,23 @@
                                 </td>
 
                                 {{-- Company & Info --}}
-                                <td class="p-3 font-medium text-gray-800">{{ $item->company_name }}</td>
-                                <td class="p-3 text-gray-500">{{ $item->industry }}</td>
-                                <td class="p-3 text-gray-500">{{ $item->position }}</td>
+                                <td class="p-3 border-r border-gray-100 font-medium text-gray-800">{{ $item->company_name }}</td>
+                                <td class="p-3 border-r border-gray-100 text-gray-500">
+                                    <span class="inline-block px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-[10px] font-bold uppercase">{{ $item->industry }}</span>
+                                </td>
+                                <td class="p-3 border-r border-gray-100 text-gray-500">{{ $item->business_model }}</td>
 
-                                {{-- Transaction Link --}}
-                                <td class="p-3">
-                                    <a href="{{ $item->transaction_url }}" target="_blank"
-                                        class="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-acmi-blueprimer hover:bg-gray-100 transition truncate max-w-[150px]">
-                                        <i class="fas fa-link text-[9px] text-gray-400"></i>
-                                        {{ $item->transaction_url }}
-                                    </a>
+                                {{-- Transaction Image --}}
+                                <td class="p-3 border-r border-gray-100">
+                                    @if($item->transaction_image)
+                                        <a href="{{ asset('uploads/transactions/' . $item->transaction_image) }}" target="_blank"
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded border border-gray-200 bg-gray-50 text-acmi-blueprimer hover:bg-gray-100 transition truncate max-w-[150px]" onclick="event.stopPropagation()">
+                                            <i class="fas fa-image text-[9px] text-gray-400"></i>
+                                            View Image
+                                        </a>
+                                    @else
+                                        <span class="text-gray-400 italic text-[11px]">No Image</span>
+                                    @endif
                                 </td>
 
                                 {{-- Interactive Status & Trash Dropdown Dropdown --}}
@@ -107,23 +127,19 @@
                                     <div class="relative inline-block text-left group">
 
                                         @if (request('status') === 'trash')
-                                            {{-- TOMBOL UTAMA SAAT DI TAB TRASH --}}
                                             <button type="button"
                                                 class="inline-flex items-center justify-center w-32 px-4 py-2 rounded-full text-[11px] font-bold border bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 transition duration-150 cursor-pointer shadow-sm">
                                                 <span>Trash Action</span>
                                                 <i class="fas fa-chevron-down text-[9px] ml-2 text-gray-500"></i>
                                             </button>
 
-                                            {{-- FLOATING BOX PUTIH (MODEL ACTION TRASH) --}}
                                             <div
                                                 class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] py-1.5 p-1">
-                                                {{-- Opsi Restore --}}
                                                 <a href="{{ route('subscription.restore', $item->id) }}"
                                                     class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-green-600 hover:bg-green-50 rounded-lg transition text-left cursor-pointer">
                                                     <i class="fas fa-undo mr-2.5 text-[12px]"></i> Restore
                                                 </a>
 
-                                                {{-- Opsi Delete Permanently --}}
                                                 <button type="button"
                                                     onclick="openDeleteModal('{{ route('subscription.forceDelete', $item->id) }}', 'Permanently Delete? This data cannot be recovered!')"
                                                     class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded-lg transition text-left cursor-pointer border-t border-gray-100/70 mt-1">
@@ -131,12 +147,11 @@
                                                 </button>
                                             </div>
                                         @else
-                                            {{-- TOMBOL UTAMA STATUS (ACTIVE / DEACTIVE) --}}
                                             @if($item->sub_status === 'active')
                                                 <button type="button"
                                                     class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[12px] font-semibold border bg-[#E6FEDA] text-black border-[#5389A8]/30 hover:bg-[#D2FEBC] transition duration-150 cursor-pointer shadow-sm">
                                                     <span>Active</span>
-                                                    <i class="fas fa-chevron-down text-[9px] ml-2 text-black"></i>
+                                                    <i class="fas fa-chevron-down text-[9px] ml-2 text-emerald-700"></i>
                                                 </button>
                                             @else
                                                 <button type="button"
@@ -146,7 +161,6 @@
                                                 </button>
                                             @endif
 
-                                            {{-- FLOATING BOX PUTIH (MODEL ACTION STATUS) --}}
                                             <div
                                                 class="absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] py-1.5 p-1">
                                                 <form action="{{ route('subscription.updateStatus', $item->id) }}" method="POST">
@@ -154,23 +168,23 @@
                                                     @method('PATCH')
 
                                                     @if($item->sub_status === 'active')
-                                                        <input type="hidden" name="sub_status" value="deactive">
+                                                        <input type="hidden" name="sub_status" value="unactive">
                                                         <button type="submit"
-                                                            class="flex items-center w-full px-3 py-2 text-[12px] font-semibold text-red-500 hover:bg-red-50 rounded-lg transition text-left">
-                                                            <i class="far fa-times-circle mr-2.5 text-[12px]"></i> Set Deactive
+                                                            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded-lg transition text-left">
+                                                            <i class="far fa-times-circle mr-2.5 text-[12px]"></i> Set Unactive
                                                         </button>
                                                     @else
                                                         <input type="hidden" name="sub_status" value="active">
                                                         <button type="submit"
-                                                            class="flex items-center w-full px-3 py-2 text-[12px] font-semibold text-green-600 hover:bg-green-50 rounded-lg transition text-left">
+                                                            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-green-600 hover:bg-green-50 rounded-lg transition text-left">
                                                             <i class="far fa-check-circle mr-2.5 text-[12px]"></i> Set Active
                                                         </button>
                                                     @endif
                                                 </form>
                                                 <button type="button"
                                                     onclick="openDeleteModal('{{ route('subscription.destroy', $item->id) }}', 'Are you sure want to move this item to trash?')"
-                                                    class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-red-850 hover:bg-red-50 rounded-lg transition text-left cursor-pointer border-t border-gray-100/70 mt-1">
-                                                    <i class="far fa-trash-alt mr-2.5 text-[12px]"></i> Move To Trash
+                                                    class="flex items-center w-full px-4 py-2.5 text-[11px] font-semibold text-gray-600 hover:bg-red-50 transition border-t border-acmi-bordercolor/50">
+                                                    <i class="far fa-trash-alt mr-2 text-[12px]"></i> Move To Trash
                                                 </button>
                                             </div>
                                         @endif
@@ -204,7 +218,6 @@
         class="w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-7 shadow-2xl scale-95 transform transition-transform duration-300">
 
         {{-- Header Modal --}}
-        {{-- Header Modal --}}
         <div class="mb-5 flex items-center justify-between border-b border-gray-100 pb-3">
             <h3 class="text-base font-bold text-gray-900">Subscription Detail Screen</h3>
 
@@ -234,11 +247,11 @@
                     class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-700 outline-none file:mr-4 file:py-1 file:px-2.5 file:rounded file:border file:border-gray-300 file:text-[11px] file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
             </div>
 
-            {{-- Partner Link --}}
+            {{-- Transaction Image --}}
             <div>
-                <label class="block font-semibold text-gray-500 mb-1.5">Partner Link</label>
-                <input type="url" name="partner_link" id="modal-partner-link"
-                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-800 outline-none focus:border-acmi-blueprimer focus:ring-1 focus:ring-acmi-blueprimer">
+                <label class="block font-semibold text-gray-500 mb-1.5">Transaction Image</label>
+                <input type="file" name="transaction_image" id="modal-transaction-image" accept="image/*"
+                    class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-700 outline-none file:mr-4 file:py-1 file:px-2.5 file:rounded file:border file:border-gray-300 file:text-[11px] file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer">
             </div>
 
             {{-- Row Start & End Date (Tipe 'date' Biar Keluar Kalender Otomatis) --}}
@@ -269,18 +282,18 @@
 </div>
 @push('scripts')
     <script>
-        function openDetailModal(id, name, link, rawDate) {
+        function openDetailModal(id, name, rawDate) {
             // 1. Set Action Form URL secara dinamis sesuai ID data yang diklik
             let updateUrl = "{{ url('/subscription') }}/" + id + "/update-detail";
             document.getElementById('edit-subscription-form').setAttribute('action', updateUrl);
 
             // 2. Masukkan data awal ke input form modal
             document.getElementById('modal-partner-name').value = name;
-            document.getElementById('modal-partner-link').value = link;
             document.getElementById('modal-start-date').value = rawDate;
 
             // Reset input file biar kosong siap upload file baru
             document.getElementById('modal-partner-image').value = "";
+            document.getElementById('modal-transaction-image').value = "";
 
             // Hitung estimasi end date otomatis (+1 tahun) sebagai default value kalender kanan
             if (rawDate) {

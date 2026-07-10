@@ -180,6 +180,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/members/{id}', 'destroy')->name('members.destroy');
         Route::post('/members/{id}/restore', 'restore')->name('members.restore');
         Route::delete('/members/{id}/force-delete', 'forceDelete')->name('members.forceDelete');
+        Route::patch('/members/{id}/sub-status', 'updateSubStatus')->name('members.updateSubStatus');
     });
 
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
@@ -193,6 +194,11 @@ Route::middleware('auth')->group(function () {
 
 
     // Settings Config
+    // Header Config
+    Route::get('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'edit'])->name('header.edit');
+    Route::post('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'update'])->name('header.update');
+
+    Route::resource('testimonial', \App\Http\Controllers\Admin\TestimonialController::class);
     Route::get('/settings-config', [SettingsController::class, 'index'])->name('settings.index');
 
     // Logout

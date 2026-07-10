@@ -59,7 +59,7 @@ class SubscriptionController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'sub_status' => 'required|in:active,deactive'
+            'sub_status' => 'required|in:active,deactive,unactive'
         ]);
 
         DB::table('subscriptions')
@@ -121,7 +121,7 @@ class SubscriptionController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'partner_link' => 'nullable|url',
+            'transaction_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
             'partner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // Max 2MB
@@ -129,7 +129,6 @@ class SubscriptionController extends Controller
 
         $updateData = [
             'name' => $request->name,
-            'transaction_url' => $request->partner_link,
             // Opsional: Jika di DB kamu fieldnya pake datetime/string, kita buat default tanggalnya aman
             'created_at' => $request->start_date ? \Carbon\Carbon::parse($request->start_date) : now(),
             'updated_at' => now()
@@ -144,6 +143,13 @@ class SubscriptionController extends Controller
 
             // Simpan nama filenya ke database (sesuaikan nama kolom gambar kamu di DB, misal 'image')
             // $updateData['image'] = $fileName; 
+        }
+
+        if ($request->hasFile('transaction_image')) {
+            $file2 = $request->file('transaction_image');
+            $fileName2 = time() . '_tr_' . $file2->getClientOriginalName();
+            $file2->move(public_path('uploads/transactions'), $fileName2);
+            $updateData['transaction_image'] = $fileName2;
         }
 
         DB::table('subscriptions')->where('id', $id)->update($updateData);

@@ -13,6 +13,17 @@
         </div>
     @endif
 
+    {{-- Validation Errors --}}
+    @if ($errors->any())
+        <div id="errorAlert" class="mb-4 rounded-xl bg-red-100 px-4 py-3 text-sm text-red-700 transition-all duration-500">
+            <ul class="list-inside list-disc">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- Header --}}
     <div class="flex items-center justify-between">
         <x-filters-tab :tabs="$tabs" />
@@ -33,6 +44,14 @@
                     <div class="relative overflow-hidden rounded-lg">
                         <img src="{{ asset('storage/' . $item->image) }}"
                             class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105">
+
+                        {{-- Expired Badge --}}
+                        @if ($item->end_date && \Carbon\Carbon::parse($item->end_date)->endOfDay()->isPast())
+                            <div class="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-md bg-rose-500/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm backdrop-blur-md">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                Expired
+                            </div>
+                        @endif
 
                         {{-- Edit & Delete --}}
                         @if (request('status') !== 'trash')
@@ -237,6 +256,7 @@
 @push('scripts')
     <script>
         const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
 
         if (successAlert) {
             setTimeout(() => {
@@ -247,6 +267,17 @@
             setTimeout(() => {
                 successAlert.remove();
             }, 3000);
+        }
+
+        if (errorAlert) {
+            setTimeout(() => {
+                errorAlert.style.opacity = '0';
+                errorAlert.style.transform = 'translateY(-10px)';
+            }, 5000);
+
+            setTimeout(() => {
+                errorAlert.remove();
+            }, 5500);
         }
 
         function animateModalOpen(modalId, boxId) {

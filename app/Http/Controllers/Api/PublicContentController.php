@@ -40,6 +40,19 @@ class PublicContentController extends Controller
         abort(404);
     }
 
+    public function getTestimonials()
+    {
+        $testimonials = Testimonial::where('status', 'published')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Testimoni Berhasil Diambil',
+            'data'    => $testimonials,
+        ], 200);
+    }
+
     public function getArticles(Request $request)
     {
         $query = Post::where('status', 'published')
@@ -141,6 +154,10 @@ class PublicContentController extends Controller
     public function getPartners()
     {
         $partners = MediaPartner::where('status', 'published')
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                      ->orWhereDate('end_date', '>=', now());
+            })
             ->latest()
             ->get();
 
@@ -168,5 +185,30 @@ class PublicContentController extends Controller
             'success' => true,
             'data'    => $formattedPosts
         ]);
+    }
+
+    public function getHeader()
+    {
+        $header = \App\Models\Header::first();
+        
+        $data = null;
+        if ($header) {
+            $formattedImages = collect($header->images)->map(function ($img) {
+                return asset('storage/' . $img);
+            })->toArray();
+
+            $data = [
+                'title_1' => $header->title_1,
+                'title_2' => $header->title_2,
+                'description' => $header->description,
+                'images' => $formattedImages,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Header Berhasil Diambil',
+            'data'    => $data,
+        ], 200);
     }
 }
