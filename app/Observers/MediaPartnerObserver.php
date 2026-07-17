@@ -26,7 +26,7 @@ class MediaPartnerObserver
      */
     public function created(MediaPartner $mediaPartner): void
     {
-        $this->sendWebhook('partner.updated', $mediaPartner);
+        $this->sendWebhook('partner.updated');
     }
 
     /**
@@ -34,7 +34,7 @@ class MediaPartnerObserver
      */
     public function updated(MediaPartner $mediaPartner): void
     {
-        $this->sendWebhook('partner.updated', $mediaPartner);
+        $this->sendWebhook('partner.updated');
     }
 
     /**
@@ -42,7 +42,7 @@ class MediaPartnerObserver
      */
     public function deleted(MediaPartner $mediaPartner): void
     {
-        $this->sendWebhook('partner.deleted', $mediaPartner);
+        $this->sendWebhook('partner.deleted');
     }
 
     /**
@@ -50,7 +50,7 @@ class MediaPartnerObserver
      */
     public function restored(MediaPartner $mediaPartner): void
     {
-        $this->sendWebhook('partner.updated'. $mediaPartner);
+        $this->sendWebhook('partner.updated');
     }
 
     /**
@@ -58,6 +58,6 @@ class MediaPartnerObserver
      */
     public function forceDeleted(MediaPartner $mediaPartner): void
     {
-        $this->sendWebhook('partner.deleted', $mediaPartner);
+        $this->sendWebhook('partner.deleted');
     }
 }

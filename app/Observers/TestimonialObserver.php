@@ -10,14 +10,12 @@ class TestimonialObserver
 {
     private function notifyFrontend(string $event, Testimonial $testimonial)
     {
-        $frontendUrl = env('FRONTEND_WEBHOOK_URL', 'http://localhost:8000/api/webhook');
-        
         try {
-            Http::post($frontendUrl, [
-                'event' => "testimonial.{$event}",
-                'data' => $testimonial->toArray(),
-                'timestamp' => now()->toIso8601String()
-            ]);
+            Http::withToken(config('services.landing.webhook_secret'))
+                ->timeout(5)
+                ->post(config('services.landing.webhook_url'), [
+                    'event' => "testimonial.{$event}",
+                ]);
         } catch (\Exception $e) {
             Log::error("Failed to notify frontend about testimonial {$event}: " . $e->getMessage());
         }

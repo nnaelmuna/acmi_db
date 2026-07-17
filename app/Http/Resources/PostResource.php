@@ -39,8 +39,8 @@ class PostResource extends JsonResource
             'content' => $isDetail
                 ? (
                     $locale === 'id'
-                        ? $this->content_id
-                        : $this->content_en
+                        ? ($this->content_id ?? $this->content_en)
+                        : ($this->content_en ?? $this->content_id)
                 )
                 : null,
     

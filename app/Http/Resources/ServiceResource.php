@@ -25,6 +25,8 @@ class ServiceResource extends JsonResource
             'features'     => $this->features,
             'website'      => $this->website,
             'address'      => $this->address,
+            'email'        => $this->email,
+            'phone'        => $this->phone,
             'image' => $this->image
                 ? (str_starts_with(trim($this->image, '"'), 'http')
                     ? trim($this->image, '"')

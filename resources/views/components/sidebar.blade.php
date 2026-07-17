@@ -14,6 +14,13 @@
                 <span class="text-md font-medium text-white {{ request()->routeIs('dashboard') }}">Dashboard</span>
             </a>
 
+            <a href="{{ route('header.edit') }}"
+                class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300
+                {{ request()->routeIs('header.*') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
+                <i class="fas fa-heading"></i>
+                <span class="text-[15px] font-medium text-white">Header</span>
+            </a>
+
             <a href="{{ route('post') }}"
                 class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300 {{ request()->routeIs('post') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-rectangle-list"></i>
@@ -85,13 +92,6 @@
                 {{ request()->routeIs('media-partner') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
                 <i class="fas fa-handshake-simple"></i>
                 <span class="text-[15px] font-medium text-white">Media Partner</span>
-            </a>
-
-            <a href="{{ route('header.edit') }}"
-                class="flex items-center gap-4 px-4 py-3 rounded-[8px] cursor-pointer transition-all duration-300
-                {{ request()->routeIs('header.*') ? 'bg-[#4155C6]' : 'hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100' }}">
-                <i class="fas fa-heading"></i>
-                <span class="text-[15px] font-medium text-white">Header</span>
             </a>
 
         </nav>
