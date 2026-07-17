@@ -129,9 +129,9 @@
     {{-- Add Modal --}}
     <div id="addModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
         <div id="addBox"
-            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300">
+            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300 max-h-[90vh] flex flex-col">
 
-            <div class="flex items-center justify-between px-6 pt-6">
+            <div class="flex items-center justify-between px-6 pt-6 pb-3 border-b border-gray-100 bg-white rounded-t-2xl flex-shrink-0">
                 <h2 class="text-lg font-semibold text-gray-800">Add Testimonial</h2>
 
                 <button type="button" onclick="closeAddModal()"
@@ -140,7 +140,7 @@
                 </button>
             </div>
 
-            <form action="{{ route('testimonial.store') }}" method="POST" class="space-y-5 px-6 pb-6 pt-5">
+            <form action="{{ route('testimonial.store') }}" method="POST" class="space-y-5 px-6 pb-6 pt-5 overflow-y-auto flex-grow">
                 @csrf
 
                 <div class="grid grid-cols-2 gap-4">
@@ -178,9 +178,9 @@
     {{-- Edit Modal --}}
     <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
         <div id="editBox"
-            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300">
+            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300 max-h-[90vh] flex flex-col">
 
-            <div class="flex items-center justify-between px-6 pt-6">
+            <div class="flex items-center justify-between px-6 pt-6 pb-3 border-b border-gray-100 bg-white rounded-t-2xl flex-shrink-0">
                 <h2 class="text-lg font-semibold text-gray-800">Edit Testimonial</h2>
 
                 <button type="button" onclick="closeEditModal()"
@@ -189,7 +189,7 @@
                 </button>
             </div>
 
-            <form id="editForm" method="POST" class="space-y-5 px-6 pb-6 pt-5">
+            <form id="editForm" method="POST" class="space-y-5 px-6 pb-6 pt-5 overflow-y-auto flex-grow">
                 @csrf
                 @method('PUT')
 

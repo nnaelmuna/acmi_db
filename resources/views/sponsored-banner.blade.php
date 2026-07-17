@@ -167,9 +167,9 @@
     {{-- Add Modal --}}
     <div id="addModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
         <div id="addBox"
-            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300">
+            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300 max-h-[90vh] flex flex-col">
 
-            <div class="flex items-center justify-between px-6 pt-6">
+            <div class="flex items-center justify-between px-6 pt-6 pb-3 border-b border-gray-100 bg-white rounded-t-2xl flex-shrink-0">
                 <h2 class="text-lg font-semibold text-gray-800">Add Banner Sponsored</h2>
 
                 <button type="button" onclick="closeAddModal()"
@@ -179,7 +179,7 @@
             </div>
 
             <form action="{{ route('sponsored-banner.store') }}" method="POST" enctype="multipart/form-data"
-                class="space-y-5 px-6 pb-6 pt-5">
+                class="space-y-5 px-6 pb-6 pt-5 overflow-y-auto flex-grow">
                 @csrf
 
                 <div>
@@ -196,15 +196,8 @@
 
                 <div>
                     <label class="mb-2 block text-xs font-semibold text-gray-600">Upload Image / PDF</label>
-                    <div onclick="document.getElementById('add_image').click()"
-                        class="relative flex items-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 cursor-pointer hover:border-gray-400 transition">
-                        <span class="rounded bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 hover:bg-gray-200 transition shrink-0 select-none">
-                            Choose File
-                        </span>
-                        <span id="add_image_name" class="truncate text-gray-500 select-none">No file chosen</span>
-                        <input type="file" name="image" id="add_image" required accept=".jpg,.jpeg,.png,.webp,.pdf"
-                            class="hidden" onclick="event.stopPropagation()">
-                    </div>
+                    <input type="file" name="image" required accept=".jpg,.jpeg,.png,.webp,.pdf"
+                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-acmi-blueprimer hover:file:bg-blue-100 cursor-pointer border border-gray-300 rounded-md p-1 bg-white focus:outline-none">
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -237,9 +230,9 @@
     {{-- Edit Modal --}}
     <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 px-4 backdrop-blur-sm">
         <div id="editBox"
-            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300">
+            class="w-full max-w-xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300 max-h-[90vh] flex flex-col">
 
-            <div class="flex items-center justify-between px-6 pt-6">
+            <div class="flex items-center justify-between px-6 pt-6 pb-3 border-b border-gray-100 bg-white rounded-t-2xl flex-shrink-0">
                 <h2 class="text-lg font-semibold text-gray-800">Edit Banner Sponsored</h2>
 
                 <button type="button" onclick="closeEditModal()"
@@ -248,7 +241,7 @@
                 </button>
             </div>
 
-            <form id="editForm" method="POST" enctype="multipart/form-data" class="space-y-5 px-6 pb-6 pt-5">
+            <form id="editForm" method="POST" enctype="multipart/form-data" class="space-y-5 px-6 pb-6 pt-5 overflow-y-auto flex-grow">
                 @csrf
                 @method('PUT')
 
@@ -276,15 +269,8 @@
 
                 <div>
                     <label class="mb-2 block text-xs font-semibold text-gray-600">Change Image / PDF</label>
-                    <div onclick="document.getElementById('edit_image').click()"
-                        class="relative flex items-center gap-3 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 cursor-pointer hover:border-gray-400 transition">
-                        <span class="rounded bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-300 hover:bg-gray-200 transition shrink-0 select-none">
-                            Choose File
-                        </span>
-                        <span id="edit_image_name" class="truncate text-gray-500 select-none">No file chosen</span>
-                        <input type="file" name="image" id="edit_image" accept=".jpg,.jpeg,.png,.webp,.pdf"
-                            class="hidden" onclick="event.stopPropagation()">
-                    </div>
+                    <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.pdf"
+                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-acmi-blueprimer hover:file:bg-blue-100 cursor-pointer border border-gray-300 rounded-md p-1 bg-white focus:outline-none">
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -415,7 +401,6 @@
             // reset form on open
             const form = document.querySelector('#addModal form');
             if (form) form.reset();
-            document.getElementById('add_image_name').textContent = 'No file chosen';
             toggleAddEndDate();
             animateModalOpen('addModal', 'addBox');
         }
@@ -449,7 +434,6 @@
             document.getElementById('edit_is_forever').checked = !!data.is_forever;
             document.getElementById('edit_impressions').value = data.impressions ?? 0;
             document.getElementById('edit_status').value = data.status ?? 'published';
-            document.getElementById('edit_image_name').textContent = 'No file chosen';
 
             const preview = document.getElementById('edit_preview_image');
             const pdfPreview = document.getElementById('edit_pdf_preview');
@@ -490,24 +474,6 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             document.getElementById('previewImage').src = '';
-        }
-
-        // Update custom file input text on change for Add Modal
-        const addFileInput = document.getElementById('add_image');
-        const addFileNameSpan = document.getElementById('add_image_name');
-        if (addFileInput && addFileNameSpan) {
-            addFileInput.addEventListener('change', function (e) {
-                addFileNameSpan.textContent = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
-            });
-        }
-
-        // Update custom file input text on change for Edit Modal
-        const editFileInput = document.getElementById('edit_image');
-        const editFileNameSpan = document.getElementById('edit_image_name');
-        if (editFileInput && editFileNameSpan) {
-            editFileInput.addEventListener('change', function (e) {
-                editFileNameSpan.textContent = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
-            });
         }
 
         window.addEventListener('click', function(e) {
