@@ -269,7 +269,7 @@
 
                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Title</label>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Lengkap</label>
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
                                 <span id="d_name">-</span>
@@ -293,10 +293,42 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Linkedin Profile</label>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
                             <div
-                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
-                                <span id="d_linkedin">-</span>
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_birth_date">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis Kelamin</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_gender">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Domisili (Kota/Kabupaten)</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_domicile">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Ukuran Baju</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_shirt_size">-</span>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Alamat Lengkap Rumah</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_address">-</span>
                             </div>
                         </div>
                     </div>
@@ -304,7 +336,7 @@
 
                 <div class="mb-6">
                     <h3 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-3">
-                        Informasi Perusahaan
+                        Informasi Perusahaan / Bisnis
                     </h3>
 
                     <div class="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -355,6 +387,62 @@
                                 <span id="d_annual_revenue">-</span>
                             </div>
                         </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Alamat Lengkap Perusahaan</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_company_address">-</span>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Detail Produk / Jasa Usaha</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[60px] flex items-start pt-2">
+                                <span id="d_business_detail">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="text-acmi-blueprimer font-bold text-xs uppercase tracking-wider mb-3">
+                        Akun Media Sosial
+                    </h3>
+
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">LinkedIn Profile</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_linkedin">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Akun Instagram</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_instagram">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Akun TikTok</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_tiktok">-</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Akun Facebook</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 break-all min-h-[38px] flex items-center">
+                                <span id="d_facebook">-</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -369,6 +457,13 @@
                             <div
                                 class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[100px] whitespace-pre-line items-start">
                                 <span id="d_motivation_referral">-</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">CEO MM Batch</label>
+                            <div
+                                class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 text-sm font-medium text-gray-800 min-h-[38px] flex items-center">
+                                <span id="d_ceo_mm_batch">-</span>
                             </div>
                         </div>
                     </div>
@@ -386,7 +481,11 @@
                     document.getElementById('d_name').innerText = data.name || '-';
                     document.getElementById('d_email').innerText = data.email || '-';
                     document.getElementById('d_phone').innerText = data.phone || '-';
-                    document.getElementById('d_linkedin').innerText = data.linkedin_url || '-';
+                    document.getElementById('d_birth_date').innerText = data.birth_date || '-';
+                    document.getElementById('d_gender').innerText = data.gender || '-';
+                    document.getElementById('d_domicile').innerText = data.domicile || '-';
+                    document.getElementById('d_shirt_size').innerText = data.shirt_size || '-';
+                    document.getElementById('d_address').innerText = data.address || '-';
 
                     // Informasi Bisnis
                     document.getElementById('d_company').innerText = data.company_name || '-';
@@ -395,9 +494,18 @@
                     document.getElementById('d_url').innerText = data.company_url || '-';
                     document.getElementById('d_employee_size').innerText = data.employee_size || '-';
                     document.getElementById('d_annual_revenue').innerText = data.annual_revenue || '-';
+                    document.getElementById('d_company_address').innerText = data.company_address || '-';
+                    document.getElementById('d_business_detail').innerText = data.business_detail || '-';
+
+                    // Akun Media Sosial
+                    document.getElementById('d_linkedin').innerText = data.linkedin_url || '-';
+                    document.getElementById('d_instagram').innerText = data.instagram || '-';
+                    document.getElementById('d_tiktok').innerText = data.tiktok || '-';
+                    document.getElementById('d_facebook').innerText = data.facebook || '-';
 
                     // Motivasi
                     document.getElementById('d_motivation_referral').innerText = data.motivation_referral || '-';
+                    document.getElementById('d_ceo_mm_batch').innerText = data.ceo_mm_batch || '-';
 
                     // Tampilkan Modal
                     document.getElementById('detailModal').classList.remove('hidden');
