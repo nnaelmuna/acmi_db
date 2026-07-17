@@ -67,7 +67,7 @@
         </aside>
 
         <main class="flex-1 flex flex-col pr-12 pl-4 pt-12">
-            <nav class="mb-8 flex item-center gap-4 md:flex-row md:items-center md:justify-between">
+            <nav class="mb-8 flex items-center gap-4 md:flex-row md:items-center md:justify-between">
                 
                 {{-- LEFT: TITLE + DATE --}}
                 <div>

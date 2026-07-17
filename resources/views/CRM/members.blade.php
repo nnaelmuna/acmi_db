@@ -6,8 +6,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('header_right')
-    <div class="hidden md:block w-64 mr-4">
-        <form action="{{ route('members.index') }}" method="GET" class="relative group">
+    <div class="hidden md:flex items-center w-64 mr-4">
+        <form action="{{ route('members.index') }}" method="GET" class="relative group w-full">
             <input type="hidden" name="status" value="{{ request('status', 'published') }}">
             <input type="hidden" name="category" value="{{ request('category') }}">
 
@@ -204,20 +204,20 @@
                                         @else
                                             @if($item->sub_status === 'active')
                                                 <button type="button"
-                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[11px] font-bold border bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 transition duration-150 cursor-pointer shadow-sm">
-                                                    Active
+                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[12px] font-semibold border bg-[#E6FEDA] text-black border-[#5389A8]/30 hover:bg-[#D2FEBC] transition duration-150 cursor-pointer shadow-sm">
+                                                    <span>Active</span>
                                                     <i class="fas fa-chevron-down text-[9px] ml-2 text-emerald-700"></i>
                                                 </button>
                                             @else
                                                 <button type="button"
-                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[11px] font-bold border bg-red-50 text-red-700 border-red-200 hover:bg-red-100 transition duration-150 cursor-pointer shadow-sm">
-                                                    Unactive
-                                                    <i class="fas fa-chevron-down text-[9px] ml-2 text-red-700"></i>
+                                                    class="inline-flex items-center justify-center w-28 px-4 py-2 rounded-full text-[12px] font-semibold border bg-[#FFDADA] text-black border-[#A85353]/30 hover:bg-[#FFC9C9] transition duration-150 cursor-pointer shadow-sm">
+                                                    <span>Deactive</span>
+                                                    <i class="fas fa-chevron-down text-[9px] ml-2 text-black"></i>
                                                 </button>
                                             @endif
 
                                             <div
-                                                class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] py-1.5 p-1">
+                                                class="absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] py-1.5 p-1">
                                                 <form action="{{ route('members.updateSubStatus', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('PATCH')
@@ -225,8 +225,8 @@
                                                     @if($item->sub_status === 'active')
                                                         <input type="hidden" name="sub_status" value="unactive">
                                                         <button type="submit"
-                                                            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-red-500 hover:bg-red-50 rounded-lg transition text-left">
-                                                            <i class="far fa-times-circle mr-2.5 text-[12px]"></i> Set Unactive
+                                                            class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded-lg transition text-left">
+                                                            <i class="far fa-times-circle mr-2.5 text-[12px]"></i> Set Deactive
                                                         </button>
                                                     @else
                                                         <input type="hidden" name="sub_status" value="active">
@@ -238,8 +238,8 @@
                                                 </form>
                                                 <button type="button"
                                                     onclick="openDeleteModal('{{ route('members.destroy', $item->id) }}', 'Are you sure want to move this member to trash?')"
-                                                    class="flex items-center w-full px-3 py-2 text-[11px] font-semibold text-gray-600 hover:bg-red-50 rounded-lg transition text-left cursor-pointer border-t border-gray-100/70 mt-1">
-                                                    <i class="far fa-trash-alt mr-2.5 text-[12px]"></i> Move To Trash
+                                                    class="flex items-center w-full px-4 py-2.5 text-[11px] font-semibold text-gray-600 hover:bg-red-50 transition border-t border-acmi-bordercolor/50">
+                                                    <i class="far fa-trash-alt mr-2 text-[12px]"></i> Move To Trash
                                                 </button>
                                             </div>
                                         @endif

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\MediaCategoryController;
 use App\Http\Controllers\Admin\MediaItemController;
 use App\Http\Controllers\Admin\MediaPartnerController;
+use App\Http\Controllers\Admin\SponsoredBannerController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CRM\InboundController;
@@ -153,6 +154,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/media-partner/{id}', 'destroy')->name('media-partner.destroy');
         Route::post('/media-partner/{id}/restore', 'restore')->name('media-partner.restore');
         Route::delete('/media-partner/{id}/force-delete', 'forceDelete')->name('media-partner.forceDelete');
+    });
+
+    // Sponsored Banner
+    Route::controller(SponsoredBannerController::class)->group(function () {
+        Route::get('/sponsored-banner', 'index')->name('sponsored-banner');
+        Route::post('/sponsored-banner', 'store')->name('sponsored-banner.store');
+        Route::put('/sponsored-banner/{id}', 'update')->name('sponsored-banner.update');
+        Route::delete('/sponsored-banner/{id}', 'destroy')->name('sponsored-banner.destroy');
+        Route::post('/sponsored-banner/{id}/restore', 'restore')->name('sponsored-banner.restore');
+        Route::delete('/sponsored-banner/{id}/force-delete', 'forceDelete')->name('sponsored-banner.forceDelete');
     });
 
     // Inbound

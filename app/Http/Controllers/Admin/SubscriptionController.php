@@ -24,23 +24,25 @@ class SubscriptionController extends Controller
             ->toArray();
 
         // 2. Query Ambil Data Utama
-        $query = DB::table('subscriptions');
+        $query = DB::table('subscriptions')
+            ->leftJoin('members', 'subscriptions.email', '=', 'members.email')
+            ->select('subscriptions.*', 'members.company_url as partner_link');
 
         // Filter berdasarkan Tab Status
         if ($status !== 'all') {
-            $query->where('status', $status);
+            $query->where('subscriptions.status', $status);
         }
 
         // Filter berdasarkan Kolom Pencarian (Search)
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('company_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $q->where('subscriptions.name', 'like', "%{$search}%")
+                    ->orWhere('subscriptions.company_name', 'like', "%{$search}%")
+                    ->orWhere('subscriptions.email', 'like', "%{$search}%");
             });
         }
 
-        $subscriptions = $query->orderBy('id', 'desc')->paginate(10)->withQueryString();
+        $subscriptions = $query->orderBy('subscriptions.id', 'desc')->paginate(10)->withQueryString();
 
         // Format data tabs agar terbaca oleh komponen blade custom-tabs
         $tabs = [
@@ -121,11 +123,35 @@ class SubscriptionController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'transaction_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'partner_link' => 'nullable|string|max:255',
+            'transaction_image' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:2048',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'partner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // Max 2MB
         ]);
+
+        $subscription = DB::table('subscriptions')->where('id', $id)->first();
+        if ($subscription) {
+            $memberExists = DB::table('members')->where('email', $subscription->email)->exists();
+            if ($memberExists) {
+                DB::table('members')
+                    ->where('email', $subscription->email)
+                    ->update(['company_url' => $request->partner_link]);
+            } else {
+                DB::table('members')->insert([
+                    'name' => $subscription->name,
+                    'email' => $subscription->email,
+                    'phone' => $subscription->phone,
+                    'company_name' => $subscription->company_name,
+                    'industry' => $subscription->industry,
+                    'position' => $subscription->business_model,
+                    'company_url' => $request->partner_link,
+                    'status' => 'published',
+                    'sub_status' => 'active',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
 
         $updateData = [
             'name' => $request->name,
@@ -133,17 +159,6 @@ class SubscriptionController extends Controller
             'created_at' => $request->start_date ? \Carbon\Carbon::parse($request->start_date) : now(),
             'updated_at' => now()
         ];
-
-        // Proses upload file gambar beneran jika user milih file baru
-        if ($request->hasFile('partner_image')) {
-            $file = $request->file('partner_image');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            // File bakal masuk ke folder: public/uploads/partners/
-            $file->move(public_path('uploads/partners'), $fileName);
-
-            // Simpan nama filenya ke database (sesuaikan nama kolom gambar kamu di DB, misal 'image')
-            // $updateData['image'] = $fileName; 
-        }
 
         if ($request->hasFile('transaction_image')) {
             $file2 = $request->file('transaction_image');
