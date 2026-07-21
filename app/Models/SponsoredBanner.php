@@ -13,6 +13,7 @@ class SponsoredBanner extends Model
     protected $fillable = [
         'title',
         'image',
+        'size',
         'link_sponsored',
         'start_date',
         'end_date',

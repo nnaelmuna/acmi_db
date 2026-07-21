@@ -200,6 +200,17 @@
                         class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-acmi-blueprimer hover:file:bg-blue-100 cursor-pointer border border-gray-300 rounded-md p-1 bg-white focus:outline-none">
                 </div>
 
+                <div>
+                    <label class="mb-2 block text-xs font-semibold text-gray-600">Size</label>
+                    <select name="size" required
+                        class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
+                        <option value="728x90">728x90</option>
+                        <option value="970x250">970x250</option>
+                        <option value="336x280">336x280</option>
+                        <option value="300x250">300x250</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-xs font-semibold text-gray-600">Start Date</label>
@@ -271,6 +282,17 @@
                     <label class="mb-2 block text-xs font-semibold text-gray-600">Change Image / PDF</label>
                     <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.pdf"
                         class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-acmi-blueprimer hover:file:bg-blue-100 cursor-pointer border border-gray-300 rounded-md p-1 bg-white focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="mb-2 block text-xs font-semibold text-gray-600">Size</label>
+                    <select id="edit_size" name="size" required
+                        class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
+                        <option value="728x90">728x90</option>
+                        <option value="970x250">970x250</option>
+                        <option value="336x280">336x280</option>
+                        <option value="300x250">300x250</option>
+                    </select>
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -434,6 +456,7 @@
             document.getElementById('edit_is_forever').checked = !!data.is_forever;
             document.getElementById('edit_impressions').value = data.impressions ?? 0;
             document.getElementById('edit_status').value = data.status ?? 'published';
+            document.getElementById('edit_size').value = data.size ?? '728x90';
 
             const preview = document.getElementById('edit_preview_image');
             const pdfPreview = document.getElementById('edit_pdf_preview');

@@ -39,6 +39,7 @@ class SponsoredBannerController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'image' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048'],
+            'size' => ['required', 'in:728x90,970x250,336x280,300x250'],
             'link_sponsored' => ['required', 'url'],
             'start_date' => ['required', 'date'],
             'end_date' => [
@@ -58,6 +59,7 @@ class SponsoredBannerController extends Controller
         SponsoredBanner::create([
             'title' => $validated['title'],
             'image' => $imagePath,
+            'size' => $validated['size'],
             'link_sponsored' => $validated['link_sponsored'],
             'start_date' => $validated['start_date'],
             'end_date' => $isForever ? null : $validated['end_date'],
@@ -82,6 +84,7 @@ class SponsoredBannerController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:2048'],
+            'size' => ['required', 'in:728x90,970x250,336x280,300x250'],
             'link_sponsored' => ['required', 'url'],
             'status' => ['required', 'in:published,draft,archived'],
         ]);
@@ -98,6 +101,7 @@ class SponsoredBannerController extends Controller
             'title' => $validated['title'],
             'link_sponsored' => $validated['link_sponsored'],
             'image' => $banner->image,
+            'size' => $validated['size'],
             'status' => $validated['status'],
         ]);
 

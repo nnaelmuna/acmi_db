@@ -17,6 +17,7 @@ use App\Models\MediaItem;
 use App\Models\MediaPartner;
 use App\Models\Category;
 use App\Models\Testimonial;
+use App\Models\SponsoredBanner;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PublicContentController extends Controller
@@ -165,6 +166,38 @@ class PublicContentController extends Controller
             'success' => true,
             'message' => 'Data Mitra Berhasil Diambil',
             'data'    => PartnerResource::collection($partners),
+        ], 200);
+    }
+
+    public function getSponsors()
+    {
+        $sponsors = SponsoredBanner::where('status', 'published')
+            ->whereDate('start_date', '<=', now())
+            ->where(function ($query) {
+                $query->where('is_forever', true)
+                      ->orWhereNull('end_date')
+                      ->orWhereDate('end_date', '>=', now());
+            })
+            ->latest()
+            ->get()
+            ->map(function ($banner) {
+                return [
+                    'id'    => $banner->id,
+                    'title' => $banner->title,
+                    'link'  => $banner->link_sponsored,
+                    'size'  => $banner->size,
+                    'image' => $banner->image
+                        ? (str_starts_with($banner->image, 'http')
+                            ? $banner->image
+                            : asset('storage/' . $banner->image))
+                        : null,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Sponsored Banner Berhasil Diambil',
+            'data'    => $sponsors,
         ], 200);
     }
 
