@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Ubah ENUM ke VARCHAR agar bisa menampung semua status
-        DB::statement("ALTER TABLE `members` MODIFY `status` VARCHAR(20) NOT NULL DEFAULT 'active'");
+        if (DB::getDriverName() !== 'sqlite') {
+            // Ubah ENUM ke VARCHAR agar bisa menampung semua status
+            DB::statement("ALTER TABLE `members` MODIFY `status` VARCHAR(20) NOT NULL DEFAULT 'active'");
+        }
 
         // Konversi data existing: active → published (agar konsisten dengan MemberController)
         DB::statement("UPDATE `members` SET `status` = 'published' WHERE `status` = 'active'");
@@ -26,7 +28,9 @@ return new class extends Migration
         // Kembalikan published → active
         DB::statement("UPDATE `members` SET `status` = 'active' WHERE `status` = 'published'");
 
-        // Kembalikan ke ENUM
-        DB::statement("ALTER TABLE `members` MODIFY `status` ENUM('active','inactive','suspended') NOT NULL DEFAULT 'active'");
+        if (DB::getDriverName() !== 'sqlite') {
+            // Kembalikan ke ENUM
+            DB::statement("ALTER TABLE `members` MODIFY `status` ENUM('active','inactive','suspended') NOT NULL DEFAULT 'active'");
+        }
     }
 };

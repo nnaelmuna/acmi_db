@@ -7,7 +7,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE faqs MODIFY status ENUM('draft','published','archived') DEFAULT 'published'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE faqs MODIFY status ENUM('draft','published','archived') DEFAULT 'published'");
+        }
     }
 
     public function down(): void
@@ -16,6 +18,8 @@ return new class extends Migration
             ->where('status', 'archived')
             ->update(['status' => 'draft']);
 
-        DB::statement("ALTER TABLE faqs MODIFY status ENUM('draft','published') DEFAULT 'published'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE faqs MODIFY status ENUM('draft','published') DEFAULT 'published'");
+        }
     }
 };

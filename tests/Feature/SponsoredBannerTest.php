@@ -42,6 +42,7 @@ class SponsoredBannerTest extends TestCase
             'title' => 'Test Banner',
             'link_sponsored' => 'https://example.com',
             'image' => $image,
+            'size' => '728x90',
             'start_date' => '2026-07-17',
             'end_date' => '2026-07-24',
             'status' => 'published',
@@ -51,6 +52,7 @@ class SponsoredBannerTest extends TestCase
         $this->assertDatabaseHas('sponsored_banners', [
             'title' => 'Test Banner',
             'link_sponsored' => 'https://example.com',
+            'size' => '728x90',
             'start_date' => '2026-07-17',
             'end_date' => '2026-07-24',
             'is_forever' => false,
@@ -68,6 +70,7 @@ class SponsoredBannerTest extends TestCase
             'title' => 'Test Forever Banner',
             'link_sponsored' => 'https://example.com',
             'image' => $image,
+            'size' => '728x90',
             'start_date' => '2026-07-17',
             'is_forever' => 'on',
             'status' => 'published',
@@ -77,6 +80,7 @@ class SponsoredBannerTest extends TestCase
         $this->assertDatabaseHas('sponsored_banners', [
             'title' => 'Test Forever Banner',
             'link_sponsored' => 'https://example.com',
+            'size' => '728x90',
             'start_date' => '2026-07-17',
             'end_date' => null,
             'is_forever' => true,
@@ -94,6 +98,7 @@ class SponsoredBannerTest extends TestCase
             'title' => 'Test PDF Banner',
             'link_sponsored' => 'https://example.com',
             'image' => $pdf,
+            'size' => '728x90',
             'start_date' => '2026-07-17',
             'end_date' => '2026-07-24',
             'status' => 'published',
@@ -103,6 +108,7 @@ class SponsoredBannerTest extends TestCase
         $this->assertDatabaseHas('sponsored_banners', [
             'title' => 'Test PDF Banner',
             'link_sponsored' => 'https://example.com',
+            'size' => '728x90',
             'start_date' => '2026-07-17',
             'end_date' => '2026-07-24',
             'is_forever' => false,
@@ -131,6 +137,7 @@ class SponsoredBannerTest extends TestCase
             'title' => 'Updated Title',
             'link_sponsored' => 'https://updated.com',
             'image' => $newImage,
+            'size' => '970x250',
             'status' => 'draft',
             // Try to pass these values; they should be ignored by update
             'start_date' => '2026-08-01',
@@ -146,6 +153,7 @@ class SponsoredBannerTest extends TestCase
             'id' => $banner->id,
             'title' => 'Updated Title',
             'link_sponsored' => 'https://updated.com',
+            'size' => '970x250',
             'start_date' => '2026-07-17', // Unchanged
             'end_date' => '2026-07-24',   // Unchanged
             'is_forever' => false,        // Unchanged
