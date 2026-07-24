@@ -20,6 +20,7 @@ class SponsoredBanner extends Model
         'is_forever',
         'impressions',
         'status',
+        'position',
     ];
 
     protected $casts = [
