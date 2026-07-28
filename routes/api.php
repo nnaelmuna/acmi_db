@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\InstagramController;
 use App\Http\Controllers\Api\InboundApiController;
 use App\Http\Controllers\Api\InboundController;
 use App\Http\Controllers\Api\MemberRequestController;
+use App\Http\Controllers\Api\SponsoredBannerController;
 
 Route::prefix('public')->group(function () {
     Route::get('/articles', [PublicContentController::class, 'getArticles']);
@@ -23,4 +24,7 @@ Route::prefix('public')->group(function () {
     Route::get('/instagram', [InstagramController::class, 'index']);
     Route::post('/inbound', [InboundApiController::class, 'store']);
     Route::post('/public/member-request', [MemberRequestController::class, 'store']);
+    Route::get('/sponsored-banners', [SponsoredBannerController::class, 'index']);
+    Route::post('/sponsored-banners/{id}/impression', [SponsoredBannerController::class, 'impression']);
+    Route::post('/sponsored-banners/{id}/click', [SponsoredBannerController::class, 'click']);
 });

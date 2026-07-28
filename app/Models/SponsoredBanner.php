@@ -19,6 +19,7 @@ class SponsoredBanner extends Model
         'end_date',
         'is_forever',
         'impressions',
+        'clicks',
         'status',
         'position',
     ];
@@ -28,5 +29,6 @@ class SponsoredBanner extends Model
         'start_date' => 'date:Y-m-d',
         'end_date' => 'date:Y-m-d',
         'impressions' => 'integer',
+        'clicks' => 'integer',
     ];
 }
