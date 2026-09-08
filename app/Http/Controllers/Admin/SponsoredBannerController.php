@@ -52,6 +52,7 @@ class SponsoredBannerController extends Controller
                 }
             ],
             'status' => ['required', 'in:published,draft,archived'],
+            'position' => 'nullable|integer|min:1|max:6',
         ]);
 
         $imagePath = $request->file('image')->store('sponsored-banners', 'public');
@@ -66,6 +67,7 @@ class SponsoredBannerController extends Controller
             'is_forever' => $isForever,
             'status' => $validated['status'],
             'impressions' => 0,
+            'position' => $validated['position'] ?? null,
         ]);
 
         ActivityLog::create([
@@ -87,6 +89,7 @@ class SponsoredBannerController extends Controller
             'size' => ['required', 'in:728x90,970x250,336x280,300x250'],
             'link_sponsored' => ['required', 'url'],
             'status' => ['required', 'in:published,draft,archived'],
+            'position' => 'nullable|integer|min:1|max:6',
         ]);
 
         if ($request->hasFile('image')) {
@@ -103,6 +106,7 @@ class SponsoredBannerController extends Controller
             'image' => $banner->image,
             'size' => $validated['size'],
             'status' => $validated['status'],
+            'position' => $validated['position'] ?? null,
         ]);
 
         ActivityLog::create([

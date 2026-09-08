@@ -186,6 +186,7 @@ class PublicContentController extends Controller
                     'title' => $banner->title,
                     'link'  => $banner->link_sponsored,
                     'size'  => $banner->size,
+                    'position' => $banner->position,
                     'image' => $banner->image
                         ? (str_starts_with($banner->image, 'http')
                             ? $banner->image

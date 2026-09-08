@@ -188,4 +188,48 @@ class SponsoredBannerTest extends TestCase
         $response->assertRedirect('/sponsored-banner?status=trash');
         $this->assertDatabaseMissing('sponsored_banners', ['id' => $banner->id]);
     }
+
+    public function test_can_store_sponsored_banner_with_position()
+    {
+        Storage::fake('public');
+
+        $image = UploadedFile::fake()->image('banner.jpg');
+
+        $response = $this->actingAs($this->user)->post('/sponsored-banner', [
+            'title' => 'Test Banner Position',
+            'link_sponsored' => 'https://example.com',
+            'image' => $image,
+            'size' => '728x90',
+            'start_date' => '2026-07-17',
+            'end_date' => '2026-07-24',
+            'status' => 'published',
+            'position' => 3,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('sponsored_banners', [
+            'title' => 'Test Banner Position',
+            'position' => 3,
+        ]);
+    }
+
+    public function test_cannot_store_sponsored_banner_with_invalid_position()
+    {
+        Storage::fake('public');
+
+        $image = UploadedFile::fake()->image('banner.jpg');
+
+        $response = $this->actingAs($this->user)->post('/sponsored-banner', [
+            'title' => 'Test Banner Position Invalid',
+            'link_sponsored' => 'https://example.com',
+            'image' => $image,
+            'size' => '728x90',
+            'start_date' => '2026-07-17',
+            'end_date' => '2026-07-24',
+            'status' => 'published',
+            'position' => 7,
+        ]);
+
+        $response->assertSessionHasErrors('position');
+    }
 }

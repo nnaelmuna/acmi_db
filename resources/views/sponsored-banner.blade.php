@@ -117,6 +117,22 @@
                             </span>
                         </div>
 
+                        {{-- Clicks Badge --}}
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-500">Clicks</span>
+                            <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-bold text-green-700">
+                                {{ number_format($item->clicks) }}
+                            </span>
+                        </div>
+
+                        {{-- CTR Badge --}}
+                        <div class="mt-2 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-500">CTR</span>
+                            <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
+                                {{ $item->impressions > 0 ? number_format($item->clicks / $item->impressions * 100, 2) : 0 }}%
+                            </span>
+                        </div>
+
                         {{-- Restore & Force Delete --}}
                         @if (request('status') === 'trash')
                             <form action="{{ route('sponsored-banner.restore', $item->id) }}" method="POST"
@@ -211,6 +227,19 @@
                     </select>
                 </div>
 
+                <div>
+                    <label class="mb-2 block text-xs font-semibold text-gray-600">Posisi Banner</label>
+                    <select name="position" class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
+                        <option value="">-- Tanpa Posisi (Gunakan Fallback) --</option>
+                        <option value="1">1. Di bawah Solution Section (728x90)</option>
+                        <option value="2">2. Di bawah Exclusive Membership (970x250)</option>
+                        <option value="3">3. Di bawah Produk Anggota (336x280)</option>
+                        <option value="4">4. Di bawah FAQ (728x90)</option>
+                        <option value="5">5. Di bawah Gallery (970x250)</option>
+                        <option value="6">6. Di bawah Instagram Feed (300x250)</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-xs font-semibold text-gray-600">Start Date</label>
@@ -295,6 +324,19 @@
                     </select>
                 </div>
 
+                <div>
+                    <label class="mb-2 block text-xs font-semibold text-gray-600">Posisi Banner</label>
+                    <select id="edit_position" name="position" class="w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-gray-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/20">
+                        <option value="">-- Tanpa Posisi (Gunakan Fallback) --</option>
+                        <option value="1">1. Di bawah Solution Section (728x90)</option>
+                        <option value="2">2. Di bawah Exclusive Membership (970x250)</option>
+                        <option value="3">3. Di bawah Produk Anggota (336x280)</option>
+                        <option value="4">4. Di bawah FAQ (728x90)</option>
+                        <option value="5">5. Di bawah Gallery (970x250)</option>
+                        <option value="6">6. Di bawah Instagram Feed (300x250)</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
                         <label class="mb-2 block text-xs font-semibold text-gray-600">Start Date</label>
@@ -317,10 +359,24 @@
                     </label>
                 </div>
 
-                <div>
-                    <label class="mb-2 block text-xs font-semibold text-gray-600">Total Impressions / Views</label>
-                    <input id="edit_impressions" type="text" disabled
-                        class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-500 cursor-not-allowed">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <div>
+                        <label class="mb-2 block text-xs font-semibold text-gray-600">Total Impressions / Views</label>
+                        <input id="edit_impressions" type="text" disabled
+                            class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-500 cursor-not-allowed">
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-xs font-semibold text-gray-600">Clicks</label>
+                        <input id="edit_clicks" type="text" disabled
+                            class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-500 cursor-not-allowed">
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-xs font-semibold text-gray-600">CTR</label>
+                        <input id="edit_ctr" type="text" disabled
+                            class="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-500 cursor-not-allowed">
+                    </div>
                 </div>
 
                 <x-form-status-select id="edit_status" name="status" />
@@ -455,8 +511,13 @@
             document.getElementById('edit_end_date').value = data.end_date ?? '';
             document.getElementById('edit_is_forever').checked = !!data.is_forever;
             document.getElementById('edit_impressions').value = data.impressions ?? 0;
+            document.getElementById('edit_clicks').value = data.clicks ?? 0;
+            const impressions = data.impressions ?? 0;
+            const clicks = data.clicks ?? 0;
+            document.getElementById('edit_ctr').value = impressions > 0 ? (clicks / impressions * 100).toFixed(2) + '%' : '0%';
             document.getElementById('edit_status').value = data.status ?? 'published';
             document.getElementById('edit_size').value = data.size ?? '728x90';
+            document.getElementById('edit_position').value = data.position ?? '';
 
             const preview = document.getElementById('edit_preview_image');
             const pdfPreview = document.getElementById('edit_pdf_preview');
