@@ -104,10 +104,4 @@
         </nav>
     </div>
 
-    <a href="{{ route('settings.index') }}"
-        class="flex items-center gap-4 px-4 py-3 rounded-[14px] cursor-pointer transition-all duration-300 hover:bg-[#4155C6]/50 opacity-90 hover:opacity-100 mt-10">
-        <i class="fas fa-gear"></i>
-        <span class="text-[15px] font-medium text-white">Settings Config</span>
-    </a>
-
 </aside>

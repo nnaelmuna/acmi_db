@@ -16,7 +16,6 @@ use App\Http\Controllers\CRM\InboundController;
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Api\PublicContentController;
 use App\Http\Controllers\Admin\HistoryController;
-use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Api\ApifyWebhookController;
 
@@ -204,13 +203,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/subscription/{id}/update-detail', [SubscriptionController::class, 'updateDetail'])->name('subscription.updateDetail');
 
 
-    // Settings Config
     // Header Config
     Route::get('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'edit'])->name('header.edit');
     Route::post('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'update'])->name('header.update');
 
     Route::resource('testimonial', \App\Http\Controllers\Admin\TestimonialController::class);
-    Route::get('/settings-config', [SettingsController::class, 'index'])->name('settings.index');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
