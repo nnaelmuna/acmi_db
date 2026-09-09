@@ -57,7 +57,7 @@ class SponsoredBannerController extends Controller
 
         $imagePath = $request->file('image')->store('sponsored-banners', 'public');
 
-        SponsoredBanner::create([
+        $createData = [
             'title' => $validated['title'],
             'image' => $imagePath,
             'size' => $validated['size'],
@@ -67,8 +67,13 @@ class SponsoredBannerController extends Controller
             'is_forever' => $isForever,
             'status' => $validated['status'],
             'impressions' => 0,
-            'position' => $validated['position'] ?? null,
-        ]);
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('sponsored_banners', 'position')) {
+            $createData['position'] = $validated['position'] ?? null;
+        }
+
+        SponsoredBanner::create($createData);
 
         ActivityLog::create([
             'user_id' => auth()->user()->id,
@@ -100,14 +105,19 @@ class SponsoredBannerController extends Controller
             $banner->image = $request->file('image')->store('sponsored-banners', 'public');
         }
 
-        $banner->update([
+        $updateData = [
             'title' => $validated['title'],
             'link_sponsored' => $validated['link_sponsored'],
             'image' => $banner->image,
             'size' => $validated['size'],
             'status' => $validated['status'],
-            'position' => $validated['position'] ?? null,
-        ]);
+        ];
+
+        if (\Illuminate\Support\Facades\Schema::hasColumn('sponsored_banners', 'position')) {
+            $updateData['position'] = $validated['position'] ?? null;
+        }
+
+        $banner->update($updateData);
 
         ActivityLog::create([
             'user_id' => auth()->user()->id,
