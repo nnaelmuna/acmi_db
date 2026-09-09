@@ -62,7 +62,7 @@ class InboundController extends Controller
                 - Inbound::where('status', 'rejected')->whereDate('created_at', Carbon::yesterday())->count(),
         ];
 
-        return view('crm.inbound', compact('inbounds', 'stats', 'diffs'));
+        return view(view()->exists('crm.inbound') ? 'crm.inbound' : 'CRM.inbound', compact('inbounds', 'stats', 'diffs'));
     }
 
     public function show($id)

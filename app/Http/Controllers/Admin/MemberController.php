@@ -59,7 +59,7 @@ class MemberController extends Controller
             ->distinct()
             ->get();
 
-        return view('crm.members', compact('members', 'tabs', 'categories', 'statusCounts'));
+        return view(view()->exists('crm.members') ? 'crm.members' : 'CRM.members', compact('members', 'tabs', 'categories', 'statusCounts'));
     }
 
     public function show(string $id)

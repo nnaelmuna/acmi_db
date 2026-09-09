@@ -52,7 +52,7 @@ class SubscriptionController extends Controller
             ['label' => 'Trash', 'value' => 'trash', 'count' => $counts['trash'] ?? 0],
         ];
 
-        return view('crm.subscription', compact('subscriptions', 'tabs'));
+        return view(view()->exists('crm.subscription') ? 'crm.subscription' : 'CRM.subscription', compact('subscriptions', 'tabs'));
     }
 
     /**
