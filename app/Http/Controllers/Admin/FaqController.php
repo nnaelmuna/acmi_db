@@ -36,60 +36,70 @@ class FaqController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'question'    => ['nullable', 'string', 'max:255'],
             'question_en' => ['nullable', 'string', 'max:255'],
             'question_id' => ['nullable', 'string', 'max:255'],
+            'answer'      => ['nullable', 'string'],
             'answer_en'   => ['nullable', 'string'],
             'answer_id'   => ['nullable', 'string'],
             'status'      => ['nullable', 'in:draft,published,archived'],
         ]);
-    
+
+        $question = $validated['question'] ?? $validated['question_id'] ?? $validated['question_en'] ?? $request->input('question');
+        $answer   = $validated['answer'] ?? $validated['answer_id'] ?? $validated['answer_en'] ?? $request->input('answer');
+
         Faq::create([
-            'question'    => $validated['question_en'] ?? $validated['question_id'],
-            'question_en' => $validated['question_en'] ?? null,
-            'question_id' => $validated['question_id'] ?? null,
-            'answer'      => $validated['answer_en'] ?? $validated['answer_id'],
-            'answer_en'   => $validated['answer_en'] ?? null,
-            'answer_id'   => $validated['answer_id'] ?? null,
+            'question'    => $question,
+            'question_en' => $validated['question_en'] ?? $question,
+            'question_id' => $validated['question_id'] ?? $question,
+            'answer'      => $answer,
+            'answer_en'   => $validated['answer_en'] ?? $answer,
+            'answer_id'   => $validated['answer_id'] ?? $answer,
             'status'      => $validated['status'] ?? 'published',
         ]);
-    
+
         ActivityLog::create([
             'user_id'       => auth()->id(),
             'activity_type' => 'faq',
             'description'   => auth()->user()->name . ' created a FAQ',
         ]);
-    
+
         return redirect()->route('faq')->with('success', 'FAQ created successfully.');
     }
-    
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
+            'question'    => ['nullable', 'string', 'max:255'],
             'question_en' => ['nullable', 'string', 'max:255'],
             'question_id' => ['nullable', 'string', 'max:255'],
+            'answer'      => ['nullable', 'string'],
             'answer_en'   => ['nullable', 'string'],
             'answer_id'   => ['nullable', 'string'],
             'status'      => ['nullable', 'in:draft,published,archived'],
         ]);
-    
+
         $faq = Faq::findOrFail($id);
-    
+
+        $question = $validated['question'] ?? $validated['question_id'] ?? $validated['question_en'] ?? $request->input('question', $faq->question);
+        $answer   = $validated['answer'] ?? $validated['answer_id'] ?? $validated['answer_en'] ?? $request->input('answer', $faq->answer);
+
         $faq->update([
-            'question'    => $validated['question_en'] ?? $validated['question_id'] ?? $faq->question,
-            'question_en' => $validated['question_en'] ?? null,
-            'question_id' => $validated['question_id'] ?? null,
-            'answer'      => $validated['answer_en'] ?? $validated['answer_id'] ?? $faq->answer,
-            'answer_en'   => $validated['answer_en'] ?? null,
-            'answer_id'   => $validated['answer_id'] ?? null,
+            'question'    => $question,
+            'question_en' => $validated['question_en'] ?? $question,
+            'question_id' => $validated['question_id'] ?? $question,
+            'answer'      => $answer,
+            'answer_en'   => $validated['answer_en'] ?? $answer,
+            'answer_id'   => $validated['answer_id'] ?? $answer,
             'status'      => $validated['status'] ?? $faq->status,
         ]);
-    
+
         ActivityLog::create([
             'user_id'       => auth()->id(),
             'activity_type' => 'faq',
             'description'   => auth()->user()->name . ' updated a FAQ',
         ]);
-    
+
         return redirect()->route('faq')->with('success', 'FAQ updated successfully.');
     }
 

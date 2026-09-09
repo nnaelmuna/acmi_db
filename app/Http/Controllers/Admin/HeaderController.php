@@ -34,7 +34,7 @@ class HeaderController extends Controller
         }
 
         $oldImagesInDb = $header->images ?? [];
-        $finalImages = $request->has('existing_images') ? $request->input('existing_images', []) : $oldImagesInDb;
+        $finalImages = $request->input('existing_images', []);
 
         // Delete removed images
         foreach ($oldImagesInDb as $oldPath) {

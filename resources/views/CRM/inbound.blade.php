@@ -18,50 +18,6 @@
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-acmi-bordercolor/50 max-w-md mb-5">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="font-bold text-black flex items-center gap-3 text-md">
-                    <i class="far fa-dot-circle text-acmi-blueaccent"></i> Approval Status
-                </h3>
-                <button class="text-acmi-darkblue">
-                    <i class="fas fa-ellipsis-h text-sm"></i>
-                </button>
-            </div>
-
-            <div class="grid grid-cols-3 gap-0">
-                <div class="pr-4">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">Review</p>
-                    <p class="text-2xl font-bold text-gray-900 mb-1">{{ $stats['review'] ?? 0 }}</p>
-                    <p class="text-[10px] text-gray-400">
-                        <span class="text-acmi-blueprimer font-bold">
-                            {{ ($diffs['review'] ?? 0) >= 0 ? '+ ' : '- ' }}{{ abs($diffs['review'] ?? 0) }}
-                        </span> vs yesterday
-                    </p>
-                </div>
-
-                <div
-                    class="relative pl-6 pr-4 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-4 before:w-[1px] before:bg-acmi-bordercolor">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">Approved</p>
-                    <p class="text-3xl font-bold text-gray-900 mb-1">{{ $stats['approved'] ?? 0 }}</p>
-                    <p class="text-[10px] text-gray-400">
-                        <span class="text-acmi-blueprimer font-bold">
-                            {{ ($diffs['approved'] ?? 0) >= 0 ? '+ ' : '- ' }}{{ abs($diffs['approved'] ?? 0) }}
-                        </span> vs yesterday
-                    </p>
-                </div>
-
-                <div
-                    class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-4 before:w-[1px] before:bg-acmi-bordercolor">
-                    <p class="text-xs text-gray-500 font-semibold mb-1">Rejected</p>
-                    <p class="text-3xl font-bold text-gray-900 mb-1">{{ $stats['rejected'] ?? 0 }}</p>
-                    <p class="text-[10px] text-gray-400">
-                        <span class="text-acmi-blueprimer font-bold">
-                            {{ ($diffs['rejected'] ?? 0) >= 0 ? '+ ' : '- ' }}{{ abs($diffs['rejected'] ?? 0) }}
-                        </span> vs yesterday
-                    </p>
-                </div>
-            </div>
-        </div>
 
         <div class="flex items-center justify-between mb-6">
             <div class="flex gap-4">

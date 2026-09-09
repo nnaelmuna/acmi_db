@@ -21,8 +21,6 @@
                             </th>
                             <th class="py-4 px-4 text-sm font-semibold text-green-600 uppercase tracking-wider">New Members
                             </th>
-                            <th class="py-4 px-4 text-sm font-semibold text-purple-600 uppercase tracking-wider">Total Views
-                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -37,13 +35,11 @@
                                         +{{ number_format($data['new_member']) }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-4 text-sm text-gray-600">
-                                    {{ number_format($data['views']) }} <span class="text-[10px] text-gray-400">Views</span>
-                                </td>
+                                
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="py-10 text-center text-sm text-gray-400">No data records found.
+                                <td colspan="3" class="py-10 text-center text-sm text-gray-400">No data records found.
                                 </td>
                             </tr>
                         @endforelse
