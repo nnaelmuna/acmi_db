@@ -50,7 +50,7 @@
                                 </div>
                             @else
                                 <img src="{{ asset('storage/' . $item->image) }}"
-                                    class="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                    class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105">
                             @endif
                         @else
                             <div class="text-sm text-gray-400">
@@ -299,8 +299,10 @@
 
                 <div>
                     <label class="mb-2 block text-xs font-semibold text-gray-600">Current Image / PDF</label>
-                    <img id="edit_preview_image" src=""
-                        class="hidden h-40 w-full rounded-xl border border-gray-200 object-cover">
+                    <div class="relative overflow-hidden rounded-xl border border-gray-200 bg-gray-50 flex items-center justify-center h-40 p-2">
+                        <img id="edit_preview_image" src=""
+                            class="hidden max-h-full max-w-full object-contain">
+                    </div>
                     <div id="edit_pdf_preview" class="hidden h-40 w-full rounded-xl border border-gray-200 bg-gray-50 flex flex-col items-center justify-center text-rose-500">
                         <i class="fa-solid fa-file-pdf text-5xl"></i>
                         <span class="mt-2 text-xs font-semibold text-gray-500">PDF Document</span>
