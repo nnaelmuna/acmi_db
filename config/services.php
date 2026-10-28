@@ -40,4 +40,8 @@ return [
         'webhook_secret' => env('LANDING_WEBHOOK_SECRET'),
     ],
 
+    'apify' => [
+        'instagram_url' => env('APIFY_INSTAGRAM_URL'),
+    ],
+
 ];

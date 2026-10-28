@@ -21,7 +21,7 @@ class SyncInstagram extends Command
     {
         $this->info('Memulai proses penjemputan data Instagram...');
 
-        $apifyUrl = env('APIFY_INSTAGRAM_URL'); 
+        $apifyUrl = config('services.apify.instagram_url');
 
         // Validasi jika lupa taruh di .env
         if (!$apifyUrl) {

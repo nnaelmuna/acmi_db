@@ -196,8 +196,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
     Route::patch('/subscription/{id}/update-status', [SubscriptionController::class, 'updateStatus'])->name('subscription.updateStatus');
     Route::get('/subscription/{id}/restore', [SubscriptionController::class, 'restore'])->name('subscription.restore');
-    Route::get('/subscription/{id}/force-delete', [SubscriptionController::class, 'forceDelete'])->name('subscription.forceDelete');
-    Route::get('/subscription/{id}/destroy', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
+    Route::get('/subscription/{id}/force-delete', [SubscriptionController::class, 'forceDelete']);
+    Route::get('/subscription/{id}/destroy', [SubscriptionController::class, 'destroy']);
     Route::delete('/subscription/{id}/destroy', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
     Route::delete('/subscription/{id}/force-delete', [SubscriptionController::class, 'forceDelete'])->name('subscription.forceDelete');
     Route::patch('/subscription/{id}/update-detail', [SubscriptionController::class, 'updateDetail'])->name('subscription.updateDetail');
@@ -206,8 +206,6 @@ Route::middleware('auth')->group(function () {
     // Header Config
     Route::get('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'edit'])->name('header.edit');
     Route::post('/header', [\App\Http\Controllers\Admin\HeaderController::class, 'update'])->name('header.update');
-
-    Route::resource('testimonial', \App\Http\Controllers\Admin\TestimonialController::class);
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

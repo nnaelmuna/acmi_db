@@ -8,7 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('inbounds:clean')->daily();
+Schedule::command('app:clean-old-inbounds')->daily();
 
 Schedule::call(function () {
     \App\Models\MediaPartner::where('status', 'published')
